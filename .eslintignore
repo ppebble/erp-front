@@ -1,0 +1,4 @@
+*.css
+*.svg
+*.cjs
+prettier.config.js
