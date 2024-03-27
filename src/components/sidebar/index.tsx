@@ -1,9 +1,6 @@
-/* eslint-disable */
-
 import { HiX } from 'react-icons/hi';
 import Links from './components/Links';
 import logo from '../../assets/img/logo/logo.png';
-// import SidebarCard from '../../components/sidebar/componentsrtl/SidebarCard';
 import routes from '../../routes';
 
 const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSpanElement> }) => {
@@ -18,7 +15,7 @@ const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSp
 				<HiX />
 			</span>
 
-			<div className={`mx-[28px] mt-[20px] flex items-center`}>
+			<div className="mx-[28px] mt-[20px] flex items-center">
 				<img className="h-[75px] w-[246px] rounded-lg" src={logo} alt="" />
 			</div>
 			<div className="mt-[18px] mb-7 h-px bg-gray-300 dark:bg-white/30" />
