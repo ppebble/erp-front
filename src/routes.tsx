@@ -15,7 +15,7 @@ import RTLDefault from './views/rtl/default';
 
 const routes = [
 	{
-		name: 'Main Dashboard',
+		name: '메인화면',
 		layout: '/admin',
 		path: 'default',
 		icon: <MdHome className="h-6 w-6" />,

@@ -56,7 +56,7 @@ const Progress = (props: {
 	};
 	return (
 		<div className={`h-2 ${width || 'w-full'} rounded-full bg-gray-200 dark:bg-navy-700`}>
-			<div className={`flex h-full items-center justify-center rounded-full ${switchColor(color)}`} style={{ width: `${value}%` }} />
+			<div className="flex h-full items-center justify-center rounded-full bg-brand-500 dark:bg-brand-400" style={{ width: `${value}%` }} />
 		</div>
 	);
 };
