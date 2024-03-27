@@ -27,7 +27,7 @@ const Auth = () => {
 								<div className="absolute right-0 hidden h-full min-h-screen md:block lg:w-[49vw] 2xl:w-[44vw]">
 									<div
 										className="absolute flex h-full w-full items-end justify-center bg-cover bg-center"
-										style={{ backgroundImage: `url(${main})` }}
+										style={{ backgroundImage: `url(${authImg})` }}
 									/>
 								</div>
 							</div>
