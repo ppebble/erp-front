@@ -40,10 +40,7 @@ const InputField = (props: {
 				type={type}
 				id={id}
 				placeholder={placeholder}
-				className={`mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none ${classNameSelector(
-					disabled,
-					state,
-				)}`}
+				className="mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none border-gray-200 dark:!border-white/10 dark:text-white"
 			/>
 		</div>
 	);

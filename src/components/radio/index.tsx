@@ -64,7 +64,7 @@ const Radio = (props: {
 			className={`before:contet[""] relative h-5 w-5 cursor-pointer appearance-none rounded-full
        border !border-gray-300 transition-all duration-[0.2s] before:absolute before:top-[3px]
        before:left-[50%] before:h-3 before:w-3 before:translate-x-[-50%] before:rounded-full before:transition-all before:duration-[0.2s] dark:!border-gray-800
-       ${switchColor(color)} `}
+       checked:!border-brand-500 checked:before:!bg-brand-500 dark:checked:!border-brand-400 dark:checked:before:!bg-brand-400 `}
 			{...rest}
 		/>
 	);
