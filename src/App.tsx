@@ -12,6 +12,8 @@ import NFTMarketplace from './views/admin/marketplace';
 import Profile from './views/admin/profile';
 import DataTables from './views/admin/tables';
 
+import NotFound from './views/notFound';
+
 const App = () => {
 	return (
 		<Routes>
@@ -25,6 +27,7 @@ const App = () => {
 				<Route path="profile" element={<Profile />} />
 			</Route>
 			<Route path="/" element={<Navigate to="/auth/signin" replace />} />
+			<Route path="*" element={<NotFound />} />
 		</Routes>
 	);
 };
