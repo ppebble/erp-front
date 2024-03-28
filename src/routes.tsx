@@ -18,20 +18,20 @@ import {
 } from 'react-icons/md';
 
 const routes = [
-	{
-		name: '메인화면',
-		layout: '/admin',
-		path: 'main',
-		icon: <MdHome className="h-6 w-6" />,
-		child: [
-			{
-				name: '요약',
-				layout: '/admin',
-				path: 'main',
-				icon: <MdHome className="h-6 w-6" />,
-			},
-		],
-	},
+	// {
+	// 	name: '메인화면',
+	// 	layout: '/admin',
+	// 	path: 'main',
+	// 	icon: <MdHome className="h-6 w-6" />,
+	// 	child: [
+	// 		{
+	// 			name: '요약',
+	// 			layout: '/admin',
+	// 			path: 'main',
+	// 			icon: <MdHome className="h-6 w-6" />,
+	// 		},
+	// 	],
+	// },
 	{
 		name: '인력현황',
 		layout: '/admin',
@@ -61,7 +61,7 @@ const routes = [
 			{
 				name: '일정표',
 				layout: '/admin',
-				path: 'null',
+				path: 'calendar',
 				icon: <MdOutlineCalendarMonth className="h-6 w-6" />,
 			},
 			{

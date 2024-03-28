@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import DashIcon from '../../../components/icons/DashIcon';
+import { MdHome } from 'react-icons/md';
 // chakra imports
 
 export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
@@ -32,7 +33,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 									{route.name}
 								</p>
 							</li>
-							{isOpenPath === route.path ? <div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-brand-500 dark:bg-brand-400" /> : null}
+							{/* {isOpenPath === route.path ? <div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-brand-500 dark:bg-brand-400" /> : null} */}
 						</div>
 						{route.child?.map((child, index) => {
 							return (
@@ -63,7 +64,24 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 		});
 	};
 	// BRAND
-	return <>{createLinks(routes)}</>;
+	return (
+		<>
+			<Link key={'mainboard'} to={'/admin/main'}>
+				<div className="relative mb-3 flex hover:cursor-pointer" onClick={() => setOpenPath('main')}>
+					<li className="my-[3px] flex cursor-pointer items-center px-8" key={'DASHBOARD'}>
+						<span className={`${isOpenPath === 'main' ? 'font-bold text-brand-500 dark:text-white' : 'font-medium text-gray-600'}`}>
+							<MdHome className="h-6 w-6" />{' '}
+						</span>
+						<p className={`leading-1 ml-4 flex ${isOpenPath === 'main' ? 'font-bold text-navy-700 dark:text-white' : 'font-medium text-gray-600'}`}>
+							{'대시보드'}
+						</p>
+					</li>
+					{/* {isOpenPath === route.path ? <div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-brand-500 dark:bg-brand-400" /> : null} */}
+				</div>
+			</Link>
+			{createLinks(routes)}
+		</>
+	);
 };
 
 export default SidebarLinks;
