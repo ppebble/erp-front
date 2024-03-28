@@ -11,6 +11,7 @@ import MainDashboard from './views/admin/default';
 import NFTMarketplace from './views/admin/marketplace';
 import Profile from './views/admin/profile';
 import DataTables from './views/admin/tables';
+import BusinessCalendar from './views/admin/business';
 
 import NotFound from './views/notFound';
 
@@ -25,6 +26,7 @@ const App = () => {
 				<Route path="nft" element={<NFTMarketplace />} />
 				<Route path="table" element={<DataTables />} />
 				<Route path="profile" element={<Profile />} />
+				<Route path="calendar" element={<BusinessCalendar />} />
 			</Route>
 			<Route path="/" element={<Navigate to="/auth/signin" replace />} />
 			<Route path="*" element={<NotFound />} />

@@ -61,7 +61,7 @@ const Switch = (props: {
       before:absolute before:top-[50%] before:h-4 before:w-4 before:translate-x-[2px] before:translate-y-[-50%] before:rounded-[20px]
       before:bg-white before:shadow-[0_2px_5px_rgba(0,_0,_0,_.2)] before:transition before:content-[""]
       checked:before:translate-x-[22px] hover:cursor-pointer
-      dark:bg-white/5 ${switchColor(color)} ${extra}`}
+      dark:bg-white/5 checked:bg-brand-500 dark:checked:bg-brand-400 ${extra}`}
 			name="weekly"
 			{...rest}
 		/>

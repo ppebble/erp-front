@@ -24,7 +24,7 @@ const CheckTable = (props: { tableData: any }) => {
 			header: () => <p className="text-sm font-bold text-gray-600 dark:text-white">NAME</p>,
 			cell: (info: any) => (
 				<div className="flex items-center">
-					<Checkbox defaultChecked={info.getValue()[1]} color="blue" me="10px" />
+					<Checkbox defaultChecked={info.getValue()[1]} me="10px" />
 					<p className="ml-3 text-sm font-bold text-navy-700 dark:text-white">{info.getValue()[0]}</p>
 				</div>
 			),
