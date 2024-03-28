@@ -1,50 +1,25 @@
-/* eslint-disable react/no-array-index-key */
 import React from 'react';
-import { Route, useLocation, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import { useNaviOpen } from '../../store';
 import Navbar from '../../components/navbar';
 import Sidebar from '../../components/sidebar';
 import Footer from '../../components/footer/Footer';
-import routes from '../../routes';
 
 const Admin = (props: { [x: string]: any }) => {
 	const { ...rest } = props;
-	const location = useLocation();
-	const [open, setOpen] = React.useState(true);
-	const [currentRoute, setCurrentRoute] = React.useState('Main Dashboard');
+	const { naviOpen, setNaviOpen } = useNaviOpen();
 
 	React.useEffect(() => {
-		window.addEventListener('resize', () => (window.innerWidth < 1200 ? setOpen(false) : setOpen(true)));
-	}, []);
-	const getActiveRoute = (actRt: RoutesType[]): string | boolean => {
-		const activeRoute = 'Main Dashboard';
-		for (let i = 0; i < actRt.length; i += 1) {
-			if (window.location.href.indexOf(`${actRt[i].layout}/${actRt[i].path}`) !== -1) {
-				setCurrentRoute(actRt[i].name);
-			}
-		}
-		return activeRoute;
-	};
-	React.useEffect(() => {
-		getActiveRoute(routes);
-	}, [location.pathname]);
-
-	const getActiveNavbar = (actNv: RoutesType[]): string | boolean | undefined => {
-		const activeNavbar = false;
-		for (let i = 0; i < actNv.length; i += 1) {
-			if (window.location.href.indexOf(actNv[i].layout + actNv[i].path) !== -1) {
-				return actNv[i].secondary;
-			}
-		}
-		return activeNavbar;
-	};
+		window.addEventListener('resize', () => (window.innerWidth < 1200 ? setNaviOpen(false) : setNaviOpen(true)));
+	}, [setNaviOpen]);
 
 	return (
 		<div className="flex h-full w-full">
-			<Sidebar open={open} onClose={() => setOpen(false)} />
+			<Sidebar open={naviOpen} onClose={() => setNaviOpen(false)} />
 			<div className="h-full w-full bg-lightPrimary dark:!bg-navy-900">
-				<main className="mx-[12px] h-full flex-none transition-all md:pr-2 xl:ml-[313px]">
+				<main className={`mx-[12px] h-full flex-none transition-all md:pr-2 xl:${naviOpen ? 'ml-[313px]' : 'ml-[12px]'}`}>
 					<div className="h-full">
-						<Navbar onOpenSidenav={() => setOpen(true)} brandText={currentRoute} secondary={getActiveNavbar(routes)} {...rest} />
+						<Navbar onOpenSidenav={() => setNaviOpen(!naviOpen)} {...rest} />
 						<Outlet />
 						<div className="p-3">
 							<Footer />
