@@ -11,13 +11,13 @@ const Admin = (props: { [x: string]: any }) => {
 
 	React.useEffect(() => {
 		window.addEventListener('resize', () => (window.innerWidth < 1200 ? setNaviOpen(false) : setNaviOpen(true)));
-	}, [setNaviOpen]);
+	}, []);
 
 	return (
 		<div className="flex h-full w-full">
 			<Sidebar open={naviOpen} onClose={() => setNaviOpen(false)} />
 			<div className="h-full w-full bg-lightPrimary dark:!bg-navy-900">
-				<main className={`mx-[12px] h-full flex-none transition-all md:pr-2 xl:${naviOpen ? 'ml-[313px]' : 'ml-[12px]'}`}>
+				<main className={`mx-[12px] h-full flex-none transition-all md:pr-2 ${naviOpen ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`}>
 					<div className="h-full">
 						<Navbar onOpenSidenav={() => setNaviOpen(!naviOpen)} {...rest} />
 						<Outlet />
