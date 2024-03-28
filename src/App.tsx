@@ -24,7 +24,7 @@ const App = () => {
 				<Route path="table" element={<DataTables />} />
 				<Route path="profile" element={<Profile />} />
 			</Route>
-			<Route path="/" element={<Navigate to={`${document.location.pathname}auth/signin`} replace />} />
+			<Route path="/" element={<Navigate to="/auth/signin" replace />} />
 		</Routes>
 	);
 };
