@@ -7,50 +7,50 @@ const Switch = (props: {
 	const switchColor = (item: string | undefined) => {
 		switch (item) {
 			case 'red':
-				'checked:bg-red-500 dark:checked:bg-red-400';
+				return 'checked:bg-red-500 dark:checked:bg-red-400';
 				break;
 			case 'blue':
-				'checked:bg-blue-500 dark:checked:bg-blue-400';
+				return 'checked:bg-blue-500 dark:checked:bg-blue-400';
 				break;
 			case 'green':
-				'checked:bg-green-500 dark:checked:bg-green-400';
+				return 'checked:bg-green-500 dark:checked:bg-green-400';
 				break;
 			case 'yellow':
-				'checked:bg-yellow-500 dark:checked:bg-yellow-400';
+				return 'checked:bg-yellow-500 dark:checked:bg-yellow-400';
 				break;
 			case 'orange':
-				'checked:bg-orange-500 dark:checked:bg-orange-400';
+				return 'checked:bg-orange-500 dark:checked:bg-orange-400';
 				break;
 			case 'teal':
-				'checked:bg-teal-500 dark:checked:bg-teal-400';
+				return 'checked:bg-teal-500 dark:checked:bg-teal-400';
 				break;
 			case 'navy':
-				'checked:bg-navy-500 dark:checked:bg-navy-400';
+				return 'checked:bg-navy-500 dark:checked:bg-navy-400';
 				break;
 			case 'lime':
-				'checked:bg-lime-500 dark:checked:bg-lime-400';
+				return 'checked:bg-lime-500 dark:checked:bg-lime-400';
 				break;
 			case 'cyan':
-				'checked:bg-cyan-500 dark:checked:bg-cyan-400';
+				return 'checked:bg-cyan-500 dark:checked:bg-cyan-400';
 				break;
 			case 'pink':
-				'checked:bg-pink-500 dark:checked:bg-pink-400';
+				return 'checked:bg-pink-500 dark:checked:bg-pink-400';
 				break;
 			case 'purple':
-				'checked:bg-purple-500 dark:checked:bg-purple-400';
+				return 'checked:bg-purple-500 dark:checked:bg-purple-400';
 				break;
 			case 'amber':
-				'checked:bg-amber-500 dark:checked:bg-amber-400';
+				return 'checked:bg-amber-500 dark:checked:bg-amber-400';
 				break;
 			case 'indigo':
-				'checked:bg-indigo-500 dark:checked:bg-indigo-400';
+				return 'checked:bg-indigo-500 dark:checked:bg-indigo-400';
 				break;
 			case 'gray':
-				'checked:bg-gray-500 dark:checked:bg-gray-400';
+				return 'checked:bg-gray-500 dark:checked:bg-gray-400';
 				break;
 
 			default:
-				'checked:bg-brand-500 dark:checked:bg-brand-400';
+				return 'checked:bg-brand-500 dark:checked:bg-brand-400';
 				break;
 		}
 	};

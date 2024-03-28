@@ -1,38 +1,28 @@
 import React from 'react';
 import { FiAlignJustify, FiSearch } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
 import { BsArrowBarUp } from 'react-icons/bs';
-
 import { RiMoonFill, RiSunFill } from 'react-icons/ri';
 import { IoMdNotificationsOutline, IoMdInformationCircleOutline } from 'react-icons/io';
 import navbarimage from '../../assets/img/layout/Navbar.png';
 import Dropdown from '../dropdown';
 import avatar from '../../assets/img/avatars/avatar4.png';
 
-const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary?: boolean | string }) => {
-	const { onOpenSidenav, brandText, secondary } = props;
+const Navbar = (props: { onOpenSidenav: () => void }) => {
+	const { onOpenSidenav } = props;
 	const [darkmode, setDarkmode] = React.useState(false);
 
 	return (
 		<nav className="sticky top-4 z-40 flex flex-row flex-wrap items-center justify-between rounded-xl bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]">
 			<div className="ml-[6px]">
 				<div className="h-6 w-[224px] pt-1">
-					<a className="text-sm font-normal text-navy-700 hover:underline dark:text-white dark:hover:text-white" href=" ">
-						Pages
-						<span className="mx-1 text-sm text-navy-700 hover:text-navy-700 dark:text-white"> / </span>
-					</a>
-					<Link className="text-sm font-normal capitalize text-navy-700 hover:underline dark:text-white dark:hover:text-white" to="#">
-						{brandText}
-					</Link>
+					<span className="flex cursor-pointer text-xl text-gray-600 dark:text-white" onClick={onOpenSidenav}>
+						<FiAlignJustify className="h-5 w-5" />
+					</span>
 				</div>
-				<p className="shrink text-[33px] capitalize text-navy-700 dark:text-white">
-					<Link to="#" className="font-bold capitalize hover:text-navy-700 dark:hover:text-white">
-						{brandText}
-					</Link>
-				</p>
 			</div>
 
 			<div className="relative mt-[3px] flex h-[61px] w-[355px] flex-grow items-center justify-around gap-2 rounded-full bg-white px-2 py-2 shadow-xl shadow-shadow-500 dark:!bg-navy-800 dark:shadow-none md:w-[365px] md:flex-grow-0 md:gap-1 xl:w-[365px] xl:gap-2">
+				{/* 검색창 */}
 				<div className="flex h-full items-center rounded-full bg-lightPrimary text-navy-700 dark:bg-navy-900 dark:text-white xl:w-[225px]">
 					<p className="pl-3 pr-2 text-xl">
 						<FiSearch className="h-4 w-4 text-gray-400 dark:text-white" />
@@ -43,10 +33,13 @@ const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary
 						className="block h-full w-full rounded-full bg-lightPrimary text-sm font-medium text-navy-700 outline-none placeholder:!text-gray-400 dark:bg-navy-900 dark:text-white dark:placeholder:!text-white sm:w-fit"
 					/>
 				</div>
+
+				{/* 사이드바 숨김 (모바일) */}
 				<span className="flex cursor-pointer text-xl text-gray-600 dark:text-white xl:hidden" onClick={onOpenSidenav}>
 					<FiAlignJustify className="h-5 w-5" />
 				</span>
-				{/* start Notification */}
+
+				{/* 알림 */}
 				<Dropdown
 					button={
 						<p className="cursor-pointer">
@@ -83,7 +76,8 @@ const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary
 						</button>
 					</div>
 				</Dropdown>
-				{/* start Horizon PRO */}
+
+				{/* i 아이콘 */}
 				<Dropdown
 					button={
 						<p className="cursor-pointer">
@@ -125,6 +119,8 @@ const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary
 						</a>
 					</div>
 				</Dropdown>
+
+				{/* 다크모드 */}
 				<div
 					className="cursor-pointer text-gray-600"
 					onClick={() => {
@@ -143,7 +139,8 @@ const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary
 						<RiMoonFill className="h-4 w-4 text-gray-600 dark:text-white" />
 					)}
 				</div>
-				{/* Profile & Dropdown */}
+
+				{/* 사용자 아이콘 */}
 				<Dropdown button={<img className="h-10 w-10 rounded-full" src={avatar} alt="Elon Musk" />} classNames="py-2 top-8 -left-[180px] w-max">
 					<div className="flex h-48 w-56 flex-col justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
 						<div className="mt-3 ml-4">

@@ -19,8 +19,8 @@ const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSp
 				<img className="h-[75px] w-[246px] rounded-lg" src={logo} alt="" />
 			</div>
 			<div className="mt-[18px] mb-7 h-px bg-gray-300 dark:bg-white/30" />
-			{/* Nav item */}
 
+			{/* Nav item */}
 			<ul className="mb-auto pt-1">
 				<Links routes={routes} />
 			</ul>
