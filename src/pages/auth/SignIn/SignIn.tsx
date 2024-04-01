@@ -1,6 +1,6 @@
 import { FcGoogle } from 'react-icons/fc';
-import InputField from '../../components/fields/InputField';
-import Checkbox from '../../components/checkbox';
+import InputField from '../../../components/fields/InputField';
+import Checkbox from '../../../components/checkbox';
 
 const Signin = () => (
 	<div className="mt-16 mb-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">

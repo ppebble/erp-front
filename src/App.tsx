@@ -1,19 +1,19 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import AdminLayout from './layouts/admin';
-import AuthLayout from './layouts/auth';
+import AdminLayout from './pages/admin';
+import AuthLayout from './pages/auth';
 
 // auth
-import SignIn from './views/auth/SignIn';
+import SignIn from './pages/auth/SignIn/SignIn';
 
 // admin
-import MainDashboard from './views/admin/default';
-import NFTMarketplace from './views/admin/marketplace';
-import Profile from './views/admin/profile';
-import DataTables from './views/admin/tables';
-import BusinessCalendar from './views/admin/business';
+import MainDashboard from './pages/admin/default';
+import NFTMarketplace from './pages/admin/marketplace';
+import Profile from './pages/admin/profile';
+import DataTables from './pages/admin/tables';
+import BusinessCalendar from './pages/admin/business';
 
-import NotFound from './views/notFound';
+import NotFound from './pages/error/notFound';
 
 const App = () => {
 	return (
