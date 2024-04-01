@@ -19,7 +19,8 @@ const FullCalendarComponent = () => {
 
 			setTimeout(() => {
 				calendar.updateSize();
-			}, 150);
+				// calendarRef.current?.render();
+			}, 250);
 
 			// calendar.render();
 			// calendar.updater();
@@ -30,7 +31,7 @@ const FullCalendarComponent = () => {
 		// const calendar = calendarRef.current.updater.enqueueForceUpdate();
 		// console.log(calendar);
 		// calendar.updater();
-	}, [naviOpen, calendarRef]);
+	}, [naviOpen]);
 	useEffect(() => {
 		console.log(currentEvents);
 	}, [currentEvents]);
