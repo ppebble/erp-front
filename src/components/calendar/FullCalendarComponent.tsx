@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import '@fullcalendar/react/dist/vdom';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -7,9 +7,12 @@ import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg }
 import { INITIAL_EVENTS } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
 import Card from '../card';
+import { useNaviOpen } from '../../store';
 
 const FullCalendarComponent = () => {
 	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
+	const { naviOpen } = useNaviOpen();
+	useEffect(() => {}, [naviOpen]);
 	const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
 	const handleDateSelect = useCallback((selectInfo: DateSelectArg) => {
 		const title = prompt('이벤트 이름 기입')?.trim();
@@ -42,7 +45,7 @@ const FullCalendarComponent = () => {
 				headerToolbar={{
 					start: 'prev',
 					center: 'title',
-					end: 'dayGridMonth timeGridWeek,timeGridDay next',
+					end: 'dayGridMonth,timeGridWeek,timeGridDay next',
 				}}
 				height="85vh"
 				initialView="dayGridMonth"

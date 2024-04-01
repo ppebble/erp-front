@@ -47,7 +47,7 @@ const routes = [
 			{
 				name: '인력사항',
 				layout: '/admin',
-				path: 'null',
+				path: 'profile-list',
 				icon: <MdOutlinePeople className="h-6 w-6" />,
 			},
 		],
@@ -67,7 +67,7 @@ const routes = [
 			{
 				name: '프로젝트',
 				layout: '/admin',
-				path: 'null',
+				path: 'project',
 				icon: <MdOutlineWorkHistory className="h-6 w-6" />,
 			},
 		],
@@ -79,9 +79,9 @@ const routes = [
 		icon: <MdOutlineLaptopChromebook className="h-6 w-6" />,
 		child: [
 			{
-				name: '물자현황',
+				name: '물자 현황',
 				layout: '/admin',
-				path: 'null',
+				path: 'equipment',
 				icon: <MdOutlineLaptopChromebook className="h-6 w-6" />,
 			},
 		],
@@ -95,25 +95,25 @@ const routes = [
 			{
 				name: '회사소식',
 				layout: '/admin',
-				path: 'null',
+				path: 'news',
 				icon: <MdOutlineNewspaper className="h-6 w-6" />,
 			},
 			{
 				name: '세미나',
 				layout: '/admin',
-				path: 'null',
+				path: 'seminar',
 				icon: <MdPeople className="h-6 w-6" />,
 			},
 			{
 				name: '자유게시판',
 				layout: '/admin',
-				path: 'null',
+				path: 'free-board',
 				icon: <MdOutlineComment className="h-6 w-6" />,
 			},
 			{
 				name: '건의사항',
 				layout: '/admin',
-				path: 'null',
+				path: 'suggestions',
 				icon: <MdEmojiPeople className="h-6 w-6" />,
 			},
 		],
