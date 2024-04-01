@@ -3,7 +3,7 @@ import Card from '../../../components/card';
 
 const BusinessCalendar = () => {
 	return (
-		<div>
+		<div className="h-full w-full">
 			<FullCalendarComponent />
 		</div>
 	);

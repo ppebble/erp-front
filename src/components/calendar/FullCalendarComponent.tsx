@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import '@fullcalendar/react/dist/vdom';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -6,17 +6,37 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg } from '@fullcalendar/react';
 import { INITIAL_EVENTS } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
-import Card from '../card';
 import { useNaviOpen } from '../../store';
+import Card from '../card';
 
 const FullCalendarComponent = () => {
 	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
 	const { naviOpen } = useNaviOpen();
-	useEffect(() => {}, [naviOpen]);
+	const calendarRef = useRef<FullCalendar>(null);
+	useEffect(() => {
+		if (calendarRef.current) {
+			const calendar = calendarRef.current.getApi();
+
+			setTimeout(() => {
+				calendar.updateSize();
+			}, 500);
+
+			// calendar.render();
+			// calendar.updater();
+			// setTimeout(calendarRef.current.render(), 100);
+			// calendarRef.current.render();
+			// calendar.refetchEvents();
+		}
+		// const calendar = calendarRef.current.updater.enqueueForceUpdate();
+		// console.log(calendar);
+		// calendar.updater();
+	}, [naviOpen, calendarRef]);
+
 	const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
 	const handleDateSelect = useCallback((selectInfo: DateSelectArg) => {
 		const title = prompt('이벤트 이름 기입')?.trim();
 		const calendarApi = selectInfo.view.calendar;
+
 		calendarApi.unselect();
 		if (title) {
 			calendarApi.addEvent({
@@ -40,7 +60,11 @@ const FullCalendarComponent = () => {
 	);
 	return (
 		<Card extra="mt-15 flex w-full h-full flex-col px-3 py-3">
+			<div />
 			<FullCalendar
+				rerenderDelay={100}
+				progressiveEventRendering
+				ref={calendarRef}
 				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 				headerToolbar={{
 					start: 'prev',
