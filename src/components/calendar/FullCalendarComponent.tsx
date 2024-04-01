@@ -19,7 +19,7 @@ const FullCalendarComponent = () => {
 
 			setTimeout(() => {
 				calendar.updateSize();
-			}, 500);
+			}, 150);
 
 			// calendar.render();
 			// calendar.updater();
@@ -31,6 +31,9 @@ const FullCalendarComponent = () => {
 		// console.log(calendar);
 		// calendar.updater();
 	}, [naviOpen, calendarRef]);
+	useEffect(() => {
+		console.log(currentEvents);
+	}, [currentEvents]);
 
 	const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
 	const handleDateSelect = useCallback((selectInfo: DateSelectArg) => {
