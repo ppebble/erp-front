@@ -6,12 +6,12 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg } from '@fullcalendar/react';
 import { INITIAL_EVENTS } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
-import { useNaviOpen } from '../../store';
+import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
 
 const FullCalendarComponent = () => {
 	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
-	const { naviOpen } = useNaviOpen();
+	const { isSideBar } = useSideBar();
 	const calendarRef = useRef<FullCalendar>(null);
 	useEffect(() => {
 		if (calendarRef.current) {
@@ -19,19 +19,9 @@ const FullCalendarComponent = () => {
 
 			setTimeout(() => {
 				calendar.updateSize();
-				// calendarRef.current?.render();
 			}, 250);
-
-			// calendar.render();
-			// calendar.updater();
-			// setTimeout(calendarRef.current.render(), 100);
-			// calendarRef.current.render();
-			// calendar.refetchEvents();
 		}
-		// const calendar = calendarRef.current.updater.enqueueForceUpdate();
-		// console.log(calendar);
-		// calendar.updater();
-	}, [naviOpen]);
+	}, [isSideBar]);
 	useEffect(() => {
 		console.log(currentEvents);
 	}, [currentEvents]);

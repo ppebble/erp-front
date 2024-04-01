@@ -9,7 +9,7 @@ import avatar from '../../assets/img/avatars/avatar4.png';
 
 const Navbar = (props: { onOpenSidenav: () => void }) => {
 	const { onOpenSidenav } = props;
-	const [darkmode, setDarkmode] = React.useState(false);
+	const [darkMode, setDarkMode] = React.useState(false);
 
 	return (
 		<nav className="sticky top-4 z-40 flex flex-row flex-wrap items-center justify-between rounded-xl bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]">
@@ -124,16 +124,16 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
 				<div
 					className="cursor-pointer text-gray-600"
 					onClick={() => {
-						if (darkmode) {
+						if (darkMode) {
 							document.body.classList.remove('dark');
-							setDarkmode(false);
+							setDarkMode(false);
 						} else {
 							document.body.classList.add('dark');
-							setDarkmode(true);
+							setDarkMode(true);
 						}
 					}}
 				>
-					{darkmode ? (
+					{darkMode ? (
 						<RiSunFill className="h-4 w-4 text-gray-600 dark:text-white" />
 					) : (
 						<RiMoonFill className="h-4 w-4 text-gray-600 dark:text-white" />
