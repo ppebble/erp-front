@@ -7,7 +7,7 @@ import { useSideBar } from '../../../store/useSideBar';
 
 export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 	const { routes } = props;
-	const { currentPath, currentChildPath, setCurrentChildPath, setCurrentPath } = useSideBar();
+	const { currentPath, setCurrentPath } = useSideBar();
 	const navigate = useNavigate();
 
 	// verifies if routeName is the one active (in browser input)
@@ -28,14 +28,11 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 			if (e.child) {
 				e.child.map((i: RoutesType) => {
 					if (i.path === url) {
-						setCurrentChildPath(i);
 						parent = routes[routes.indexOf(e)];
-						return i;
 					}
 				});
 				return e.child;
 			} else {
-				return;
 			}
 		});
 		console.log(parent);
