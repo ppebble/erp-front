@@ -23,7 +23,7 @@ const FullCalendarComponent = () => {
 		}
 	}, [isSideBar]);
 	useEffect(() => {
-		console.log(currentEvents);
+		// console.log(currentEvents);
 	}, [currentEvents]);
 
 	const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
