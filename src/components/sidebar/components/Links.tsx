@@ -4,13 +4,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DashIcon from '../../../components/icons/DashIcon';
 import { MdHome, MdOutlineLaptopChromebook } from 'react-icons/md';
 import { useSideBar } from '../../../store/useSideBar';
-// chakra imports
 
 export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
-	// Chakra color mode
 	let location = useLocation();
 	const { routes } = props;
-	// const [isOpenPath, setCurrentPath] = useState<string>('main');
 	const { currentPath, setCurrentPath } = useSideBar();
 	const navigate = useNavigate();
 
@@ -24,6 +21,13 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 			navigate(route.layout + '/' + route.path);
 		}
 	};
+	const locationHook = useLocation();
+
+	useEffect(() => {
+		const splitUrl = locationHook?.pathname.split('/');
+		const lastUrl = splitUrl?.length > 1 ? splitUrl[splitUrl.length - 1] : null;
+		setCurrentPath(lastUrl ? lastUrl : '');
+	}, []);
 
 	useEffect(() => {
 		console.log(currentPath);
@@ -45,7 +49,6 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 									{route.name}
 								</p>
 							</li>
-							{/* {isOpenPath === route.path ? <div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-brand-500 dark:bg-brand-400" /> : null} */}
 						</div>
 					</div>
 					{route.child?.map((child) => {
