@@ -6,14 +6,15 @@ import { MdHome, MdOutlineLaptopChromebook } from 'react-icons/md';
 import { useSideBar } from '../../../store/useSideBar';
 
 export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
-	let location = useLocation();
 	const { routes } = props;
-	const { currentPath, setCurrentPath } = useSideBar();
+	const { currentPath, currentChildPath, setCurrentChildPath, setCurrentPath } = useSideBar();
 	const navigate = useNavigate();
 
 	// verifies if routeName is the one active (in browser input)
 	const activeRoute = (routeName: string) => {
-		return location.pathname.includes(routeName);
+		const splitUrl = locationHook?.pathname.split('/');
+		const lastUrl = splitUrl?.length > 1 ? splitUrl[splitUrl.length - 1] : null;
+		return lastUrl === routeName;
 	};
 
 	const singleRoute = (route: RoutesType) => {
@@ -21,30 +22,51 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 			navigate(route.layout + '/' + route.path);
 		}
 	};
+	const getCurrentChildParentRoute = (url: string | null) => {
+		let parent;
+		routes.map((e: RoutesType) => {
+			if (e.child) {
+				e.child.map((i: RoutesType) => {
+					if (i.path === url) {
+						setCurrentChildPath(i);
+						parent = routes[routes.indexOf(e)];
+						return i;
+					}
+				});
+				return e.child;
+			} else {
+				return;
+			}
+		});
+		console.log(parent);
+		return parent;
+	};
 	const locationHook = useLocation();
 
 	useEffect(() => {
 		const splitUrl = locationHook?.pathname.split('/');
 		const lastUrl = splitUrl?.length > 1 ? splitUrl[splitUrl.length - 1] : null;
-		setCurrentPath(lastUrl ? lastUrl : '');
+		if (routes.find((e) => e.path === lastUrl)) {
+			setCurrentPath(routes.find((e) => e.path === lastUrl));
+		} else {
+			setCurrentPath(getCurrentChildParentRoute(lastUrl));
+		}
 	}, []);
 
-	useEffect(() => {
-		console.log(currentPath);
-	}, [currentPath]);
+	useEffect(() => {}, [currentPath]);
 
 	const createLinks = (routes: RoutesType[]) => {
 		return routes.map((route) => {
 			return (
 				<Fragment key={route.path}>
 					<div onClick={() => singleRoute(route)}>
-						<div className="relative mb-3 flex hover:cursor-pointer" onClick={() => setCurrentPath(route.path)}>
+						<div className="relative mb-3 flex hover:cursor-pointer" onClick={() => setCurrentPath(route)}>
 							<li className="my-[3px] flex cursor-pointer items-center px-8" key={route.path + 'li'}>
-								<span className={`${currentPath === route.path ? 'font-bold text-brand-500 dark:text-white' : 'font-medium text-gray-600'}`}>
+								<span className={`${currentPath?.path === route.path ? 'font-bold text-brand-500 dark:text-white' : 'font-medium text-gray-600'}`}>
 									{route.icon ? route.icon : <DashIcon />}{' '}
 								</span>
 								<p
-									className={`leading-1 ml-4 flex ${currentPath === route.path ? 'font-bold text-navy-700 dark:text-white' : 'font-medium text-gray-600'}`}
+									className={`leading-1 ml-4 flex ${currentPath?.path === route.path ? 'font-bold text-navy-700 dark:text-white' : 'font-medium text-gray-600'}`}
 								>
 									{route.name}
 								</p>
@@ -56,7 +78,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 							<Link key={child.path} to={child.layout + '/' + child.path}>
 								<div
 									key={child.path + 'div'}
-									className={`${currentPath !== route.path ? 'invisible h-0 mb-0 ' : 'relative mb-3 flex hover:cursor-pointer ml-10'}`}
+									className={`${currentPath?.path !== route.path ? 'invisible h-0 mb-0 ' : 'relative mb-3 flex hover:cursor-pointer ml-10'}`}
 								>
 									<li className="my-[3px] flex cursor-pointer items-center px-8">
 										<span className={`${activeRoute(child.path) ? 'font-bold text-brand-500 dark:text-white' : 'font-medium text-gray-600'}`}>
