@@ -31,11 +31,8 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 						parent = routes[routes.indexOf(e)];
 					}
 				});
-				return e.child;
-			} else {
 			}
 		});
-		console.log(parent);
 		return parent;
 	};
 	const locationHook = useLocation();
