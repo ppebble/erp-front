@@ -1,24 +1,20 @@
-import tableDataDevelopment from './variables/tableDataDevelopment';
-import tableDataCheck from './variables/tableDataCheck';
-import CheckTable from './components/CheckTable';
-import tableDataColumns from './variables/tableDataColumns';
-import tableDataComplex from './variables/tableDataComplex';
-import DevelopmentTable from './components/DevelopmentTable';
-import ColumnsTable from './components/ColumnsTable';
-import ComplexTable from './components/ComplexTable';
+import DailyTraffic from '../dashboard/components/DailyTraffic';
+import PieChartCard from '../dashboard/components/PieChartCard';
+import WeeklyRevenue from '../dashboard/components/WeeklyRevenue';
+import TotalSpent from '../dashboard/components/TotalSpent';
+import basicModal from '../../../components/modal';
 
 const Tables = () => {
 	return (
 		<div>
-			<div className="mt-5 grid h-full grid-cols-1 gap-5 md:grid-cols-2">
-				<DevelopmentTable tableData={tableDataDevelopment} />
-				<CheckTable tableData={tableDataCheck} />
+			<div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+				<TotalSpent />
+				<WeeklyRevenue />
 			</div>
 
-			<div className="mt-5 grid h-full grid-cols-1 gap-5 md:grid-cols-2">
-				<ColumnsTable tableData={tableDataColumns} />
-
-				<ComplexTable tableData={tableDataComplex} />
+			<div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+				<DailyTraffic />
+				<PieChartCard />
 			</div>
 		</div>
 	);

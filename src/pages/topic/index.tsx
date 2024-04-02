@@ -10,8 +10,12 @@ const Topic = (props: { [x: string]: any }) => {
 	const { isSideBar, setSideBar } = useSideBar();
 
 	useEffect(() => {
-		window.addEventListener('resize', () => (window.innerWidth < 1200 ? setSideBar(false) : setSideBar(true)));
-	}, []);
+		const showSidebar = () => {
+			window.innerWidth < 1200 ? setSideBar(false) : setSideBar(true);
+		};
+		window.addEventListener('resize', showSidebar);
+		return () => window.removeEventListener('resize', showSidebar);
+	}, [setSideBar]);
 
 	return (
 		<div className="flex h-full w-full">
@@ -30,4 +34,5 @@ const Topic = (props: { [x: string]: any }) => {
 		</div>
 	);
 };
+
 export default Topic;

@@ -1,15 +1,16 @@
 import ReactDOM from 'react-dom/client';
-import './index.css';
-
+import { ChakraProvider } from '@chakra-ui/react';
 import { HashRouter } from 'react-router-dom';
-import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import App from './App';
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<HashRouter>
-		<QueryClientProvider client={new QueryClient()}>
-			<App />
-		</QueryClientProvider>
+		<ChakraProvider>
+			<QueryClientProvider client={new QueryClient()}>
+				<App />
+			</QueryClientProvider>
+		</ChakraProvider>
 	</HashRouter>,
 );
