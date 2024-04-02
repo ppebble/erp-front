@@ -1,7 +1,5 @@
 import {
 	MdHome,
-	MdOutlineShoppingCart,
-	MdPerson,
 	MdEmojiPeople,
 	MdOutlinePeople,
 	MdOutlineAutoGraph,
@@ -9,7 +7,6 @@ import {
 	MdOutlineWorkHistory,
 	MdOutlineCalendarMonth,
 	MdOutlineBusiness,
-	MdOutlineCommute,
 	MdOutlineComment,
 	MdOutlineNewspaper,
 	MdPeople,
@@ -18,6 +15,12 @@ import {
 } from 'react-icons/md';
 
 const routes = [
+	{
+		name: '대시보드',
+		layout: '/erp',
+		path: 'dashboard',
+		icon: <MdHome className="h-6 w-6" />,
+	},
 	{
 		name: '인력현황',
 		layout: '/erp',
@@ -41,8 +44,8 @@ const routes = [
 	{
 		name: '사업계획',
 		layout: '/erp',
-		icon: <MdOutlineBusiness className="h-6 w-6" />,
 		path: 'business',
+		icon: <MdOutlineBusiness className="h-6 w-6" />,
 		child: [
 			{
 				name: '일정표',
@@ -58,16 +61,16 @@ const routes = [
 			},
 		],
 	},
-	// {
-	// 	name: '물자현황',
-	// 	layout: '/erp',
-	// 	path: 'equipment',
-	// 	icon: <MdOutlineLaptopChromebook className="h-6 w-6" />,
-	// },
+	{
+		name: '물자현황',
+		layout: '/erp',
+		path: 'equipment',
+		icon: <MdOutlineLaptopChromebook className="h-6 w-6" />,
+	},
 	{
 		name: '게시판',
 		layout: '/erp',
-		path: 'board',
+		path: 'notices',
 		icon: <MdOutlineDashboard className="h-6 w-6" />,
 		child: [
 			{
