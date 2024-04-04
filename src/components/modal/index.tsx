@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 import {
 	AlertDialog,
 	AlertDialogBody,
@@ -8,6 +8,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogOverlay,
 	Button,
+	Input,
 } from '@chakra-ui/react';
 
 type normalProps = {
@@ -16,9 +17,39 @@ type normalProps = {
 	change: () => void;
 	open: boolean;
 	contents: any;
+	type: number;
 };
 
-const NormalModal = ({ width, height, change, open, contents }: normalProps) => {
+const CaseBody = (contents: any, type: number) => {
+	switch (type) {
+		case 1:
+			return (
+				<div>
+					<p>이름 : {contents?.name}</p>
+					<p>직책 : {contents?.position}</p>
+					<p>직급 : {contents?.rank}</p>
+					<p>부서 : {contents?.team}</p>
+				</div>
+			);
+		case 2:
+			return (
+				<div>
+					이름 : <Input className="w-3/6" />
+					<br />
+					직책 : <Input />
+					<br />
+					직급 : <Input />
+					<br />
+					부서 : <Input />
+					<br />
+				</div>
+			);
+		default:
+			return <div>default</div>;
+	}
+};
+
+const NormalModal = ({ width, height, change, open, contents, type }: normalProps) => {
 	const cancelRef = useRef<any>();
 
 	return (
@@ -26,14 +57,11 @@ const NormalModal = ({ width, height, change, open, contents }: normalProps) => 
 			<AlertDialogOverlay />
 
 			<AlertDialogContent minW={width} minH={height}>
-				<AlertDialogHeader>상세보기</AlertDialogHeader>
+				<AlertDialogHeader>{type === 1 ? '상세보기' : '글쓰기'}</AlertDialogHeader>
 				<AlertDialogCloseButton />
-				<AlertDialogBody>
-					<p>이름 : {contents?.name}</p>
-					<p>직책 : {contents?.position}</p>
-					<p>직급 : {contents?.rank}</p>
-					<p>부서 : {contents?.team}</p>
-				</AlertDialogBody>
+
+				<AlertDialogBody>{CaseBody(contents, type)}</AlertDialogBody>
+
 				<AlertDialogFooter>
 					<Button ref={cancelRef} onClick={change}>
 						No

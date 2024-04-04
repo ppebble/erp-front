@@ -13,6 +13,8 @@ import Summary from './pages/topic/summary';
 import Workforce from './pages/topic/workforce';
 import CompanyCalendar from './pages/topic/calendar';
 
+import Test from './pages/topic/test';
+
 import NotFound from './pages/error/notFound';
 import Topic from './pages/topic';
 import Equipment from './pages/topic/equipment';
@@ -38,6 +40,7 @@ const App = () => {
 				<Route path="seminar" element={<Profile />} />
 				<Route path="board" element={<Summary />} />
 				<Route path="suggestions" element={<Equipment />} />
+				<Route path="test" element={<Test />} />
 			</Route>
 			<Route path="/" element={<Navigate to="/auth/login" replace />} />
 			<Route path="*" element={<NotFound />} />

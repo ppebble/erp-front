@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
+import { Button } from '@chakra-ui/react';
 import CardMenu from '../../../../components/card/CardMenu';
 import Card from '../../../../components/card';
 import NormalModal from '../../../../components/modal';
@@ -91,13 +92,20 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 	const [open, setOpen] = useState(false);
 	const [contents, setContents] = useState<any>();
 	const [size, setSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
+	const [type, setType] = useState(1);
 
 	const changeOpen = () => {
 		setOpen(!open);
 	};
 
 	const details = (con: any) => {
+		setType(1);
 		setContents(con);
+		setOpen(!open);
+	};
+
+	const newWrite = () => {
+		setType(2);
 		setOpen(!open);
 	};
 
@@ -116,7 +124,7 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 				<CardMenu />
 			</header>
 
-			<div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
+			<div className="mt-8 overflow-x-scroll xl:overflow-x-hidden" style={{ height: '500px' }}>
 				<table className="w-full">
 					<thead>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -162,43 +170,48 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 							})}
 					</tbody>
 				</table>
-				<div className="w-full  flex justify-center sm:justify-end flex-col sm:flex-row gap-5 mt-1.5 px-1 items-center">
-					<div className="flex">
-						<ul className="flex justify-center items-center gap-x-[10px] z-30" role="navigation" aria-label="Pagination">
+			</div>
+
+			<div>
+				<Button onClick={() => newWrite()}>글쓰기</Button>
+			</div>
+
+			<div className="w-full  flex justify-center sm:justify-end flex-col sm:flex-row gap-5 mt-1.5 px-1 items-center">
+				<div className="flex">
+					<ul className="flex justify-center items-center gap-x-[10px] z-30" role="navigation" aria-label="Pagination">
+						<li
+							className={` prev-btn flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] disabled] ${
+								currentPage === 0 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
+							}`}
+							onClick={previousPage}
+						>
+							<MdChevronLeft />
+						</li>
+						{customPagination?.map((_data, index) => (
 							<li
-								className={` prev-btn flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] disabled] ${
-									currentPage === 0 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
+								className={`flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
+									currentPage === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
 								}`}
-								onClick={previousPage}
+								onClick={() => changePage(index)}
+								// eslint-disable-next-line react/no-array-index-key
+								key={index}
 							>
-								<MdChevronLeft />
+								{index + 1}
 							</li>
-							{customPagination?.map((_data, index) => (
-								<li
-									className={`flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
-										currentPage === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
-									}`}
-									onClick={() => changePage(index)}
-									// eslint-disable-next-line react/no-array-index-key
-									key={index}
-								>
-									{index + 1}
-								</li>
-							))}
-							<li
-								className={`flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] ${
-									currentPage === totalPage - 1 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
-								}`}
-								onClick={nextPage}
-							>
-								<MdChevronRight />
-							</li>
-						</ul>
-					</div>
+						))}
+						<li
+							className={`flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] ${
+								currentPage === totalPage - 1 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
+							}`}
+							onClick={nextPage}
+						>
+							<MdChevronRight />
+						</li>
+					</ul>
 				</div>
 			</div>
 
-			<NormalModal width={size[0]} height={size[1]} change={changeOpen} open={open} contents={contents} />
+			<NormalModal width={size[0]} height={size[1]} change={changeOpen} open={open} contents={contents} type={type} />
 		</Card>
 	);
 };
