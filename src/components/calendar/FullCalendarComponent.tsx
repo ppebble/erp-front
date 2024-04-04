@@ -9,7 +9,7 @@ import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
 import { CalendarParam } from '../../pages/topic/calendar';
-import { useCalendarParam } from '../../store/useCalendar';
+import { useCalendarAction, useCalendarDialogOpen, useCalendarParam } from '../../store/useCalendar';
 
 type PropsType = {
 	param: CalendarParam;
@@ -29,6 +29,8 @@ const FullCalendarComponent = () => {
 	const { isSideBar } = useSideBar();
 	const calendarRef = useRef<FullCalendar>(null);
 	const calendarParam = useCalendarParam();
+	const isDialogOpen = useCalendarDialogOpen();
+	const calendarAction = useCalendarAction();
 	// const [data, setData] = useState<CalendarParam>(calendarParam);
 	useEffect(() => {}, [calendarParam]);
 	useEffect(() => {
@@ -57,6 +59,7 @@ const FullCalendarComponent = () => {
 					start: selectInfo.startStr,
 					end: selectInfo.endStr,
 					allDay: selectInfo.allDay,
+					// allDay: false,
 					color: calendarParam.task.color,
 					display: calendarParam.display,
 					textColor: '#fff',
@@ -65,11 +68,18 @@ const FullCalendarComponent = () => {
 		},
 		[calendarParam],
 	);
-	const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-		if (window.confirm(`${clickInfo.event.title}  이벤트를 삭제하시겠습니까?`)) {
-			clickInfo.event.remove();
-		}
-	}, []);
+	const handleEventClick = useCallback(
+		(clickInfo: EventClickArg) => {
+			// if (window.confirm(`${clickInfo.event.title}  이벤트를 삭제하시겠습니까?`)) {
+			// 	clickInfo.event.remove();
+			// }
+			if (!isDialogOpen) {
+				calendarAction.setCalendarEventParam(clickInfo.event);
+				calendarAction.setCalendarDialogFlag(true);
+			}
+		},
+		[isDialogOpen],
+	);
 	const renderEventContent = (eventContent: EventContentArg) => (
 		<>
 			<b>{eventContent.timeText}</b>
@@ -96,7 +106,7 @@ const FullCalendarComponent = () => {
 					height="85vh"
 					initialView="dayGridMonth"
 					eventContent={renderEventContent}
-					selectable
+					// selectable
 					editable
 					eventDisplay="block"
 					selectMirror
