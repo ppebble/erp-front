@@ -10,7 +10,10 @@ import Dashboard from './pages/topic/dashboard';
 import NFTMarketplace from './pages/topic/marketplace';
 import Profile from './pages/topic/profile';
 import Summary from './pages/topic/summary';
+import Workforce from './pages/topic/workforce';
 import CompanyCalendar from './pages/topic/calendar';
+
+import Test from './pages/topic/test';
 
 import NotFound from './pages/error/notFound';
 import Topic from './pages/topic';
@@ -25,9 +28,7 @@ const App = () => {
 			<Route path="/erp" element={<Topic />}>
 				<Route path="dashboard" element={<Dashboard />} />
 				<Route path="summary" element={<Summary />} />
-				<Route path="workforce" element={<Profile />} />
-				{/* 추후 인력사항 추가 시 아래 주석 해제 */}
-				{/* <Route path="workforce" element={<Workforce />} /> */}
+				<Route path="workforce" element={<Workforce />} />
 				<Route path="calendar" element={<CompanyCalendar />} />
 				<Route path="project" element={<Profile />} />
 				{/* 추후 인력사항 추가 시 아래 주석 해제 */}
@@ -35,11 +36,11 @@ const App = () => {
 				<Route path="equipment" element={<Equipment />} />
 				<Route path="nft" element={<NFTMarketplace />} />
 				<Route path="profile" element={<Profile />} />
-
 				<Route path="news" element={<NFTMarketplace />} />
 				<Route path="seminar" element={<Profile />} />
 				<Route path="board" element={<Summary />} />
 				<Route path="suggestions" element={<Equipment />} />
+				<Route path="test" element={<Test />} />
 			</Route>
 			<Route path="/" element={<Navigate to="/auth/login" replace />} />
 			<Route path="*" element={<NotFound />} />
