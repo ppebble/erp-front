@@ -29,17 +29,20 @@ abbr[title] {
 	border-radius: 10px;
 	padding: 5px;
 	background-color: #787f8f;
-	border-color: #b0bbd5;
+	border-color: #787f8f;
 }
 .fc-daygrid-event {
 	border-radius: 10px;
 	padding: 5px;
 	background-color: #787f8f;
-	border-color: #b0bbd5;
+	border-color: #787f8f;
 }
 .fc__navigation__label {
 	font-weight: 700 !important;
 	font-size: 18px;
+}
+.fc-event-title .fc-sticky {
+	white-space: normal;
 }
 .fc__navigation__label:hover,
 .fc__navigation__label:focus {
@@ -119,7 +122,7 @@ body.dark .fc-day {
 	color: white;
 }
 body.dark .fc-day-sun a {
-	color: rgb(233, 186, 186);
+	color: #e9baba;
 }
 body.dark .fc-day-sat a {
 	color: rgb(181, 181, 221);
