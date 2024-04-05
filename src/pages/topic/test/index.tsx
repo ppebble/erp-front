@@ -1,9 +1,8 @@
-import { Card, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import OrgChart from 'react-orgchart';
 import 'react-orgchart/index.css';
 
 const Test = () => {
-	const initechOrg = {
+	const initechOrg1 = {
 		name: '대표이사',
 		children: [
 			{
@@ -15,6 +14,12 @@ const Test = () => {
 			{
 				name: '마케팅영업본부',
 			},
+		],
+	};
+
+	const initechOrg2 = {
+		name: ' ',
+		children: [
 			{
 				name: ' ',
 				children: [
@@ -25,7 +30,7 @@ const Test = () => {
 								name: '전략사업본부',
 								children: [
 									{
-										name: 'AI & 빅데이터팀',
+										name: 'AI &\n빅데이터팀',
 										children: [{ name: 'DCIM팀' }],
 									},
 								],
@@ -62,13 +67,13 @@ const Test = () => {
 								name: 'SC사업본부',
 								children: [
 									{
-										name: '국가 R&D 연구과제팀',
+										name: '국가 R&D\n연구과제팀',
 										children: [
 											{
-												name: '스마트시티 서비스 사업팀',
+												name: '스마트시티\n서비스 사업팀',
 												children: [
 													{
-														name: '스마트 시티 서비스 기획팀',
+														name: '스마트시티\n서비스 기획팀',
 													},
 												],
 											},
@@ -92,21 +97,28 @@ const Test = () => {
 		],
 	};
 
-	const MyNodeComponent = ({ node }) => {
-		let test;
+	const MyNodeComponent = ({ node }: any) => {
+		let test: any = '';
 		if (node.name !== ' ') {
 			test = (
-				<div className="initechNode" onClick={() => alert('Hi my real name is: ' + node.actor)}>
-					{node.name}
+				<div className="initechNode" onClick={() => console.log(node.name)}>
+					<pre>{node.name}</pre>
 				</div>
 			);
-		} else {
-			test = '';
 		}
 		return test;
 	};
 
-	return <OrgChart tree={initechOrg} NodeComponent={MyNodeComponent} />;
+	return (
+		<div>
+			<div style={{ marginRight: '200px', minWidth: '500px' }}>
+				<OrgChart tree={initechOrg1} NodeComponent={MyNodeComponent} />
+			</div>
+			<div style={{ marginTop: '-72px', minWidth: '500px' }}>
+				<OrgChart tree={initechOrg2} NodeComponent={MyNodeComponent} />
+			</div>
+		</div>
+	);
 };
 
 export default Test;
