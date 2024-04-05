@@ -90,15 +90,15 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 	});
 
 	const [open, setOpen] = useState(false);
-	const [contents, setContents] = useState<any>();
-	const [size, setSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
-	const [type, setType] = useState(1);
+	const [contents, setContents] = useState<RowObj>();
+	const [type, setType] = useState<number>(1);
+	const [detailsSize, setDetailsSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
 
 	const changeOpen = () => {
 		setOpen(!open);
 	};
 
-	const details = (con: any) => {
+	const details = (con: RowObj) => {
 		setType(1);
 		setContents(con);
 		setOpen(!open);
@@ -111,108 +111,110 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 
 	useEffect(() => {
 		const changeSize = () => {
-			window.innerWidth < 1441 ? setSize(['80%', '80%']) : setSize(['50%', '75%']);
+			window.innerWidth < 1441 ? setDetailsSize(['80%', '80%']) : setDetailsSize(['50%', '75%']);
 		};
 		window.addEventListener('resize', changeSize);
 		return () => window.removeEventListener('resize', changeSize);
 	}, []);
 
 	return (
-		<Card extra="w-full pb-10 p-4 h-full">
-			<header className="relative flex items-center justify-between">
-				<div className="text-xl font-bold text-navy-700 dark:text-white">인력사항</div>
-				<CardMenu />
-			</header>
+		<div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-1">
+			<Card extra="w-full pb-10 p-4 h-full">
+				<header className="relative flex items-center justify-between">
+					<div className="text-xl font-bold text-navy-700 dark:text-white">인력사항</div>
+					<CardMenu />
+				</header>
 
-			<div className="mt-8 overflow-x-scroll xl:overflow-x-hidden" style={{ height: '500px' }}>
-				<table className="w-full">
-					<thead>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<tr key={headerGroup.id} className="!border-px !border-gray-400">
-								{headerGroup.headers.map((header) => {
+				<div className="mt-8 overflow-x-scroll xl:overflow-x-hidden" style={{ height: '500px' }}>
+					<table className="w-full">
+						<thead>
+							{table.getHeaderGroups().map((headerGroup) => (
+								<tr key={headerGroup.id} className="!border-px !border-gray-400">
+									{headerGroup.headers.map((header) => {
+										return (
+											<th
+												key={header.id}
+												colSpan={header.colSpan}
+												onClick={header.column.getToggleSortingHandler()}
+												className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
+											>
+												<div className="items-center justify-between text-xs text-gray-200">
+													<p className="text-sm font-bold text-gray-600 dark:text-white">{header.id}</p>
+													{/* {flexRender(header.column.columnDef.header, header.getContext())} */}
+													{{
+														asc: '↑',
+														desc: '↓',
+													}[header.column.getIsSorted() as string] ?? null}
+												</div>
+											</th>
+										);
+									})}
+								</tr>
+							))}
+						</thead>
+						<tbody>
+							{table
+								.getRowModel()
+								.rows.slice(startIndex, endIndex)
+								.map((row) => {
 									return (
-										<th
-											key={header.id}
-											colSpan={header.colSpan}
-											onClick={header.column.getToggleSortingHandler()}
-											className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
-										>
-											<div className="items-center justify-between text-xs text-gray-200">
-												<p className="text-sm font-bold text-gray-600 dark:text-white">{header.id}</p>
-												{/* {flexRender(header.column.columnDef.header, header.getContext())} */}
-												{{
-													asc: '↑',
-													desc: '↓',
-												}[header.column.getIsSorted() as string] ?? null}
-											</div>
-										</th>
+										<tr key={row.id}>
+											{row.getVisibleCells().map((cell) => {
+												return (
+													<td key={cell.id} className="min-w-[150px] border-white/0 py-3  pr-4" onClick={() => details(row.original)}>
+														{flexRender(cell.column.columnDef.cell, cell.getContext())}
+													</td>
+												);
+											})}
+										</tr>
 									);
 								})}
-							</tr>
-						))}
-					</thead>
-					<tbody>
-						{table
-							.getRowModel()
-							.rows.slice(startIndex, endIndex)
-							.map((row) => {
-								return (
-									<tr key={row.id}>
-										{row.getVisibleCells().map((cell) => {
-											return (
-												<td key={cell.id} className="min-w-[150px] border-white/0 py-3  pr-4" onClick={() => details(row.original)}>
-													{flexRender(cell.column.columnDef.cell, cell.getContext())}
-												</td>
-											);
-										})}
-									</tr>
-								);
-							})}
-					</tbody>
-				</table>
-			</div>
-
-			<div>
-				<Button onClick={() => newWrite()}>글쓰기</Button>
-			</div>
-
-			<div className="w-full  flex justify-center sm:justify-end flex-col sm:flex-row gap-5 mt-1.5 px-1 items-center">
-				<div className="flex">
-					<ul className="flex justify-center items-center gap-x-[10px] z-30" role="navigation" aria-label="Pagination">
-						<li
-							className={` prev-btn flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] disabled] ${
-								currentPage === 0 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
-							}`}
-							onClick={previousPage}
-						>
-							<MdChevronLeft />
-						</li>
-						{customPagination?.map((_data, index) => (
-							<li
-								className={`flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
-									currentPage === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
-								}`}
-								onClick={() => changePage(index)}
-								// eslint-disable-next-line react/no-array-index-key
-								key={index}
-							>
-								{index + 1}
-							</li>
-						))}
-						<li
-							className={`flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] ${
-								currentPage === totalPage - 1 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
-							}`}
-							onClick={nextPage}
-						>
-							<MdChevronRight />
-						</li>
-					</ul>
+						</tbody>
+					</table>
 				</div>
-			</div>
 
-			<NormalModal width={size[0]} height={size[1]} change={changeOpen} open={open} contents={contents} type={type} />
-		</Card>
+				<div>
+					<Button onClick={() => newWrite()}>글쓰기</Button>
+				</div>
+
+				<div className="w-full  flex justify-center sm:justify-end flex-col sm:flex-row gap-5 mt-1.5 px-1 items-center">
+					<div className="flex">
+						<ul className="flex justify-center items-center gap-x-[10px] z-30" role="navigation" aria-label="Pagination">
+							<li
+								className={` prev-btn flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] disabled] ${
+									currentPage === 0 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
+								}`}
+								onClick={previousPage}
+							>
+								<MdChevronLeft />
+							</li>
+							{customPagination?.map((_data, index) => (
+								<li
+									className={`flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
+										currentPage === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
+									}`}
+									onClick={() => changePage(index)}
+									// eslint-disable-next-line react/no-array-index-key
+									key={index}
+								>
+									{index + 1}
+								</li>
+							))}
+							<li
+								className={`flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] ${
+									currentPage === totalPage - 1 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
+								}`}
+								onClick={nextPage}
+							>
+								<MdChevronRight />
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<NormalModal change={changeOpen} contents={contents} open={open} type={type} />
+			</Card>
+		</div>
 	);
 };
 
