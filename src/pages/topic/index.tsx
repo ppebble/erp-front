@@ -21,7 +21,7 @@ const Topic = (props: { [x: string]: any }) => {
 		<div className="flex h-full w-full">
 			<Sidebar open={isSideBar} onClose={() => setSideBar(false)} />
 			<div className="h-full w-full bg-lightPrimary dark:!bg-navy-900">
-				<main className={`mx-[12px] h-full flex-none transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`}>
+				<main className={` h-full flex-none transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`}>
 					<div className="h-full">
 						<Navbar onOpenSidenav={() => setSideBar(!isSideBar)} {...rest} />
 						<Outlet />

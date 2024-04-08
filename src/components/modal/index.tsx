@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useState } from 'react';
+import { useRef } from 'react';
 import {
 	AlertDialog,
 	AlertDialogBody,
@@ -9,68 +9,81 @@ import {
 	AlertDialogOverlay,
 	Button,
 	Input,
+	Textarea,
 } from '@chakra-ui/react';
 
-type normalProps = {
-	width: string;
-	height: string;
+type ModalProps = {
 	change: () => void;
-	open: boolean;
 	contents: any;
+	open: boolean;
 	type: number;
 };
 
-const CaseBody = (contents: any, type: number) => {
+const SetModal = ({ change, contents, open, type }: ModalProps) => {
+	const cancelRef = useRef<any>();
+	let dialog;
 	switch (type) {
 		case 1:
-			return (
-				<div>
-					<p>이름 : {contents?.name}</p>
-					<p>직책 : {contents?.position}</p>
-					<p>직급 : {contents?.rank}</p>
-					<p>부서 : {contents?.team}</p>
-				</div>
+			dialog = (
+				<AlertDialogContent minW="50%" minH="75%">
+					<AlertDialogHeader>상세보기</AlertDialogHeader>
+					<AlertDialogCloseButton />
+					<AlertDialogBody>
+						<div>
+							<p>이름 : {contents?.name}</p>
+							<p>직책 : {contents?.position}</p>
+							<p>직급 : {contents?.rank}</p>
+							<p>부서 : {contents?.team}</p>
+						</div>
+					</AlertDialogBody>
+				</AlertDialogContent>
 			);
+			break;
 		case 2:
-			return (
-				<div>
-					이름 : <Input className="w-3/6" />
-					<br />
-					직책 : <Input />
-					<br />
-					직급 : <Input />
-					<br />
-					부서 : <Input />
-					<br />
-				</div>
+			dialog = (
+				<AlertDialogContent minW="50%" minH="50%">
+					<AlertDialogHeader>글쓰기</AlertDialogHeader>
+					<AlertDialogCloseButton />
+
+					<AlertDialogBody>
+						<div>
+							<p>이름</p>
+							<Input />
+							<p>직책</p>
+							<Input />
+							<p>직급</p>
+							<Input />
+							<p>부서</p>
+							<Input />
+							<p>내용</p>
+							<Textarea />
+						</div>
+					</AlertDialogBody>
+
+					<AlertDialogFooter>
+						<Button ref={cancelRef} onClick={change}>
+							취소
+						</Button>
+						<Button colorScheme="blue" ml={3}>
+							확인
+						</Button>
+					</AlertDialogFooter>
+				</AlertDialogContent>
 			);
+			break;
 		default:
-			return <div>default</div>;
+			break;
 	}
+	return dialog;
 };
 
-const NormalModal = ({ width, height, change, open, contents, type }: normalProps) => {
+const NormalModal = ({ change, contents, open, type }: ModalProps) => {
 	const cancelRef = useRef<any>();
 
 	return (
 		<AlertDialog motionPreset="slideInBottom" leastDestructiveRef={cancelRef} onClose={change} isOpen={open} isCentered>
 			<AlertDialogOverlay />
-
-			<AlertDialogContent minW={width} minH={height}>
-				<AlertDialogHeader>{type === 1 ? '상세보기' : '글쓰기'}</AlertDialogHeader>
-				<AlertDialogCloseButton />
-
-				<AlertDialogBody>{CaseBody(contents, type)}</AlertDialogBody>
-
-				<AlertDialogFooter>
-					<Button ref={cancelRef} onClick={change}>
-						No
-					</Button>
-					<Button colorScheme="red" ml={3}>
-						Yes
-					</Button>
-				</AlertDialogFooter>
-			</AlertDialogContent>
+			<SetModal change={change} contents={contents} open={open} type={type} />
 		</AlertDialog>
 	);
 };

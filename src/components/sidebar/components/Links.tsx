@@ -2,7 +2,6 @@
 import { Fragment, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DashIcon from '../../../components/icons/DashIcon';
-import { MdHome, MdOutlineLaptopChromebook } from 'react-icons/md';
 import { useSideBar } from '../../../store/useSideBar';
 
 export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
@@ -76,7 +75,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 								>
 									<li className="my-[3px] flex cursor-pointer items-center px-8">
 										<span className={`${activeRoute(child.path) ? 'font-bold text-brand-500 dark:text-white' : 'font-medium text-gray-600'}`}>
-											{child.icon ? child.icon : <DashIcon />}{' '}
+											{child.icon ? child.icon : <DashIcon />}
 										</span>
 										<p
 											className={`leading-1 ml-4 flex ${
