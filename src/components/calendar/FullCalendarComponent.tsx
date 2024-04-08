@@ -9,7 +9,7 @@ import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
 
-import { useCalendarAction, useCalendarDialogOpen, useCalendarParam } from '../../store/useCalendar';
+import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType } from '../../store/useCalendar';
 
 type PropsType = {
 	param: CalendarParam;
@@ -20,16 +20,19 @@ const FullCalendarComponent = () => {
 	const { isSideBar } = useSideBar();
 	const calendarRef = useRef<FullCalendar>(null);
 	const calendarParam = useCalendarParam();
+	const calendarType = useCalendarType();
 	const isDialogOpen = useCalendarDialogOpen();
 	const calendarAction = useCalendarAction();
+	const calendar = calendarRef.current?.getApi();
 	// const [data, setData] = useState<CalendarParam>(calendarParam);
 	useEffect(() => {}, [calendarParam]);
 	useEffect(() => {
+		calendarAction.setCalendarType(calendar?.view.type ? calendar?.view.type : 'dayGridMonth');
+	}, [calendar?.view.type]);
+	useEffect(() => {
 		if (calendarRef.current) {
-			const calendar = calendarRef.current.getApi();
-
 			setTimeout(() => {
-				calendar.updateSize();
+				calendar?.updateSize();
 			}, 250);
 		}
 	}, [isSideBar]);
@@ -65,6 +68,7 @@ const FullCalendarComponent = () => {
 			// }
 			if (!isDialogOpen) {
 				calendarAction.setCalendarEventParam(clickInfo.event);
+				calendarAction.setAddFlag(false);
 				calendarAction.setCalendarDialogFlag(true);
 			}
 		},
@@ -72,8 +76,8 @@ const FullCalendarComponent = () => {
 	);
 	const renderEventContent = (eventContent: EventContentArg) => (
 		<>
-			<b>{eventContent.timeText}</b>
-			<i>{eventContent.event.title}</i>
+			{/* <b>{eventContent.timeText}</b> */}
+			<p>{eventContent.event.title}</p>
 		</>
 	);
 	return (

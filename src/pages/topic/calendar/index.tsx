@@ -52,7 +52,17 @@ const CompanyCalendar = () => {
 											// 일정 추가 팝업 모달
 											if (!isDialogOpen) {
 												// calendarAction.setCalendarEventParam(clickInfo.event);
-												calendarAction.setClearEventParam();
+												calendarAction.setAddEventParam({
+													title: '',
+													start: '',
+													end: '',
+													allDay: true,
+													extendedProps: {
+														register: '',
+														eventDesc: '',
+													},
+												});
+												calendarAction.setAddFlag(true);
 												calendarAction.setCalendarDialogFlag(true);
 											}
 										}}

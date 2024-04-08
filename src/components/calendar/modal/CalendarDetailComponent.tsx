@@ -1,18 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
-import { useCalendarEvnetParam } from '../../../store/useCalendar';
+import { useCalendarDialogOpen, useCalendarEvnetParam } from '../../../store/useCalendar';
 
-export const CalendarDetailComponent = () => {
+export const CalendarDetailComponent = ({ isAllday }: any) => {
 	const selectedEvent = useCalendarEvnetParam();
+	const isDialogOpen = useCalendarDialogOpen();
 	const refEventName = useRef<HTMLInputElement>(null);
 	const refEventStartDate = useRef<HTMLInputElement>(null);
 	const refEventEndDate = useRef<HTMLInputElement>(null);
 	const refRegistUser = useRef<HTMLInputElement>(null);
 	const refEventDetail = useRef<HTMLInputElement>(null);
+	const [isDate, setIsDate] = useState<boolean | undefined>(false);
+	const [defStart, setDefStart] = useState<string | undefined>('');
+	const [defEnd, setDefEnd] = useState<string | undefined>('');
 
+	useEffect(() => {
+		// setIsDate(selectedEvent?.allDay);
+		setDefStart(selectedEvent?.startStr?.slice(0, 16));
+		setDefEnd(selectedEvent?.endStr?.slice(0, 16));
+	}, []);
+	useEffect(() => {
+		setIsDate(isAllday);
+	}, [isAllday, isDialogOpen]);
 	useEffect(() => {
 		console.log(selectedEvent?.startStr?.slice(0, 16));
 		console.log(selectedEvent?.endStr?.slice(0, 16));
 	}, [selectedEvent?.endStr]);
+	useEffect(() => {
+		setIsDate(selectedEvent?.allDay);
+	}, [selectedEvent?.allDay]);
 
 	return (
 		<div className="grid h-full grid-cols-1">
@@ -37,11 +52,13 @@ export const CalendarDetailComponent = () => {
 				</div>
 				<div className="flex justify-start">
 					<input
-						type={`${!selectedEvent?.allDay ? 'datetime-local' : 'date'}`}
+						type={`${!isDate ? 'datetime-local' : 'date'}`}
+						// type={`${!selectedEvent?.allDay ? 'datetime-local' : 'date'}`}
 						ref={refEventStartDate}
 						id="eventName"
 						disabled={false}
-						defaultValue={selectedEvent?.startStr?.slice(0, 19)}
+						// defaultValue={selectedEvent?.startStr?.slice(0, 19)}
+						defaultValue={defStart}
 						className="mt-2 mr-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 					/>
 					<div className="justify-center items-center flex">
@@ -49,14 +66,16 @@ export const CalendarDetailComponent = () => {
 					</div>
 					<input
 						// type="datetime-local"
-						type={`${!selectedEvent?.allDay ? 'datetime-local' : 'date'}`}
+						type={`${!isDate ? 'datetime-local' : 'date'}`}
+						// type={`${!selectedEvent?.allDay ? 'datetime-local' : 'date'}`}
 						ref={refEventEndDate}
 						id="eventName"
 						disabled={false}
 						onChange={() => {
 							console.log(refEventEndDate.current?.value);
 						}}
-						defaultValue={selectedEvent?.endStr?.slice(0, 19)}
+						// defaultValue={selectedEvent?.endStr?.slice(0, 19)}
+						defaultValue={defEnd}
 						className="mt-2 ml-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 					/>
 				</div>
@@ -70,7 +89,7 @@ export const CalendarDetailComponent = () => {
 						type="text"
 						id="eventName"
 						ref={refRegistUser}
-						defaultValue={selectedEvent?.extendedProps.register}
+						defaultValue={selectedEvent?.extendedProps?.register}
 						disabled={false}
 						className="mt-2 read-only flex h-12 w-full items-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 					/>
@@ -85,7 +104,7 @@ export const CalendarDetailComponent = () => {
 						type="text"
 						ref={refEventDetail}
 						id="eventName"
-						defaultValue={selectedEvent?.extendedProps.eventDesc}
+						defaultValue={selectedEvent?.extendedProps?.eventDesc}
 						disabled={false}
 						className="mt-2 read-only flex h-12 w-full items-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 					/>

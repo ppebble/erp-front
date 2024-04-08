@@ -34,7 +34,7 @@ export const taskList = [
 	{ id: 'personal', name: '개인일정', color: taskColor.personal },
 	{ id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
 ];
-const eventColor = taskList.find((e) => e.id === 'sc')?.color;
+const eventColor = taskList.find((e) => e.id === 'dev')?.color;
 
 export const INITIAL_EVENTS: EventInput[] = [
 	{
@@ -52,6 +52,6 @@ export const INITIAL_EVENTS: EventInput[] = [
 	{
 		title: 'Timed event',
 		start: `${todayStr}T12:00:00`,
-		end: '2024-04-09T12:00:00',
+		end: '2024-04-10T15:00:00',
 	},
 ];
