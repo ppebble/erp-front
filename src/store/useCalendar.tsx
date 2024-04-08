@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { EventApi, EventInput } from '@fullcalendar/react';
-import { CalendarParam } from '../pages/topic/calendar';
+import { CalendarParam } from '../components/calendar/utils/event-utils';
 
 interface CalendarStoreProps {
 	calendarParam: CalendarParam;

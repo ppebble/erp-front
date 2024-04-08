@@ -2,31 +2,13 @@ import { MdAddCircleOutline, MdApps, MdSearch } from 'react-icons/md';
 import { BsSquareFill } from 'react-icons/bs';
 import { useEffect, useState } from 'react';
 import { EventApi } from '@fullcalendar/react';
-import FullCalendarComponent, { taskColor } from '../../../components/calendar/FullCalendarComponent';
+import FullCalendarComponent from '../../../components/calendar/FullCalendarComponent';
 import Dropdown from '../../../components/dropdown';
 import { useCalendarAction, useCalendarDialogOpen } from '../../../store/useCalendar';
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
-
-export type CalendarTaskType = {
-	id: string;
-	name: string;
-	color: string;
-};
-export type CalendarParam = {
-	task: CalendarTaskType;
-	display: string;
-};
+import { CalendarTaskType, taskColor, taskList } from '../../../components/calendar/utils/event-utils';
 
 const CompanyCalendar = () => {
-	const taskList = [
-		{ id: 'sc', name: 'SC사업부', color: taskColor.sc },
-		{ id: 'sf', name: 'SF&신사업부', color: taskColor.sf },
-		{ id: 'manage', name: '경영팀', color: taskColor.manage },
-		{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
-		{ id: 'strategicBusinessDivision', name: '전략사업본부', color: taskColor.strategicBusinessDivision },
-		{ id: 'personal', name: '개인일정', color: taskColor.personal },
-		{ id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
-	];
 	const [display, setDisplay] = useState<string>('block');
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();

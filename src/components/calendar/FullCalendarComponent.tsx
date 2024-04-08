@@ -4,26 +4,17 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg } from '@fullcalendar/react';
-import { INITIAL_EVENTS } from './utils/event-utils';
+import { CalendarParam, INITIAL_EVENTS } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
-import { CalendarParam } from '../../pages/topic/calendar';
+
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam } from '../../store/useCalendar';
 
 type PropsType = {
 	param: CalendarParam;
 };
 
-export const taskColor = {
-	sc: '#1cb9e0',
-	sf: '#00e413',
-	manage: '#f52b4d',
-	dev: '#9842fa',
-	personal: '#787f8f',
-	strategicBusinessDivision: '#e9baba',
-	myPersonal: '#aaafbb',
-};
 const FullCalendarComponent = () => {
 	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
 	const { isSideBar } = useSideBar();
