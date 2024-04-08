@@ -41,7 +41,9 @@ const Topic = (props: { [x: string]: any }) => {
 			<div className={`h-full transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`} style={isScroll ? {} : { minHeight: '100vh' }}>
 				<Navbar onOpenSidenav={() => setSideBar(!isSideBar)} {...rest} />
 				<Outlet />
-				<Footer isScorll={isScroll} />
+			</div>
+			<div className={`h-full transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`}>
+				<Footer isSideBar={isSideBar} isScorll={isScroll} />
 			</div>
 		</div>
 	);

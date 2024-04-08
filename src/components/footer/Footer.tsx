@@ -1,15 +1,19 @@
 import { useEffect } from 'react';
 
 type FooterProps = {
+	isSideBar: boolean;
 	isScorll: boolean;
 };
 
-const Footer = ({ isScorll }: FooterProps) => {
+const Footer = ({ isSideBar, isScorll }: FooterProps) => {
+	const marginRight = () => {
+		return isSideBar ? '376px' : '63px';
+	};
 	return (
 		<div
 			id="footer"
 			className="flex w-full flex-col items-center justify-between px-1 pb-8 pt-3 lg:px-8 xl:flex-row"
-			style={isScorll ? {} : { position: 'fixed', bottom: '0px' }}
+			style={isScorll ? {} : { position: 'fixed', bottom: '0px', width: '100%', paddingRight: marginRight() }}
 		>
 			<h5 className="mb-4 text-center text-sm font-medium text-gray-600 sm:!mb-0 md:text-lg">
 				<p className="mb-4 text-center text-sm text-gray-600 sm:!mb-0 md:text-base">
