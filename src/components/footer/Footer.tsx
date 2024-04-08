@@ -1,6 +1,16 @@
-const Footer = () => {
+import { useEffect } from 'react';
+
+type FooterProps = {
+	isScorll: boolean;
+};
+
+const Footer = ({ isScorll }: FooterProps) => {
 	return (
-		<div className="flex w-full flex-col items-center justify-between px-1 pb-8 pt-3 lg:px-8 xl:flex-row">
+		<div
+			id="footer"
+			className="flex w-full flex-col items-center justify-between px-1 pb-8 pt-3 lg:px-8 xl:flex-row"
+			style={isScorll ? {} : { position: 'fixed', bottom: '0px' }}
+		>
 			<h5 className="mb-4 text-center text-sm font-medium text-gray-600 sm:!mb-0 md:text-lg">
 				<p className="mb-4 text-center text-sm text-gray-600 sm:!mb-0 md:text-base">
 					©{new Date().getFullYear()} Nexmore Systems. All Rights Reserved.

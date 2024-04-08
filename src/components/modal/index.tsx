@@ -80,8 +80,9 @@ const SetModal = ({ change, contents, open, type }: ModalProps) => {
 const NormalModal = ({ change, contents, open, type }: ModalProps) => {
 	const cancelRef = useRef<any>();
 
+	// closeOnOverlayClick 영역밖 클릭시 Dialog 닫히는지
 	return (
-		<AlertDialog motionPreset="slideInBottom" leastDestructiveRef={cancelRef} onClose={change} isOpen={open} isCentered>
+		<AlertDialog motionPreset="slideInBottom" closeOnOverlayClick={false} leastDestructiveRef={cancelRef} onClose={change} isOpen={open} isCentered>
 			<AlertDialogOverlay />
 			<SetModal change={change} contents={contents} open={open} type={type} />
 		</AlertDialog>
