@@ -1,9 +1,10 @@
 import { MdAddCircleOutline, MdApps, MdSearch } from 'react-icons/md';
 import { BsSquareFill } from 'react-icons/bs';
 import { useEffect, useState } from 'react';
+import { EventApi } from '@fullcalendar/react';
 import FullCalendarComponent, { taskColor } from '../../../components/calendar/FullCalendarComponent';
 import Dropdown from '../../../components/dropdown';
-import { useCalendarAction } from '../../../store/useCalendar';
+import { useCalendarAction, useCalendarDialogOpen } from '../../../store/useCalendar';
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
 
 export type CalendarTaskType = {
@@ -29,6 +30,7 @@ const CompanyCalendar = () => {
 	const [display, setDisplay] = useState<string>('block');
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();
+	const isDialogOpen = useCalendarDialogOpen();
 
 	useEffect(() => {
 		// useCalendar.calendarParam 기본값
@@ -66,6 +68,11 @@ const CompanyCalendar = () => {
 										className="h-10 w-10"
 										onClick={() => {
 											// 일정 추가 팝업 모달
+											if (!isDialogOpen) {
+												// calendarAction.setCalendarEventParam(clickInfo.event);
+												calendarAction.setClearEventParam();
+												calendarAction.setCalendarDialogFlag(true);
+											}
 										}}
 									/>
 								</p>

@@ -59,7 +59,6 @@ const FullCalendarComponent = () => {
 					start: selectInfo.startStr,
 					end: selectInfo.endStr,
 					allDay: selectInfo.allDay,
-					// allDay: false,
 					color: calendarParam.task.color,
 					display: calendarParam.display,
 					textColor: '#fff',

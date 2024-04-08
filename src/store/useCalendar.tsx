@@ -6,7 +6,7 @@ import { CalendarParam } from '../pages/topic/calendar';
 interface CalendarStoreProps {
 	calendarParam: CalendarParam;
 	calendarEvents: EventInput[];
-	calendarEvent: EventApi;
+	calendarEvent: EventApi | null;
 	isDialogOpen: boolean;
 	action: ActionItem;
 }
@@ -14,6 +14,7 @@ interface ActionItem {
 	setCalendarParam: (param: CalendarParam) => void;
 	setCalendarDialogFlag: (param: boolean) => void;
 	setCalendarEventParam: (param: EventApi) => void;
+	setClearEventParam: () => void;
 }
 
 const useCalendar = create<CalendarStoreProps>()(
@@ -21,7 +22,7 @@ const useCalendar = create<CalendarStoreProps>()(
 		// EventInput = 서버에 넣을 이벤트 모델 로 예상됨
 		calendarParam: {} as CalendarParam,
 		calendarEvents: [] as EventInput[],
-		calendarEvent: {} as EventApi,
+		calendarEvent: {} as EventApi | null,
 		isDialogOpen: false,
 
 		// set param
@@ -50,6 +51,11 @@ const useCalendar = create<CalendarStoreProps>()(
 					false,
 					'SET_CALENDAR_PARAM',
 				),
+			setClearEventParam: () => {
+				set({
+					calendarEvent: null,
+				});
+			},
 		},
 	})),
 );

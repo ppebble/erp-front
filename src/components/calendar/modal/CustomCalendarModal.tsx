@@ -16,8 +16,7 @@ import FullCalendarComponent from '../FullCalendarComponent';
 import MiniCalendar from '../MiniCalendar';
 import CardMenu from '../../card/CardMenu';
 import { useCalendarAction, useCalendarDialogOpen, useCalendarEvnetParam } from '../../../store/useCalendar';
-import { CalendarDetailViewComponent } from './CalendarDetailViewComponent';
-import { CalendarDetailInputComponent } from './CalendarDetailInputComponent';
+import { CalendarDetailComponent } from './CalendarDetailComponent';
 
 export const CustomCalendarModal = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -54,18 +53,28 @@ export const CustomCalendarModal = () => {
 					}}
 				/>
 				<ModalBody>
-					{/* <CalendarDetailViewComponent /> */}
-					<CalendarDetailInputComponent />
+					<CalendarDetailComponent />
 				</ModalBody>
 				<div className="h-px w-full bg-gray-300 dark:bg-white/20 " />
 				<ModalFooter>
 					<Button
+						colorScheme="blue"
+						className="mr-3"
 						onClick={() => {
 							calendarAction.setCalendarDialogFlag(false);
 							onClose;
 						}}
 					>
-						Close
+						확인
+					</Button>
+					<Button
+						colorScheme="red"
+						onClick={() => {
+							calendarAction.setCalendarDialogFlag(false);
+							onClose;
+						}}
+					>
+						취소
 					</Button>
 				</ModalFooter>
 			</ModalContent>
