@@ -13,6 +13,16 @@
 	}
 }
 
+html,
+body,
+#root {
+	height: 100%;
+}
+
+#footer {
+	height: 100px;
+}
+
 input.defaultCheckbox::before {
 	content: url(../src/assets/svg/checked.svg);
 	color: white;
