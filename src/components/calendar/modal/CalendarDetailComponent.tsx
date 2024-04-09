@@ -27,6 +27,7 @@ export const CalendarDetailComponent = ({ isAllday, isConfirm }: any) => {
 			register: refRegistUser.current?.value,
 			eventDetail: refEventDetail.current?.value,
 		};
+		eventParam.allDay = isDate;
 		setCalendar.setAddEventParam(eventParam);
 		setCalendar.setAddFlag(false);
 	}, [addFlag]);

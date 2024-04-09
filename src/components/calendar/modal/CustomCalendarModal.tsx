@@ -24,21 +24,36 @@ export const CustomCalendarModal = () => {
 	const addFlag = useAddEventFlag();
 	const calendarAction = useCalendarAction();
 	const refAllDaySwitch = useRef<HTMLInputElement>(null);
-	const [isAllDay, setIsAllDay] = useState<boolean | undefined>(false);
 	const selectedEvent = useCalendarEvnetParam();
 	const isAdd = useAddEventFlag();
+	const [isAllDay, setIsAllDay] = useState<boolean | undefined>(selectedEvent?.allDay);
+
 	const onClickConfirm = () => {
 		calendarAction.setAddFlag(true);
 	};
+	useEffect(() => {
+		if (refAllDaySwitch.current?.checked === undefined && selectedEvent?.allDay) {
+			setIsAllDay(selectedEvent?.allDay);
+		}
+	}, []);
 
 	useEffect(() => {
 		if (isDialogOpen) {
+			if (refAllDaySwitch.current?.checked === undefined && selectedEvent?.allDay) {
+				setIsAllDay(selectedEvent?.allDay);
+				// refAllDaySwitch.current?.checked === true;
+			} else {
+				setIsAllDay(refAllDaySwitch.current?.checked);
+			}
 			onOpen();
 		} else {
 			onClose();
 		}
 	}, [isDialogOpen]);
 	useEffect(() => {
+		if (refAllDaySwitch.current?.checked === undefined && selectedEvent?.allDay) {
+			setIsAllDay(selectedEvent?.allDay);
+		}
 		setIsAllDay(refAllDaySwitch.current?.checked);
 	}, [isAllDay, isDialogOpen]);
 	// const sizes = ['xs', 'sm', 'md', 'lg', 'xl', 'full'];
@@ -67,7 +82,8 @@ export const CustomCalendarModal = () => {
 								id="switch5"
 								ref={refAllDaySwitch}
 								// value={isAllDay}
-								defaultChecked={isAdd ? isAllDay : selectedEvent?.allDay}
+								checked={selectedEvent?.allDay}
+								isChecked={!!selectedEvent?.allDay}
 								onChange={() => {
 									setIsAllDay(!isAllDay);
 								}}

@@ -116,8 +116,6 @@ const FullCalendarComponent = () => {
 					navLinks
 					businessHours
 					events={initEvents}
-					// initialEvents={initEvents}
-					// initialEvents={INITIAL_EVENTS}
 					locale="kr"
 					eventsSet={handleEvents}
 					select={handleDateSelect}
