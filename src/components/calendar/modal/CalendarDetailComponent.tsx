@@ -43,6 +43,8 @@ export const CalendarDetailComponent = ({ isAllday, isConfirm }: any) => {
 			setDefStart(selectedEvent?.startStr?.slice(0, 16));
 			setDefEnd(selectedEvent?.endStr?.slice(0, 16));
 		}
+		refEventStartDate.current?.setAttribute('value', defStart || '');
+		refEventEndDate.current?.setAttribute('value', defEnd || '');
 	}, [isAllday, isDialogOpen]);
 	useEffect(() => {
 		setIsDate(selectedEvent?.allDay);
@@ -78,6 +80,7 @@ export const CalendarDetailComponent = ({ isAllday, isConfirm }: any) => {
 						disabled={false}
 						// defaultValue={selectedEvent?.startStr?.slice(0, 19)}
 						defaultValue={defStart}
+						// value={defStart}
 						className="mt-2 mr-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 					/>
 					<div className="justify-center items-center flex">
@@ -90,7 +93,7 @@ export const CalendarDetailComponent = ({ isAllday, isConfirm }: any) => {
 						ref={refEventEndDate}
 						id="eventName"
 						disabled={false}
-						onChange={() => {
+						onChange={(e) => {
 							console.log(refEventEndDate.current?.value);
 						}}
 						// defaultValue={selectedEvent?.endStr?.slice(0, 19)}

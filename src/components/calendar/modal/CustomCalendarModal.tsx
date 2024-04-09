@@ -11,7 +11,7 @@ import {
 	Switch,
 	useDisclosure,
 } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { EventInput } from '@fullcalendar/react';
 import { useAddEventFlag, useCalendarAction, useCalendarDialogOpen, useCalendarEvnetParam, useInputEvent } from '../../../store/useCalendar';
 import { CalendarDetailComponent } from './CalendarDetailComponent';
@@ -32,9 +32,7 @@ export const CustomCalendarModal = () => {
 		calendarAction.setAddFlag(true);
 	};
 	useEffect(() => {
-		if (refAllDaySwitch.current?.checked === undefined && selectedEvent?.allDay) {
-			setIsAllDay(selectedEvent?.allDay);
-		}
+		setIsAllDay(selectedEvent?.allDay);
 	}, []);
 
 	useEffect(() => {
@@ -57,11 +55,11 @@ export const CustomCalendarModal = () => {
 		setIsAllDay(refAllDaySwitch.current?.checked);
 	}, [isAllDay, isDialogOpen]);
 	// const sizes = ['xs', 'sm', 'md', 'lg', 'xl', 'full'];
-	useEffect(() => {
-		if (!isAdd) {
-			console.log(addEventParam);
-		}
-	}, [isAdd]);
+	// useEffect(() => {
+	// 	if (!isAdd) {
+	// 		console.log(addEventParam);
+	// 	}
+	// }, [isAdd]);
 
 	return (
 		<Modal
@@ -82,8 +80,8 @@ export const CustomCalendarModal = () => {
 								id="switch5"
 								ref={refAllDaySwitch}
 								// value={isAllDay}
-								checked={selectedEvent?.allDay}
-								isChecked={!!selectedEvent?.allDay}
+								// checked={!!selectedEvent?.allDay}
+								defaultChecked={isAllDay || selectedEvent?.allDay}
 								onChange={() => {
 									setIsAllDay(!isAllDay);
 								}}
