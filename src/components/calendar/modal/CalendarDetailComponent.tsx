@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { useCalendarDialogOpen, useCalendarEvnetParam } from '../../../store/useCalendar';
+import { EventInput } from '@fullcalendar/react';
+import { useAddEventFlag, useCalendarAction, useCalendarDialogOpen, useCalendarEvnetParam } from '../../../store/useCalendar';
 
-export const CalendarDetailComponent = ({ isAllday }: any) => {
+export const CalendarDetailComponent = ({ isAllday, isConfirm }: any) => {
 	const selectedEvent = useCalendarEvnetParam();
 	const isDialogOpen = useCalendarDialogOpen();
+	const setCalendar = useCalendarAction();
 	const refEventName = useRef<HTMLInputElement>(null);
 	const refEventStartDate = useRef<HTMLInputElement>(null);
 	const refEventEndDate = useRef<HTMLInputElement>(null);
@@ -12,19 +14,35 @@ export const CalendarDetailComponent = ({ isAllday }: any) => {
 	const [isDate, setIsDate] = useState<boolean | undefined>(false);
 	const [defStart, setDefStart] = useState<string | undefined>('');
 	const [defEnd, setDefEnd] = useState<string | undefined>('');
+	const eventParam = {} as EventInput;
+	const addFlag = useAddEventFlag();
 
 	useEffect(() => {
 		// setIsDate(selectedEvent?.allDay);
-		setDefStart(selectedEvent?.startStr?.slice(0, 16));
-		setDefEnd(selectedEvent?.endStr?.slice(0, 16));
-	}, []);
+		eventParam.title = refEventName.current?.value;
+		eventParam.allDay = isAllday;
+		eventParam.start = refEventStartDate.current?.value;
+		eventParam.end = refEventStartDate.current?.value;
+		eventParam.extendedProps = {
+			register: refRegistUser.current?.value,
+			eventDetail: refEventDetail.current?.value,
+		};
+		setCalendar.setAddEventParam(eventParam);
+		setCalendar.setAddFlag(false);
+	}, [addFlag]);
 	useEffect(() => {
 		setIsDate(isAllday);
+		if (isAllday) {
+			setDefStart(selectedEvent?.startStr?.slice(0, 10));
+			setDefEnd(selectedEvent?.endStr?.slice(0, 10));
+		} else if (defStart?.length === 10 && selectedEvent?.allDay) {
+			setDefStart(`${selectedEvent?.startStr}T00:00:00`);
+			setDefEnd(`${selectedEvent?.endStr}T23:59:59`);
+		} else {
+			setDefStart(selectedEvent?.startStr?.slice(0, 16));
+			setDefEnd(selectedEvent?.endStr?.slice(0, 16));
+		}
 	}, [isAllday, isDialogOpen]);
-	useEffect(() => {
-		console.log(selectedEvent?.startStr?.slice(0, 16));
-		console.log(selectedEvent?.endStr?.slice(0, 16));
-	}, [selectedEvent?.endStr]);
 	useEffect(() => {
 		setIsDate(selectedEvent?.allDay);
 	}, [selectedEvent?.allDay]);

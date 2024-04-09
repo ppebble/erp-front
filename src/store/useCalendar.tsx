@@ -15,10 +15,11 @@ interface CalendarStoreProps {
 }
 interface ActionItem {
 	setCalendarParam: (param: CalendarParam) => void;
+	setCalendarEvents: (param: EventInput[]) => void;
 	setCalendarDialogFlag: (param: boolean) => void;
 	setCalendarEventParam: (param: EventApi) => void;
 	setCalendarType: (param: string | undefined) => void;
-	setAddEventParam: (paran: EventInput) => void;
+	setAddEventParam: (paran: EventInput | undefined) => void;
 	setAddFlag: (param: boolean) => void;
 }
 
@@ -59,7 +60,15 @@ const useCalendar = create<CalendarStoreProps>()(
 					false,
 					'SET_CALENDAR_PARAM',
 				),
-			setAddEventParam: (param: EventInput) => {
+			setCalendarEvents: (param: EventInput[]) =>
+				set(
+					{
+						calendarEvents: param,
+					},
+					false,
+					'SET_CALENDAR_PARAM',
+				),
+			setAddEventParam: (param: EventInput | undefined) => {
 				set({
 					inputEvent: param,
 				});
@@ -83,3 +92,5 @@ export const useCalendarDialogOpen = () => useCalendar((state) => state.isDialog
 export const useCalendarType = () => useCalendar((state) => state.calendarType);
 export const useAddEventFlag = () => useCalendar((state) => state.addEventFlag);
 export const useCalendarAction = () => useCalendar((state) => state.action);
+export const useInputEvent = () => useCalendar((state) => state.inputEvent);
+export const useEvents = () => useCalendar((state) => state.calendarEvents);

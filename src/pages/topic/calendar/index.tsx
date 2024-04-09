@@ -4,15 +4,16 @@ import { useEffect, useState } from 'react';
 import { EventApi } from '@fullcalendar/react';
 import FullCalendarComponent from '../../../components/calendar/FullCalendarComponent';
 import Dropdown from '../../../components/dropdown';
-import { useCalendarAction, useCalendarDialogOpen } from '../../../store/useCalendar';
+import { useCalendarAction, useCalendarDialogOpen, useEvents } from '../../../store/useCalendar';
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
-import { CalendarTaskType, taskColor, taskList } from '../../../components/calendar/utils/event-utils';
+import { CalendarTaskType, INITIAL_EVENTS, taskColor, taskList } from '../../../components/calendar/utils/event-utils';
 
 const CompanyCalendar = () => {
 	const [display, setDisplay] = useState<string>('block');
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();
 	const isDialogOpen = useCalendarDialogOpen();
+	const eventParam = {} as EventApi;
 
 	useEffect(() => {
 		// useCalendar.calendarParam 기본값
@@ -52,17 +53,7 @@ const CompanyCalendar = () => {
 											// 일정 추가 팝업 모달
 											if (!isDialogOpen) {
 												// calendarAction.setCalendarEventParam(clickInfo.event);
-												calendarAction.setAddEventParam({
-													title: '',
-													start: '',
-													end: '',
-													allDay: true,
-													extendedProps: {
-														register: '',
-														eventDesc: '',
-													},
-												});
-												calendarAction.setAddFlag(true);
+												calendarAction.setCalendarEventParam(eventParam);
 												calendarAction.setCalendarDialogFlag(true);
 											}
 										}}

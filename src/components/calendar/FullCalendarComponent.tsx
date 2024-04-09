@@ -3,13 +3,13 @@ import '@fullcalendar/react/dist/vdom';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg } from '@fullcalendar/react';
+import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/react';
 import { CalendarParam, INITIAL_EVENTS } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
 
-import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType } from '../../store/useCalendar';
+import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents } from '../../store/useCalendar';
 
 type PropsType = {
 	param: CalendarParam;
@@ -24,8 +24,16 @@ const FullCalendarComponent = () => {
 	const isDialogOpen = useCalendarDialogOpen();
 	const calendarAction = useCalendarAction();
 	const calendar = calendarRef.current?.getApi();
+	const initEvents = useEvents();
 	// const [data, setData] = useState<CalendarParam>(calendarParam);
-	useEffect(() => {}, [calendarParam]);
+	useEffect(() => {
+		calendarAction.setCalendarEvents(INITIAL_EVENTS);
+	}, []);
+	useEffect(() => {
+		if (initEvents && calendar) {
+			calendar.addEvent(initEvents);
+		}
+	}, [initEvents]);
 	useEffect(() => {
 		calendarAction.setCalendarType(calendar?.view.type ? calendar?.view.type : 'dayGridMonth');
 	}, [calendar?.view.type]);
@@ -34,6 +42,7 @@ const FullCalendarComponent = () => {
 			setTimeout(() => {
 				calendar?.updateSize();
 			}, 250);
+			calendarAction.setCalendarEvents(INITIAL_EVENTS);
 		}
 	}, [isSideBar]);
 	useEffect(() => {
@@ -68,7 +77,6 @@ const FullCalendarComponent = () => {
 			// }
 			if (!isDialogOpen) {
 				calendarAction.setCalendarEventParam(clickInfo.event);
-				calendarAction.setAddFlag(false);
 				calendarAction.setCalendarDialogFlag(true);
 			}
 		},
@@ -88,7 +96,7 @@ const FullCalendarComponent = () => {
 				}}
 			>
 				<FullCalendar
-					rerenderDelay={100}
+					rerenderDelay={250}
 					progressiveEventRendering
 					ref={calendarRef}
 					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -107,7 +115,9 @@ const FullCalendarComponent = () => {
 					dayMaxEvents
 					navLinks
 					businessHours
-					initialEvents={INITIAL_EVENTS}
+					events={initEvents}
+					// initialEvents={initEvents}
+					// initialEvents={INITIAL_EVENTS}
 					locale="kr"
 					eventsSet={handleEvents}
 					select={handleDateSelect}

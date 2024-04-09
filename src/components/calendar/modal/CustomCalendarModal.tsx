@@ -13,33 +13,40 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { EventInput } from '@fullcalendar/react';
-import { useAddEventFlag, useCalendarAction, useCalendarDialogOpen, useCalendarEvnetParam } from '../../../store/useCalendar';
+import { useAddEventFlag, useCalendarAction, useCalendarDialogOpen, useCalendarEvnetParam, useInputEvent } from '../../../store/useCalendar';
 import { CalendarDetailComponent } from './CalendarDetailComponent';
 
 export const CustomCalendarModal = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	// const [size, setSize] = useState('md');
 	const isDialogOpen = useCalendarDialogOpen();
+	const addEventParam = useInputEvent();
+	const addFlag = useAddEventFlag();
 	const calendarAction = useCalendarAction();
-	const [eventInput, setEventInput] = useState<EventInput>();
 	const refAllDaySwitch = useRef<HTMLInputElement>(null);
-	const [isAllDay, setIsAllDay] = useState<boolean>(false);
+	const [isAllDay, setIsAllDay] = useState<boolean | undefined>(false);
 	const selectedEvent = useCalendarEvnetParam();
 	const isAdd = useAddEventFlag();
+	const onClickConfirm = () => {
+		calendarAction.setAddFlag(true);
+	};
 
 	useEffect(() => {
 		if (isDialogOpen) {
 			onOpen();
-			// console.log(isAllDay);
 		} else {
 			onClose();
 		}
 	}, [isDialogOpen]);
 	useEffect(() => {
-		console.log(refAllDaySwitch.current?.checked);
-		// setIsAllDay(isAllDay);
-	}, [isAllDay]);
+		setIsAllDay(refAllDaySwitch.current?.checked);
+	}, [isAllDay, isDialogOpen]);
 	// const sizes = ['xs', 'sm', 'md', 'lg', 'xl', 'full'];
+	useEffect(() => {
+		if (!isAdd) {
+			console.log(addEventParam);
+		}
+	}, [isAdd]);
 
 	return (
 		<Modal
@@ -83,15 +90,7 @@ export const CustomCalendarModal = () => {
 				</ModalBody>
 				<div className="h-px w-full bg-gray-300 dark:bg-white/20 " />
 				<ModalFooter>
-					<Button
-						colorScheme="blue"
-						className="mr-3"
-						onClick={() => {
-							// POST 날리기
-							calendarAction.setCalendarDialogFlag(false);
-							onClose;
-						}}
-					>
+					<Button colorScheme="blue" className="mr-3" onClick={onClickConfirm}>
 						확인
 					</Button>
 					<Button
