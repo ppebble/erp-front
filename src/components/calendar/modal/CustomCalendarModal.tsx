@@ -22,7 +22,7 @@ import {
 	useInputEvent,
 	useWorkType,
 } from '../../../store/useCalendar';
-import { CalendarDetailComponent } from './CalendarDetailComponent';
+// import { CalendarDetailComponent } from './CalendarDetailComponent';
 
 export const CustomCalendarModal = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -77,7 +77,7 @@ export const CustomCalendarModal = () => {
 				setDefEnd(selectedEvent?.endStr?.slice(0, 16));
 			}
 		}
-	}, [isDialogOpen, selectedEvent?.endStr, selectedEvent?.startStr, workType]);
+	}, [refAllDaySwitch.current?.checked]);
 
 	useEffect(() => {
 		console.log(defStart);
@@ -85,19 +85,7 @@ export const CustomCalendarModal = () => {
 	}, [defEnd]);
 
 	const setEvnet = async () => {
-		// console.log(addEventParam);
-		// if (!addEventParam.title) {
-		// 	console.log('err');
-		// 	return;
-		// }
-		// if (!addEventParam.start) {
-		// 	console.log('err');
-		// 	return;
-		// }
-		// if (!addEventParam.end) {
-		// 	console.log('err');
-		// 	return;
-		// }
+		setEventParam({});
 		eventParam.id = `${refEventName.current?.value}${refEventStartDate.current?.value}`;
 		eventParam.title = refEventName.current?.value;
 		// eventParam.allDay = isAllDay;
@@ -110,9 +98,9 @@ export const CustomCalendarModal = () => {
 			register: refRegistUser.current?.value,
 			eventDesc: refEventDetail.current?.value,
 		};
-		eventParam.allDay = isAllDay;
+		eventParam.allDay = refAllDaySwitch.current?.checked;
 		const param = [...events];
-		calendarAction.setAddEventParam(eventParam);
+		// calendarAction.setAddEventParam(eventParam);
 		if (!eventParam.title) {
 			console.log('err');
 			return;
@@ -133,11 +121,17 @@ export const CustomCalendarModal = () => {
 			newParam.push(eventParam);
 			calendarAction.setCalendarEvents(newParam);
 		}
-		console.log(defStart);
-		console.log(defEnd);
+		// console.log(defStart);
+		// console.log(defEnd);
 
 		// calendarAction.setCalendarEvents(events);
 		calendarAction.setCalendarDialogFlag(false);
+
+		// eventParam.allDay = false;
+		// eventParam.start = '';
+		// eventParam.end = '';
+		// eventParam.title = '';
+
 		onClose;
 	};
 	const onClickConfirm = () => {
@@ -172,8 +166,8 @@ export const CustomCalendarModal = () => {
 				setIsAllDay(refAllDaySwitch.current?.checked);
 			}
 			onOpen();
-			console.log(defStart);
-			console.log(defEnd);
+			// console.log(defStart);
+			// console.log(defEnd);
 		} else {
 			onClose();
 		}
@@ -214,7 +208,7 @@ export const CustomCalendarModal = () => {
 									// 		setDefEnd(selectedEvent?.endStr?.slice(0, 16));
 									// 	}
 									// }
-									convertDate();
+									// convertDate();
 								}}
 							/>
 							<label htmlFor="checkbox5" className="text-base text-ms ml-3 font-small text-navy-700 dark:text-white">
@@ -275,7 +269,7 @@ export const CustomCalendarModal = () => {
 									id="eventName"
 									disabled={false}
 									onChange={(e) => {
-										console.log(refEventEndDate.current?.value);
+										// console.log(refEventEndDate.current?.value);
 									}}
 									// defaultValue={selectedEvent?.endStr?.slice(0, 19)}
 									// defaultValue={refEventEndDate.current?.value}
@@ -307,7 +301,7 @@ export const CustomCalendarModal = () => {
 									id="eventName"
 									disabled={false}
 									onChange={(e) => {
-										console.log(refEventEndDate.current?.value);
+										// console.log(refEventEndDate.current?.value);
 									}}
 									// defaultValue={selectedEvent?.endStr?.slice(0, 19)}
 									// defaultValue={refEventEndDate.current?.value}

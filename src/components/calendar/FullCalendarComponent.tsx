@@ -25,11 +25,12 @@ const FullCalendarComponent = () => {
 	const calendarAction = useCalendarAction();
 	const calendar = calendarRef.current?.getApi();
 	const initEvents = useEvents();
-	// const [data, setData] = useState<CalendarParam>(calendarParam);
+	const [data, setData] = useState<CalendarParam>(calendarParam);
 	useEffect(() => {
 		calendarAction.setCalendarEvents(INITIAL_EVENTS);
 	}, []);
 	useEffect(() => {
+		// console.log(initEvents);
 		if (initEvents && calendar) {
 			calendar.addEvent(initEvents);
 		}
@@ -49,7 +50,7 @@ const FullCalendarComponent = () => {
 		// console.log(currentEvents);
 	}, [currentEvents]);
 
-	const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
+	// const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
 	// const handleDateSelect = useCallback(
 	// 	(selectInfo: DateSelectArg) => {
 	// 		const title = prompt('이벤트 이름 기입')?.trim();

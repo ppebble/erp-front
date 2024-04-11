@@ -61,16 +61,23 @@ const useCalendar = create<CalendarStoreProps>()(
 						calendarEvent: param,
 					},
 					false,
-					'SET_CALENDAR_PARAM',
 				),
 			setCalendarEvents: (param: EventInput[]) =>
 				set(
-					{
+					(state) => ({
 						calendarEvents: param,
-					},
+					}),
 					false,
-					'SET_CALENDAR_PARAM',
+					'CALENDAR_EVENTS',
 				),
+			// setCalendarEvents: (param: EventInput[]) =>
+			// 	set(
+			// 		{
+			// 			calendarEvents: param,
+			// 		},
+			// 		false,
+			// 		'CALENDAR_EVENTS',
+			// 	),
 			setAddEventParam: (param: EventInput | undefined) => {
 				set({
 					inputEvent: param,
