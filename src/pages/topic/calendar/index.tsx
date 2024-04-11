@@ -53,6 +53,8 @@ const CompanyCalendar = () => {
 											// 일정 추가 팝업 모달
 											if (!isDialogOpen) {
 												// calendarAction.setCalendarEventParam(clickInfo.event);
+												// calendarAction.setAddFlag(true);
+												calendarAction.setWorkType('add');
 												calendarAction.setCalendarEventParam(eventParam);
 												calendarAction.setCalendarDialogFlag(true);
 											}

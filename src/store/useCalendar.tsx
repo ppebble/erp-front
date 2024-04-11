@@ -11,6 +11,7 @@ interface CalendarStoreProps {
 	calendarEvent: EventApi | null;
 	isDialogOpen: boolean;
 	inputEvent: EventInput;
+	workType: string;
 	action: ActionItem;
 }
 interface ActionItem {
@@ -21,6 +22,7 @@ interface ActionItem {
 	setCalendarType: (param: string | undefined) => void;
 	setAddEventParam: (paran: EventInput | undefined) => void;
 	setAddFlag: (param: boolean) => void;
+	setWorkType: (param: string) => void;
 }
 
 const useCalendar = create<CalendarStoreProps>()(
@@ -31,6 +33,7 @@ const useCalendar = create<CalendarStoreProps>()(
 		calendarEvents: [] as EventInput[],
 		calendarEvent: {} as EventApi | null,
 		inputEvent: {} as EventInput,
+		workType: '',
 		addEventFlag: true,
 		isDialogOpen: false,
 
@@ -83,6 +86,11 @@ const useCalendar = create<CalendarStoreProps>()(
 					addEventFlag: param,
 				});
 			},
+			setWorkType: (param: string) => {
+				set({
+					workType: param,
+				});
+			},
 		},
 	})),
 );
@@ -94,3 +102,4 @@ export const useAddEventFlag = () => useCalendar((state) => state.addEventFlag);
 export const useCalendarAction = () => useCalendar((state) => state.action);
 export const useInputEvent = () => useCalendar((state) => state.inputEvent);
 export const useEvents = () => useCalendar((state) => state.calendarEvents);
+export const useWorkType = () => useCalendar((state) => state.workType);

@@ -42,7 +42,7 @@ const FullCalendarComponent = () => {
 			setTimeout(() => {
 				calendar?.updateSize();
 			}, 250);
-			calendarAction.setCalendarEvents(INITIAL_EVENTS);
+			// calendarAction.setCalendarEvents(INITIAL_EVENTS);
 		}
 	}, [isSideBar]);
 	useEffect(() => {
@@ -50,32 +50,33 @@ const FullCalendarComponent = () => {
 	}, [currentEvents]);
 
 	const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
-	const handleDateSelect = useCallback(
-		(selectInfo: DateSelectArg) => {
-			const title = prompt('이벤트 이름 기입')?.trim();
-			const calendarApi = selectInfo.view.calendar;
-			calendarApi.unselect();
-			if (title) {
-				calendarApi.addEvent({
-					// type :: eventInput
-					title,
-					start: selectInfo.startStr,
-					end: selectInfo.endStr,
-					allDay: selectInfo.allDay,
-					color: calendarParam.task.color,
-					display: calendarParam.display,
-					textColor: '#fff',
-				});
-			}
-		},
-		[calendarParam],
-	);
+	// const handleDateSelect = useCallback(
+	// 	(selectInfo: DateSelectArg) => {
+	// 		const title = prompt('이벤트 이름 기입')?.trim();
+	// 		const calendarApi = selectInfo.view.calendar;
+	// 		calendarApi.unselect();
+	// 		if (title) {
+	// 			calendarApi.addEvent({
+	// 				// type :: eventInput
+	// 				title,
+	// 				start: selectInfo.startStr,
+	// 				end: selectInfo.endStr,
+	// 				allDay: selectInfo.allDay,
+	// 				color: calendarParam.task.color,
+	// 				display: calendarParam.display,
+	// 				textColor: '#fff',
+	// 			});
+	// 		}
+	// 	},
+	// 	[calendarParam],
+	// );
 	const handleEventClick = useCallback(
 		(clickInfo: EventClickArg) => {
 			// if (window.confirm(`${clickInfo.event.title}  이벤트를 삭제하시겠습니까?`)) {
 			// 	clickInfo.event.remove();
 			// }
 			if (!isDialogOpen) {
+				calendarAction.setWorkType('edit');
 				calendarAction.setCalendarEventParam(clickInfo.event);
 				calendarAction.setCalendarDialogFlag(true);
 			}
@@ -97,13 +98,14 @@ const FullCalendarComponent = () => {
 			>
 				<FullCalendar
 					rerenderDelay={250}
-					progressiveEventRendering
+					// progressiveEventRendering
 					ref={calendarRef}
 					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 					headerToolbar={{
 						start: 'prev',
 						center: 'title',
-						end: 'dayGridMonth,timeGridWeek,timeGridDay next',
+						// end: 'dayGridMonth,timeGridWeek,timeGridDay next',
+						end: 'today next',
 					}}
 					height="85vh"
 					initialView="dayGridMonth"
@@ -117,8 +119,8 @@ const FullCalendarComponent = () => {
 					businessHours
 					events={initEvents}
 					locale="kr"
-					eventsSet={handleEvents}
-					select={handleDateSelect}
+					// eventsSet={handleEvents}
+					// select={handleDateSelect}
 					eventClick={handleEventClick}
 				/>
 			</div>

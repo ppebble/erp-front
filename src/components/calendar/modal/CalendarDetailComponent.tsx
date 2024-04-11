@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { EventInput } from '@fullcalendar/react';
-import { useAddEventFlag, useCalendarAction, useCalendarDialogOpen, useCalendarEvnetParam } from '../../../store/useCalendar';
+import {
+	useAddEventFlag,
+	useCalendarAction,
+	useCalendarDialogOpen,
+	useCalendarEvnetParam,
+	useEvents,
+	useInputEvent,
+	useWorkType,
+} from '../../../store/useCalendar';
 
 export const CalendarDetailComponent = ({ isAllday, isConfirm }: any) => {
 	const selectedEvent = useCalendarEvnetParam();
@@ -14,41 +22,78 @@ export const CalendarDetailComponent = ({ isAllday, isConfirm }: any) => {
 	const [isDate, setIsDate] = useState<boolean | undefined>(false);
 	const [defStart, setDefStart] = useState<string | undefined>('');
 	const [defEnd, setDefEnd] = useState<string | undefined>('');
-	const eventParam = {} as EventInput;
-	const addFlag = useAddEventFlag();
+	const events = useEvents();
+	const addEventParam = useInputEvent();
 
-	useEffect(() => {
-		// setIsDate(selectedEvent?.allDay);
-		eventParam.title = refEventName.current?.value;
-		eventParam.allDay = isAllday;
-		eventParam.start = refEventStartDate.current?.value;
-		eventParam.end = refEventStartDate.current?.value;
-		eventParam.extendedProps = {
-			register: refRegistUser.current?.value,
-			eventDetail: refEventDetail.current?.value,
-		};
-		eventParam.allDay = isDate;
-		setCalendar.setAddEventParam(eventParam);
-		setCalendar.setAddFlag(false);
-	}, [addFlag]);
+	const eventParam = {} as EventInput;
+	// const addFlag = useAddEventFlag();
+	const workType = useWorkType();
 	useEffect(() => {
 		setIsDate(isAllday);
-		if (isAllday) {
-			setDefStart(selectedEvent?.startStr?.slice(0, 10));
-			setDefEnd(selectedEvent?.endStr?.slice(0, 10));
-		} else if (defStart?.length === 10 && selectedEvent?.allDay) {
-			setDefStart(`${selectedEvent?.startStr}T00:00:00`);
-			setDefEnd(`${selectedEvent?.endStr}T23:59:59`);
-		} else {
-			setDefStart(selectedEvent?.startStr?.slice(0, 16));
-			setDefEnd(selectedEvent?.endStr?.slice(0, 16));
+		if (isDialogOpen) {
+			if (isAllday) {
+				setDefStart(selectedEvent?.startStr?.slice(0, 10));
+				setDefEnd(selectedEvent?.endStr?.slice(0, 10));
+			} else if (defStart?.length === 10 && selectedEvent?.allDay) {
+				setDefStart(`${selectedEvent?.startStr}T00:00:00`);
+				setDefEnd(`${selectedEvent?.endStr}T23:59:59`);
+			} else {
+				setDefStart(selectedEvent?.startStr?.slice(0, 16));
+				setDefEnd(selectedEvent?.endStr?.slice(0, 16));
+			}
 		}
+	}, [isAllday, isDialogOpen]);
+	useEffect(() => {
 		refEventStartDate.current?.setAttribute('value', defStart || '');
 		refEventEndDate.current?.setAttribute('value', defEnd || '');
-	}, [isAllday, isDialogOpen]);
+	}, [defStart, defEnd]);
 	useEffect(() => {
 		setIsDate(selectedEvent?.allDay);
 	}, [selectedEvent?.allDay]);
+
+	useEffect(() => {
+		eventParam.id = `${refEventName.current?.value}${refEventStartDate.current?.value}`;
+		eventParam.title = refEventName.current?.value;
+		eventParam.allDay = isAllday;
+		// eventParam.start = refEventStartDate.current?.value;
+		// eventParam.end = refEventEndDate.current?.value;
+		eventParam.start = defStart;
+		eventParam.end = defEnd;
+		eventParam.extendedProps = {
+			register: refRegistUser.current?.value,
+			eventDesc: refEventDetail.current?.value,
+		};
+		eventParam.allDay = isDate;
+		const param = [...events];
+		setCalendar.setAddEventParam(eventParam);
+		if (!eventParam.title) {
+			console.log('err');
+			return;
+		}
+		if (!eventParam.start) {
+			console.log('err');
+			return;
+		}
+		if (!eventParam.end) {
+			console.log('err');
+			return;
+		}
+		if (workType === 'add') {
+			param.push(eventParam);
+			setCalendar.setCalendarEvents(param);
+		} else if (workType === 'edit') {
+			const newParam = param.filter((e) => e.id !== eventParam.id);
+			newParam.push(eventParam);
+			setCalendar.setCalendarEvents(newParam);
+		}
+
+		// if (addEventParam.start || addEventParam.end) {
+		// 	addEventParam.start = defStart;
+		// 	addEventParam.end = defEnd;
+		// }
+
+		// setCalendar.setAddFlag(false);
+	}, [isConfirm]);
 
 	return (
 		<div className="grid h-full grid-cols-1">

@@ -11,13 +11,12 @@ import NFTMarketplace from './pages/topic/marketplace';
 import Profile from './pages/topic/profile';
 import Summary from './pages/topic/summary';
 import Workforce from './pages/topic/workforce';
-import CompanyCalendar from './pages/topic/calendar';
-
 import Test from './pages/topic/test';
 
 import NotFound from './pages/error/notFound';
 import Topic from './pages/topic';
 import Equipment from './pages/topic/equipment';
+import CompanyCalendar from './pages/topic/calendar';
 
 const App = () => {
 	return (
