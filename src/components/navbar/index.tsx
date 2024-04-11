@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FiAlignJustify } from 'react-icons/fi';
 import { BsArrowBarUp } from 'react-icons/bs';
 import { RiMoonFill, RiSunFill } from 'react-icons/ri';
@@ -10,9 +11,17 @@ import avatar from '../../assets/img/avatars/avatar4.png';
 const Navbar = (props: { onOpenSidenav: () => void }) => {
 	const { onOpenSidenav } = props;
 	const [darkMode, setDarkMode] = useState(false);
+	const navigate = useNavigate();
+
+	const myProfile = () => {
+		navigate('workforce');
+	};
 
 	return (
-		<nav className="sticky top-0 z-40 flex flex-row flex-wrap items-center justify-between ml-[-12px] bg-whiteSmoke p-2 backdrop-blur-xl dark:bg-[#0b14374d]">
+		<nav
+			className="sticky top-0 z-40 flex flex-row flex-wrap items-center justify-between ml-[-15px] mr-[-8px] bg-white p-2 backdrop-blur-xl dark:bg-[#0b14374d]"
+			style={{ boxShadow: ' 0 2px 2px -2px gray' }}
+		>
 			{/* 사이드바 (pc) */}
 			<div className="ml-[6px]">
 				<div>
@@ -140,12 +149,9 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
 						<div className="mt-3 h-px w-full bg-gray-200 dark:bg-white/20 " />
 
 						<div className="mt-3 ml-4 flex flex-col">
-							<a href=" " className="text-sm text-gray-800 dark:text-white hover:dark:text-white">
-								Profile Settings
-							</a>
-							<a href=" " className="mt-3 text-sm text-gray-800 dark:text-white hover:dark:text-white">
-								Newsletter Settings
-							</a>
+							<p onClick={() => myProfile()} className="cursor-pointer text-sm text-gray-800 dark:text-white hover:dark:text-white">
+								프로필 설정
+							</p>
 							<a href=" " className="mt-3 text-sm font-medium text-red-500 hover:text-red-500">
 								Log Out
 							</a>

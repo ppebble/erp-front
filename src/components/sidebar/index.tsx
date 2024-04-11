@@ -15,10 +15,10 @@ const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSp
 				<HiX />
 			</span>
 
-			<div className="mx-[28px] mt-[20px] flex items-center">
+			<div className="mx-[28px] flex items-center">
 				<img className="h-[75px] w-[246px] rounded-lg" src={logo} alt="" />
 			</div>
-			<div className="mt-[18px] mb-7 h-px bg-gray-300 dark:bg-white/30" />
+			<div className="mt-[5px] mb-7 h-px bg-gray-300 dark:bg-white/30" />
 
 			{/* Nav item */}
 			<ul className="mb-auto pt-1">
