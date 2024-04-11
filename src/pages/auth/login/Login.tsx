@@ -5,6 +5,7 @@ import { ForwardedRef, useRef, useState } from 'react';
 import InputField from '../../../components/fields/InputField';
 import Checkbox from '../../../components/checkbox';
 import { useLoginAction, UserInfo } from '../../../store/useLogin';
+import NormalModal from '../../../components/modal';
 
 const Login = () => {
 	const navigation = useNavigate();
@@ -14,13 +15,21 @@ const Login = () => {
 	const refUserPwd = useRef<HTMLInputElement>(null);
 	const refRemeberId = useRef<HTMLInputElement>(null);
 	const [isRemember, setIsRemember] = useState<boolean>(false);
+	const [open, setOpen] = useState(false);
+	const [contents, setContents] = useState<string>();
+
+	const changeOpen = () => {
+		setOpen(!open);
+	};
+
 	const doLogin = () => {
 		const param = {
 			userId: refUserId.current?.value,
 			userPwd: refUserPwd.current?.value,
 		};
 		if (!param.userId || !param.userPwd) {
-			console.log('id / pwd 를 입력해주세요');
+			changeOpen();
+			setContents('id / pwd 를 입력해주세요');
 		} else {
 			// loginAction(param)
 			//  >> param ::  로그인 후에 결과값(UserInfo)
@@ -84,6 +93,7 @@ const Login = () => {
 					</a>
 				</div>
 			</div>
+			<NormalModal change={changeOpen} contents={contents} open={open} type={3} closeOnOverlay />
 		</div>
 	);
 };

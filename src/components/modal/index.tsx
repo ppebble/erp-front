@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
 	AlertDialog,
 	AlertDialogBody,
@@ -17,15 +17,26 @@ type ModalProps = {
 	contents: any;
 	open: boolean;
 	type: number;
+	closeOnOverlay?: boolean;
 };
 
 const SetModal = ({ change, contents, open, type }: ModalProps) => {
+	const [detailsSize, setDetailsSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
+
+	useEffect(() => {
+		const changeSize = () => {
+			window.innerWidth < 1441 ? setDetailsSize(['80%', '80%']) : setDetailsSize(['50%', '75%']);
+		};
+		window.addEventListener('resize', changeSize);
+		return () => window.removeEventListener('resize', changeSize);
+	}, []);
+
 	const cancelRef = useRef<any>();
 	let dialog;
 	switch (type) {
-		case 1:
+		case 1: // 게시판 글 상세보기
 			dialog = (
-				<AlertDialogContent minW="50%" minH="75%">
+				<AlertDialogContent minW={detailsSize[0]} minH={detailsSize[1]}>
 					<AlertDialogHeader>상세보기</AlertDialogHeader>
 					<AlertDialogCloseButton />
 					<AlertDialogBody>
@@ -39,7 +50,7 @@ const SetModal = ({ change, contents, open, type }: ModalProps) => {
 				</AlertDialogContent>
 			);
 			break;
-		case 2:
+		case 2: // 게시판 글 쓰기
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
 					<AlertDialogHeader>글쓰기</AlertDialogHeader>
@@ -71,18 +82,43 @@ const SetModal = ({ change, contents, open, type }: ModalProps) => {
 				</AlertDialogContent>
 			);
 			break;
+		case 3: // 알림
+			dialog = (
+				<AlertDialogContent minW="20%" minH="20%">
+					<AlertDialogHeader />
+					<AlertDialogCloseButton />
+
+					<AlertDialogBody className="content-center text-center text-xl">
+						<div>{contents}</div>
+					</AlertDialogBody>
+
+					<AlertDialogFooter className="!flow-root w-full text-center">
+						<Button className="w-1/2 !ml-0" colorScheme="blue" ml={3} onClick={change}>
+							확인
+						</Button>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			);
+			break;
 		default:
 			break;
 	}
 	return dialog;
 };
 
-const NormalModal = ({ change, contents, open, type }: ModalProps) => {
+const NormalModal = ({ change, contents, open, type, closeOnOverlay }: ModalProps) => {
 	const cancelRef = useRef<any>();
 
 	// closeOnOverlayClick 영역밖 클릭시 Dialog 닫히는지
 	return (
-		<AlertDialog motionPreset="slideInBottom" closeOnOverlayClick={false} leastDestructiveRef={cancelRef} onClose={change} isOpen={open} isCentered>
+		<AlertDialog
+			motionPreset="slideInBottom"
+			closeOnOverlayClick={closeOnOverlay}
+			leastDestructiveRef={cancelRef}
+			onClose={change}
+			isOpen={open}
+			isCentered
+		>
 			<AlertDialogOverlay />
 			<SetModal change={change} contents={contents} open={open} type={type} />
 		</AlertDialog>

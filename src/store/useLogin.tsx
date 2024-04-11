@@ -60,7 +60,7 @@ const useLoginStore = create<LoginPersistStore>()(
 				name: 'auth-store', // 저장소 key값
 				storage: createJSONStorage(() => localStorage), // 저장소
 				version: 1.0, // version 정보
-				partialize: (state) => ({
+				partialize: (state: any) => ({
 					isAuthorized: state.isAuthorized,
 					userId: state.userId,
 					userName: state.userName,

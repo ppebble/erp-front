@@ -101,12 +101,12 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 	const details = (con: RowObj) => {
 		setType(1);
 		setContents(con);
-		setOpen(!open);
+		changeOpen();
 	};
 
 	const newWrite = () => {
 		setType(2);
-		setOpen(!open);
+		changeOpen();
 	};
 
 	useEffect(() => {
@@ -118,7 +118,7 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 	}, []);
 
 	return (
-		<div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-1">
+		<div className="mt-5 grid">
 			<Card extra="w-full pb-10 p-4 h-full">
 				<header className="relative flex items-center justify-between">
 					<div className="text-xl font-bold text-navy-700 dark:text-white">인력사항</div>
@@ -212,7 +212,7 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 					</div>
 				</div>
 
-				<NormalModal change={changeOpen} contents={contents} open={open} type={type} />
+				<NormalModal change={changeOpen} contents={contents} open={open} type={type} closeOnOverlay={false} />
 			</Card>
 		</div>
 	);
