@@ -2,7 +2,7 @@
 import { EventInput } from '@fullcalendar/react';
 import { useEffect } from 'react';
 import { useCalendarParam } from '../../../store/useCalendar';
-import { TASK_LIST, TASK_LIST_KEY } from '../../../store/common/useCommon';
+import { TASK_LIST } from '../../../store/common/useCommon';
 
 // let eventGuid = 0;
 const todayStr = new Date().toISOString().replace(/T.*$/, ''); // YYYY-MM-DD of today
@@ -37,11 +37,10 @@ export const taskList = [
 	{ id: 'personal', name: '개인일정', color: taskColor.personal },
 	{ id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
 ];
-export const getTask = (task: TASK_LIST_KEY) => {
-	console.log(task);
-	return task;
-};
+
 export const getEventColor = (task: string | undefined) => taskList.find((e) => e.id === task)?.color;
+// export const getEventColor = (task: TASK_LIST) => TASK_LIST.;
+
 /**
  *  scheduleNo = id
  *  profileNo = extendedProps.register
