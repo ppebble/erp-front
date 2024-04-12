@@ -1,16 +1,18 @@
 /* eslint-disable prettier/prettier */
 import { EventInput } from '@fullcalendar/react';
 import { useEffect } from 'react';
+import { useCalendarParam } from '../../../store/useCalendar';
 
 // let eventGuid = 0;
 const todayStr = new Date().toISOString().replace(/T.*$/, ''); // YYYY-MM-DD of today
 // export function createEventId() {
 // 	return String((eventGuid += 1))
 // }
+
 export type CalendarTaskType = {
-	id: string;
+	id?: string;
 	name: string;
-	color: string;
+	color?: string;
 };
 export type CalendarParam = {
 	task: CalendarTaskType;
@@ -34,7 +36,7 @@ export const taskList = [
 	{ id: 'personal', name: '개인일정', color: taskColor.personal },
 	{ id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
 ];
-const eventColor = taskList.find((e) => e.id === 'dev')?.color;
+export const getEventColor = (task: string | undefined) => taskList.find((e) => e.id === task)?.color;
 
 export const INITIAL_EVENTS: EventInput[] = [
 	{
@@ -46,14 +48,19 @@ export const INITIAL_EVENTS: EventInput[] = [
 		extendedProps: {
 			register: 'heap userId',
 			eventDesc: '상세 이벤트 설명 설명 설명 설명',
-			// task: 'dev',
+			task: { id: 'dev', name: '기술개발본부', color: taskColor.dev },
 		},
-		color: eventColor,
+		color: getEventColor('dev'),
 	},
 	{
 		id: 'event2',
 		title: 'Timed event',
 		start: `${todayStr}T12:00:00`,
-		end: '2024-04-12T15:00:00',
+		end: '2024-04-13T15:00:00',
+		extendedProps: {
+			register: 'heap userId',
+			eventDesc: '상세 이벤트 설명 설명 설명 설명',
+			task: { id: 'personal', name: '개인일정' },
+		},
 	},
 ];

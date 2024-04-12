@@ -12,16 +12,19 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { EventInput } from '@fullcalendar/react';
+import { EventApi, EventInput } from '@fullcalendar/react';
+import { BsSquareFill } from 'react-icons/bs';
 import {
 	useAddEventFlag,
 	useCalendarAction,
 	useCalendarDialogOpen,
 	useCalendarEvnetParam,
+	useCalendarParam,
 	useEvents,
 	useInputEvent,
 	useWorkType,
 } from '../../../store/useCalendar';
+import { getEventColor, taskList } from '../utils/event-utils';
 // import { CalendarDetailComponent } from './CalendarDetailComponent';
 
 export const CustomCalendarModal = () => {
@@ -41,6 +44,8 @@ export const CustomCalendarModal = () => {
 
 	const [defStart, setDefStart] = useState<string | undefined>('');
 	const [defEnd, setDefEnd] = useState<string | undefined>('');
+	const [defStartTime, setDefStartTime] = useState<string | undefined>('');
+	const [defEndTime, setDefEndTime] = useState<string | undefined>('');
 
 	const refEventName = useRef<HTMLInputElement>(null);
 	const refEventStartDate = useRef<HTMLInputElement>(null);
@@ -50,42 +55,23 @@ export const CustomCalendarModal = () => {
 	const refRegistUser = useRef<HTMLInputElement>(null);
 	const refEventDetail = useRef<HTMLInputElement>(null);
 
-	// useEffect(() => {
-	// 	if (isDialogOpen && workType === 'edit') {
-	// 		if (refAllDaySwitch.current?.checked && selectedEvent?.startStr?.length !== 10) {
-	// 			setDefStart(selectedEvent?.startStr?.slice(0, 10));
-	// 			setDefEnd(selectedEvent?.endStr?.slice(0, 10));
-	// 		} else if (selectedEvent?.startStr?.length === 10 && !refAllDaySwitch.current?.checked) {
-	// 			setDefStart(`${selectedEvent?.startStr}T00:00:00`);
-	// 			setDefEnd(`${selectedEvent?.endStr}T23:59:59`);
-	// 		} else {
-	// 			setDefStart(selectedEvent?.startStr?.slice(0, 16));
-	// 			setDefEnd(selectedEvent?.endStr?.slice(0, 16));
-	// 		}
-	// 	}
-	// }, [refAllDaySwitch.current?.checked]);
-	const convertDate = useCallback(() => {
-		if (isDialogOpen && workType === 'edit') {
-			if (refAllDaySwitch.current?.checked && selectedEvent?.startStr?.length !== 10) {
-				setDefStart(selectedEvent?.startStr?.slice(0, 10));
-				setDefEnd(selectedEvent?.endStr?.slice(0, 10));
-			} else if (selectedEvent?.startStr?.length === 10 && !refAllDaySwitch.current?.checked) {
-				setDefStart(`${selectedEvent?.startStr}T00:00:00`);
-				setDefEnd(`${selectedEvent?.endStr}T23:59:59`);
-			} else {
-				setDefStart(selectedEvent?.startStr?.slice(0, 16));
-				setDefEnd(selectedEvent?.endStr?.slice(0, 16));
-			}
-		}
-	}, [refAllDaySwitch.current?.checked]);
+	const currentEventParam = useCalendarParam();
 
 	useEffect(() => {
-		console.log(defStart);
-		console.log(defEnd);
-	}, [defEnd]);
+		if (refAllDaySwitch.current) {
+			if (refAllDaySwitch.current?.checked) {
+				refEventStartDate.current?.setAttribute('defaultValue', refEventStartDateTime.current?.value?.slice(0, 10) || '');
+				refEventEndDate.current?.setAttribute('defaultValue', refEventEndDateTime.current?.value?.slice(0, 10) || '');
+			} else {
+				refEventStartDateTime.current?.setAttribute('defaultValue', `${refEventStartDate.current?.value}T00:00:00` || '');
+				refEventEndDateTime.current?.setAttribute('defaultValue', `${refEventEndDate.current?.value}T23:59:59` || '');
+			}
+		}
+	}, [refEventStartDate.current]);
 
 	const setEvnet = async () => {
 		setEventParam({});
+		// const color = getEventColor(currentEventParam.task.id);
 		eventParam.id = `${refEventName.current?.value}${refEventStartDate.current?.value}`;
 		eventParam.title = refEventName.current?.value;
 		// eventParam.allDay = isAllDay;
@@ -97,7 +83,10 @@ export const CustomCalendarModal = () => {
 		eventParam.extendedProps = {
 			register: refRegistUser.current?.value,
 			eventDesc: refEventDetail.current?.value,
+			task: { id: currentEventParam.task.id, name: currentEventParam.task.name },
 		};
+		eventParam.color = getEventColor(currentEventParam.task.id);
+		// eventParam.color = color;
 		eventParam.allDay = refAllDaySwitch.current?.checked;
 		const param = [...events];
 		// calendarAction.setAddEventParam(eventParam);
@@ -147,19 +136,32 @@ export const CustomCalendarModal = () => {
 
 	useEffect(() => {
 		if (isDialogOpen) {
+			calendarAction.setCalendarParam({
+				display: 'block',
+				task: {
+					id: workType === 'edit' ? selectedEvent?.extendedProps.task.id : currentEventParam.task.id,
+					name: workType === 'edit' ? selectedEvent?.extendedProps.task.name : currentEventParam.task.name,
+					color: workType === 'edit' ? getEventColor(selectedEvent?.extendedProps.task.id) : currentEventParam?.task.color,
+				},
+			});
 			if (refAllDaySwitch.current?.checked === undefined && selectedEvent?.allDay !== undefined) {
 				setIsAllDay(selectedEvent?.allDay);
-				// refAllDaySwitch.current?.checked === true;
+
 				if (isDialogOpen && workType === 'edit') {
-					if (selectedEvent?.allDay && defStart?.length !== 10) {
-						setDefStart(selectedEvent?.startStr?.slice(0, 10));
-						setDefEnd(selectedEvent?.endStr?.slice(0, 10));
-					} else if (defStart?.length === 10 && !selectedEvent?.allDay) {
-						setDefStart(`${selectedEvent?.startStr}T00:00:00`);
-						setDefEnd(`${selectedEvent?.endStr}T23:59:59`);
+					const startStr = selectedEvent?.startStr ? selectedEvent?.startStr : refEventStartDate.current?.value;
+					const endStr = selectedEvent?.endStr ? selectedEvent?.endStr : refEventEndDate.current?.value;
+					if (selectedEvent?.allDay && startStr?.length !== 10) {
+						setDefStart(startStr?.slice(0, 10));
+						setDefEnd(endStr?.slice(0, 10));
+					} else if (startStr?.length === 10 && !selectedEvent?.allDay) {
+						setDefStartTime(`${startStr}T00:00:00`);
+						setDefEndTime(`${endStr}T23:59:59`);
+					} else if (startStr?.length === 10 && selectedEvent.allDay) {
+						setDefStart(startStr);
+						setDefEnd(endStr);
 					} else {
-						setDefStart(selectedEvent?.startStr?.slice(0, 16));
-						setDefEnd(selectedEvent?.endStr?.slice(0, 16));
+						setDefStartTime(startStr?.slice(0, 16));
+						setDefEndTime(endStr?.slice(0, 16));
 					}
 				}
 			} else {
@@ -169,6 +171,19 @@ export const CustomCalendarModal = () => {
 			// console.log(defStart);
 			// console.log(defEnd);
 		} else {
+			calendarAction.setCalendarEventParam({} as EventApi);
+			calendarAction.setCalendarParam({
+				display: 'block',
+				task: {
+					id: '',
+					name: currentEventParam.task.name,
+					color: currentEventParam?.task.color,
+				},
+			});
+			setDefEnd('');
+			setDefStart('');
+			setDefStartTime('');
+			setDefEndTime('');
 			onClose();
 		}
 	}, [isDialogOpen]);
@@ -196,18 +211,31 @@ export const CustomCalendarModal = () => {
 								defaultChecked={isAllDay || selectedEvent?.allDay}
 								onChange={() => {
 									setIsAllDay(!isAllDay);
-									// if (isDialogOpen && workType === 'edit') {
-									// 	if (selectedEvent?.allDay && defStart?.length !== 10) {
-									// 		setDefStart(selectedEvent?.startStr?.slice(0, 10));
-									// 		setDefEnd(selectedEvent?.endStr?.slice(0, 10));
-									// 	} else if (defStart?.length === 10 && selectedEvent?.allDay) {
-									// 		setDefStart(`${selectedEvent?.startStr}T00:00:00`);
-									// 		setDefEnd(`${selectedEvent?.endStr}T23:59:59`);
-									// 	} else {
-									// 		setDefStart(selectedEvent?.startStr?.slice(0, 16));
-									// 		setDefEnd(selectedEvent?.endStr?.slice(0, 16));
-									// 	}
-									// }
+									if (isDialogOpen) {
+										if (refAllDaySwitch.current?.checked) {
+											refEventStartDate.current?.setAttribute('value', refEventStartDateTime.current?.value?.slice(0, 10) || '');
+											refEventEndDate.current?.setAttribute('value', refEventEndDateTime.current?.value?.slice(0, 10) || '');
+										} else {
+											refEventStartDateTime.current?.setAttribute('value', `${refEventStartDate.current?.value}T00:00:00` || '');
+											refEventEndDateTime.current?.setAttribute('value', `${refEventEndDate.current?.value}T23:59:59` || '');
+										}
+										const startStr = refAllDaySwitch.current?.checked ? refEventStartDate.current?.value : refEventStartDateTime.current?.value;
+										const endStr = refAllDaySwitch.current?.checked ? refEventEndDate.current?.value : refEventEndDateTime.current?.value;
+
+										if (refAllDaySwitch.current?.checked && startStr?.length !== 10) {
+											setDefStart(startStr?.slice(0, 10));
+											setDefEnd(endStr?.slice(0, 10));
+										} else if (startStr?.length === 10 && !refAllDaySwitch.current?.checked) {
+											setDefStartTime(`${startStr}T00:00:00`);
+											setDefEndTime(`${endStr}T23:59:59`);
+										} else if (startStr?.length === 10 && refAllDaySwitch.current?.checked) {
+											setDefStart(startStr);
+											setDefEnd(endStr);
+										} else {
+											setDefStartTime(startStr?.slice(0, 16));
+											setDefEndTime(endStr?.slice(0, 16));
+										}
+									}
 									// convertDate();
 								}}
 							/>
@@ -226,6 +254,13 @@ export const CustomCalendarModal = () => {
 				/>
 				<ModalBody>
 					<div className="grid h-full grid-cols-1">
+						<div className="mt-3 flex">
+							<BsSquareFill
+								color={workType === 'edit' && isDialogOpen ? getEventColor(selectedEvent?.extendedProps.task.id) : currentEventParam?.task.color}
+								className="mr-2 mt-1"
+							/>
+							<p className="text-sm text-gray-900">{`|  ${currentEventParam.task.name}`}</p>
+						</div>
 						<div className="mt-5 start justify-start">
 							<div className="flex justify-start">
 								<p className="text-base font-bold text-navy-700 dark:text-white">일정 명 :</p>
@@ -254,7 +289,7 @@ export const CustomCalendarModal = () => {
 									disabled={false}
 									// defaultValue={selectedEvent?.startStr?.slice(0, 19)}
 									// defaultValue={refEventStartDate.current?.value}
-									defaultValue={defStart}
+									defaultValue={defStartTime}
 									className="mt-2 mr-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 								/>
 								<div className="justify-center items-center flex">
@@ -273,7 +308,7 @@ export const CustomCalendarModal = () => {
 									}}
 									// defaultValue={selectedEvent?.endStr?.slice(0, 19)}
 									// defaultValue={refEventEndDate.current?.value}
-									defaultValue={defEnd}
+									defaultValue={defEndTime}
 									className="mt-2 ml-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 								/>
 							</div>

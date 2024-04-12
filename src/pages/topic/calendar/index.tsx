@@ -4,26 +4,26 @@ import { useEffect, useState } from 'react';
 import { EventApi } from '@fullcalendar/react';
 import FullCalendarComponent from '../../../components/calendar/FullCalendarComponent';
 import Dropdown from '../../../components/dropdown';
-import { useCalendarAction, useCalendarDialogOpen, useEvents } from '../../../store/useCalendar';
+import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useEvents } from '../../../store/useCalendar';
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
 import { CalendarTaskType, INITIAL_EVENTS, taskColor, taskList } from '../../../components/calendar/utils/event-utils';
 
 const CompanyCalendar = () => {
-	const [display, setDisplay] = useState<string>('block');
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();
 	const isDialogOpen = useCalendarDialogOpen();
+	const currentEventParam = useCalendarParam();
 	const eventParam = {} as EventApi;
 
 	useEffect(() => {
 		// useCalendar.calendarParam 기본값
 		const task = { id: 'personal', name: '개인일정', color: taskColor.personal };
-		calendarAction.setCalendarParam({ display, task });
+		calendarAction.setCalendarParam({ display: 'block', task });
 	}, []);
 	const activeTask = (task: CalendarTaskType) => {
 		if (task.id !== selectedTask.id) {
 			setSelectedTask(task);
-			calendarAction.setCalendarParam({ display, task });
+			calendarAction.setCalendarParam({ display: 'block', task });
 		}
 	};
 
@@ -55,6 +55,14 @@ const CompanyCalendar = () => {
 												// calendarAction.setCalendarEventParam(clickInfo.event);
 												// calendarAction.setAddFlag(true);
 												calendarAction.setWorkType('add');
+												calendarAction.setCalendarParam({
+													display: 'block',
+													task: {
+														id: selectedTask.id,
+														name: selectedTask.name,
+														color: selectedTask.color,
+													},
+												});
 												calendarAction.setCalendarEventParam(eventParam);
 												calendarAction.setCalendarDialogFlag(true);
 											}
