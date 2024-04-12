@@ -91,17 +91,22 @@ export const CustomCalendarModal = () => {
 		const param = [...events];
 		// calendarAction.setAddEventParam(eventParam);
 		if (!eventParam.title) {
-			console.log('err');
+			alert('일정 타이틀 입력 누락');
 			return;
 		}
 		if (!eventParam.start) {
-			console.log('err');
+			alert('일정 시작일자 입력 누락');
 			return;
 		}
 		if (!eventParam.end) {
-			console.log('err');
+			alert('일정 종료일자 입력 누락');
 			return;
 		}
+		if (eventParam.start > eventParam.end) {
+			alert('시작일자가 종료일자보다 미래일 수 없습니다.');
+			return;
+		}
+
 		if (workType === 'add') {
 			param.push(eventParam);
 			calendarAction.setCalendarEvents(param);
@@ -283,12 +288,10 @@ export const CustomCalendarModal = () => {
 							<div className={`flex justify-start ${isAllDay ? 'invisible h-0 mb-0 ' : ''}`}>
 								<input
 									type="datetime-local"
-									// type={`${!selectedEvent?.allDay ? 'datetime-local' : 'date'}`}
 									ref={refEventStartDateTime}
 									id="eventName"
 									disabled={false}
-									// defaultValue={selectedEvent?.startStr?.slice(0, 19)}
-									// defaultValue={refEventStartDate.current?.value}
+									onChange={(e) => {}}
 									defaultValue={defStartTime}
 									className="mt-2 mr-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 								/>
@@ -391,12 +394,22 @@ export const CustomCalendarModal = () => {
 					</Button>
 					<Button
 						colorScheme="red"
+						className="mr-3"
 						onClick={() => {
 							calendarAction.setCalendarDialogFlag(false);
 							onClose;
 						}}
 					>
 						취소
+					</Button>
+					<Button
+						colorScheme="red"
+						onClick={() => {
+							calendarAction.setCalendarDialogFlag(false);
+							onClose;
+						}}
+					>
+						삭제
 					</Button>
 				</ModalFooter>
 			</ModalContent>
