@@ -87,7 +87,7 @@ const FullCalendarComponent = () => {
 	const renderEventContent = (eventContent: EventContentArg) => (
 		<>
 			{/* <b>{eventContent.timeText}</b> */}
-			<p>{eventContent.event.title}</p>
+			<p className="hover:cursor-pointer">{eventContent.event.title}</p>
 		</>
 	);
 	return (
@@ -112,7 +112,7 @@ const FullCalendarComponent = () => {
 					initialView="dayGridMonth"
 					eventContent={renderEventContent}
 					// selectable
-					editable
+					// editable
 					eventDisplay="block"
 					selectMirror
 					dayMaxEvents
