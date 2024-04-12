@@ -6,7 +6,7 @@ import FullCalendarComponent from '../../../components/calendar/FullCalendarComp
 import Dropdown from '../../../components/dropdown';
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useEvents } from '../../../store/useCalendar';
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
-import { CalendarTaskType, INITIAL_EVENTS, taskColor, taskList } from '../../../components/calendar/utils/event-utils';
+import { CalendarTaskType, taskColor, taskList } from '../../../components/calendar/utils/event-utils';
 
 const CompanyCalendar = () => {
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });

@@ -24,7 +24,7 @@ import {
 	useInputEvent,
 	useWorkType,
 } from '../../../store/useCalendar';
-import { getEventColor, taskList } from '../utils/event-utils';
+import { getEventColor } from '../utils/event-utils';
 // import { CalendarDetailComponent } from './CalendarDetailComponent';
 
 export const CustomCalendarModal = () => {
