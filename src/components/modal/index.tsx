@@ -53,10 +53,10 @@ const NormalModal = ({ width, height, change, open, contents, type }: normalProp
 	const cancelRef = useRef<any>();
 
 	return (
-		<AlertDialog size="xl" motionPreset="slideInBottom" leastDestructiveRef={cancelRef} onClose={change} isOpen={open} isCentered>
+		<AlertDialog motionPreset="slideInBottom" leastDestructiveRef={cancelRef} onClose={change} isOpen={open} isCentered>
 			<AlertDialogOverlay />
 
-			<AlertDialogContent>
+			<AlertDialogContent minW={width} minH={height}>
 				<AlertDialogHeader>{type === 1 ? '상세보기' : '글쓰기'}</AlertDialogHeader>
 				<AlertDialogCloseButton />
 
