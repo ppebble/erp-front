@@ -3,77 +3,91 @@ import '@fullcalendar/react/dist/vdom';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg } from '@fullcalendar/react';
-import { INITIAL_EVENTS } from './utils/event-utils';
+import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/react';
+import { CalendarParam, INITIAL_EVENTS } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
-import { CalendarParam } from '../../pages/topic/calendar';
-import { useCalendarParam } from '../../store/useCalendar';
+
+import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents } from '../../store/useCalendar';
 
 type PropsType = {
 	param: CalendarParam;
 };
 
-export const taskColor = {
-	sc: '#1cb9e0',
-	sf: '#00e413',
-	manage: '#f52b4d',
-	dev: '#9842fa',
-	personal: '#787f8f',
-	strategicBusinessDivision: '#e9baba',
-	myPersonal: '#aaafbb',
-};
 const FullCalendarComponent = () => {
 	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
 	const { isSideBar } = useSideBar();
 	const calendarRef = useRef<FullCalendar>(null);
 	const calendarParam = useCalendarParam();
-	// const [data, setData] = useState<CalendarParam>(calendarParam);
-	useEffect(() => {}, [calendarParam]);
+	const calendarType = useCalendarType();
+	const isDialogOpen = useCalendarDialogOpen();
+	const calendarAction = useCalendarAction();
+	const calendar = calendarRef.current?.getApi();
+	const initEvents = useEvents();
+	const [data, setData] = useState<CalendarParam>(calendarParam);
+	useEffect(() => {
+		calendarAction.setCalendarEvents(INITIAL_EVENTS);
+	}, []);
+	useEffect(() => {
+		// console.log(initEvents);
+		if (initEvents && calendar) {
+			calendar.addEvent(initEvents);
+		}
+	}, [initEvents]);
+	useEffect(() => {
+		calendarAction.setCalendarType(calendar?.view.type ? calendar?.view.type : 'dayGridMonth');
+	}, [calendar?.view.type]);
 	useEffect(() => {
 		if (calendarRef.current) {
-			const calendar = calendarRef.current.getApi();
-
 			setTimeout(() => {
-				calendar.updateSize();
+				calendar?.updateSize();
 			}, 250);
+			// calendarAction.setCalendarEvents(INITIAL_EVENTS);
 		}
 	}, [isSideBar]);
 	useEffect(() => {
 		// console.log(currentEvents);
 	}, [currentEvents]);
 
-	const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
-	const handleDateSelect = useCallback(
-		(selectInfo: DateSelectArg) => {
-			const title = prompt('이벤트 이름 기입')?.trim();
-			const calendarApi = selectInfo.view.calendar;
-			calendarApi.unselect();
-			if (title) {
-				calendarApi.addEvent({
-					// type :: eventInput
-					title,
-					start: selectInfo.startStr,
-					end: selectInfo.endStr,
-					allDay: selectInfo.allDay,
-					color: calendarParam.task.color,
-					display: calendarParam.display,
-					textColor: '#fff',
-				});
+	// const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
+	// const handleDateSelect = useCallback(
+	// 	(selectInfo: DateSelectArg) => {
+	// 		const title = prompt('이벤트 이름 기입')?.trim();
+	// 		const calendarApi = selectInfo.view.calendar;
+	// 		calendarApi.unselect();
+	// 		if (title) {
+	// 			calendarApi.addEvent({
+	// 				// type :: eventInput
+	// 				title,
+	// 				start: selectInfo.startStr,
+	// 				end: selectInfo.endStr,
+	// 				allDay: selectInfo.allDay,
+	// 				color: calendarParam.task.color,
+	// 				display: calendarParam.display,
+	// 				textColor: '#fff',
+	// 			});
+	// 		}
+	// 	},
+	// 	[calendarParam],
+	// );
+	const handleEventClick = useCallback(
+		(clickInfo: EventClickArg) => {
+			// if (window.confirm(`${clickInfo.event.title}  이벤트를 삭제하시겠습니까?`)) {
+			// 	clickInfo.event.remove();
+			// }
+			if (!isDialogOpen) {
+				calendarAction.setWorkType('edit');
+				calendarAction.setCalendarEventParam(clickInfo.event);
+				calendarAction.setCalendarDialogFlag(true);
 			}
 		},
-		[calendarParam],
+		[isDialogOpen],
 	);
-	const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-		if (window.confirm(`${clickInfo.event.title}  이벤트를 삭제하시겠습니까?`)) {
-			clickInfo.event.remove();
-		}
-	}, []);
 	const renderEventContent = (eventContent: EventContentArg) => (
 		<>
-			<b>{eventContent.timeText}</b>
-			<i>{eventContent.event.title}</i>
+			{/* <b>{eventContent.timeText}</b> */}
+			<p>{eventContent.event.title}</p>
 		</>
 	);
 	return (
@@ -84,29 +98,30 @@ const FullCalendarComponent = () => {
 				}}
 			>
 				<FullCalendar
-					rerenderDelay={100}
-					progressiveEventRendering
+					rerenderDelay={250}
+					// progressiveEventRendering
 					ref={calendarRef}
 					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 					headerToolbar={{
 						start: 'prev',
 						center: 'title',
-						end: 'dayGridMonth,timeGridWeek,timeGridDay next',
+						// end: 'dayGridMonth,timeGridWeek,timeGridDay next',
+						end: 'today next',
 					}}
 					height="85vh"
 					initialView="dayGridMonth"
 					eventContent={renderEventContent}
-					selectable
+					// selectable
 					editable
 					eventDisplay="block"
 					selectMirror
 					dayMaxEvents
 					navLinks
 					businessHours
-					initialEvents={INITIAL_EVENTS}
+					events={initEvents}
 					locale="kr"
-					eventsSet={handleEvents}
-					select={handleDateSelect}
+					// eventsSet={handleEvents}
+					// select={handleDateSelect}
 					eventClick={handleEventClick}
 				/>
 			</div>
