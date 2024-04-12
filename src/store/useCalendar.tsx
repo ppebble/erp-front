@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { EventApi, EventInput } from '@fullcalendar/react';
-import { CalendarParam, taskColor } from '../components/calendar/utils/event-utils';
+import { CalendarParam } from '../components/calendar/utils/event-utils';
 
 interface CalendarStoreProps {
 	calendarParam: CalendarParam;
@@ -28,7 +28,7 @@ interface ActionItem {
 const useCalendar = create<CalendarStoreProps>()(
 	devtools((set) => ({
 		// EventInput = 서버에 넣을 이벤트 모델 로 예상됨
-		calendarParam: { display: 'block', task: { id: 'personal', name: '개인일정', color: taskColor.personal } } as CalendarParam,
+		calendarParam: { display: 'block', task: { id: 'personal', name: '개인일정', color: '#787f8f' } } as CalendarParam,
 		calendarType: 'dayGridMonth',
 		calendarEvents: [] as EventInput[],
 		calendarEvent: {} as EventApi | null,

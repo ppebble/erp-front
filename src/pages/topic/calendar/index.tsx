@@ -6,7 +6,27 @@ import FullCalendarComponent from '../../../components/calendar/FullCalendarComp
 import Dropdown from '../../../components/dropdown';
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useEvents } from '../../../store/useCalendar';
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
-import { CalendarTaskType, taskColor, taskList } from '../../../components/calendar/utils/event-utils';
+import { CalendarTaskType } from '../../../components/calendar/utils/event-utils';
+import { taskList } from '../../../store/common/useCommon';
+
+const taskColor = {
+	sc: '#1cb9e0',
+	sf: '#00e413',
+	manage: '#f52b4d',
+	dev: '#9842fa',
+	personal: '#787f8f',
+	sb: '#e9baba',
+	myPersonal: '#aaafbb',
+};
+const taskLists = [
+	{ id: 'sc', name: 'SC사업부', color: taskColor.sc },
+	{ id: 'sf', name: 'SF&신사업부', color: taskColor.sf },
+	{ id: 'manage', name: '경영팀', color: taskColor.manage },
+	{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
+	{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
+	{ id: 'personal', name: '개인일정', color: taskColor.personal },
+	{ id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
+] as const;
 
 const CompanyCalendar = () => {
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
@@ -82,7 +102,7 @@ const CompanyCalendar = () => {
 											</div>
 										</div>
 										<div className="mt-3 h-px w-full bg-gray-200 dark:bg-white/20 " />
-										{taskList.map((e) => {
+										{taskLists.map((e) => {
 											return (
 												<div
 													className="mt-3 ml-4 flex"

@@ -1,4 +1,4 @@
-export const TASK_LIST = {
+export const taskList = {
 	sc: { id: 'sc', name: 'SC사업부', color: '#1cb9e0' },
 	sf: { id: 'sf', name: 'SF&신사업부', color: '#00e413' },
 	manage: { id: 'manage', name: '경영팀', color: '#f52b4d' },
@@ -7,6 +7,6 @@ export const TASK_LIST = {
 	personal: { id: 'personal', name: '개인일정', color: '#787f8f' },
 } as const;
 
-export type TASK_LIST = (typeof TASK_LIST)[keyof typeof TASK_LIST];
+export type taskList = (typeof taskList)[keyof typeof taskList];
 
 type ValuesOf<E> = E[keyof E];

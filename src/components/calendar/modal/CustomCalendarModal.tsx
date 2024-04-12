@@ -25,7 +25,6 @@ import {
 	useWorkType,
 } from '../../../store/useCalendar';
 import { getEventColor } from '../utils/event-utils';
-// import { CalendarDetailComponent } from './CalendarDetailComponent';
 
 export const CustomCalendarModal = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
