@@ -1,13 +1,13 @@
 import { MdAddCircleOutline, MdApps, MdSearch } from 'react-icons/md';
 import { BsSquareFill } from 'react-icons/bs';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { EventApi } from '@fullcalendar/react';
 import { Checkbox, CheckboxGroup } from '@chakra-ui/react';
 import FullCalendarComponent from '../../../components/calendar/FullCalendarComponent';
 import Dropdown from '../../../components/dropdown';
-import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useEvents } from '../../../store/useCalendar';
+import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useEvents, useFilteredEvents } from '../../../store/useCalendar';
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
-import { CalendarTaskType } from '../../../components/calendar/utils/event-utils';
+import { CalendarTaskType, INITIAL_EVENTS } from '../../../components/calendar/utils/event-utils';
 import { taskList } from '../../../store/common/useCommon';
 
 const taskColor = {
@@ -35,13 +35,14 @@ const CompanyCalendar = () => {
 	const isDialogOpen = useCalendarDialogOpen();
 	const currentEventParam = useCalendarParam();
 	const eventParam = {} as EventApi;
+	// const events = useEvents();
 	const events = useEvents();
+	const filteredEvents = useFilteredEvents();
 
 	useEffect(() => {
 		// useCalendar.calendarParam 기본값
 		const task = { id: 'personal', name: '개인일정', color: taskColor.personal };
 		calendarAction.setCalendarParam({ display: 'block', task });
-		calendarAction.setFilterEvents(events.filter((item) => ['personal'].includes(item.extendedProps?.task.id)));
 	}, []);
 	const activeTask = (task: CalendarTaskType) => {
 		if (task.id !== selectedTask.id) {
@@ -49,6 +50,9 @@ const CompanyCalendar = () => {
 			calendarAction.setCalendarParam({ display: 'block', task });
 		}
 	};
+	useEffect(() => {
+		calendarAction.setFilterEvents(events.filter((item) => ['personal'].includes(item.extendedProps?.task.id)));
+	}, [events]);
 
 	return (
 		<>
