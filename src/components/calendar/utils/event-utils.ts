@@ -49,12 +49,12 @@ export const getEventColor = (task: string | undefined) => {
  *  task = extendedProps.task.name ... (extendedProps.task.id 필요함 ..)
  *  title = title
  *  note = extendedProps.eventDesc
- *  isToday ?    ??
+ *  isToday  = isAllDay
  *  startDate = start(string)
  *  endDate = end(string)
  *  status ?   ???
  *
- *   allDay ... allDayFlag 필요
+
  */
 export const INITIAL_EVENTS: EventInput[] = [
 	{

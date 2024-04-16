@@ -83,7 +83,12 @@ const FullCalendarComponent = () => {
 					events={initEvents}
 					locale="kr"
 					eventClick={handleEventClick}
-					dateClick={() => {}}
+					dateClick={() => {
+						return false;
+					}}
+					navLinkDayClick={() => {
+						return false;
+					}}
 				/>
 			</div>
 		</Card>
