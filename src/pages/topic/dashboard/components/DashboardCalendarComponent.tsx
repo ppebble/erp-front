@@ -49,23 +49,10 @@ const DashboardCalendarComponent = () => {
 		// console.log(currentEvents);
 	}, [currentEvents]);
 
-	const handleEventClick = useCallback(
-		(clickInfo: EventClickArg) => {
-			// if (window.confirm(`${clickInfo.event.title}  이벤트를 삭제하시겠습니까?`)) {
-			// 	clickInfo.event.remove();
-			// }
-			if (!isDialogOpen) {
-				calendarAction.setWorkType('edit');
-				calendarAction.setCalendarEventParam(clickInfo.event);
-				calendarAction.setCalendarDialogFlag(true);
-			}
-		},
-		[isDialogOpen],
-	);
 	const renderEventContent = (eventContent: EventContentArg) => (
 		<>
 			{/* <b>{eventContent.timeText}</b> */}
-			<p className="hover:cursor-pointer">{eventContent.event.title}</p>
+			<p className="text-sm font-medium base text-white-300 dark:text-white">{eventContent.event.title}</p>
 		</>
 	);
 	return (
@@ -79,14 +66,14 @@ const DashboardCalendarComponent = () => {
 					rerenderDelay={250}
 					// progressiveEventRendering
 					ref={calendarRef}
-					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+					plugins={[dayGridPlugin]}
 					headerToolbar={{
 						start: '',
 						center: 'title',
 						// end: 'dayGridMonth,timeGridWeek,timeGridDay next',
 						end: '',
 					}}
-					height="85vh"
+					height="60vh"
 					initialView="dayGridMonth"
 					eventContent={renderEventContent}
 					// selectable
@@ -100,8 +87,6 @@ const DashboardCalendarComponent = () => {
 					locale="kr"
 					// eventsSet={handleEvents}
 					// select={handleDateSelect}
-					eventClick={handleEventClick}
-					dateClick={() => {}}
 				/>
 			</div>
 		</Card>

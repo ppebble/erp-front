@@ -35,11 +35,13 @@ const CompanyCalendar = () => {
 	const isDialogOpen = useCalendarDialogOpen();
 	const currentEventParam = useCalendarParam();
 	const eventParam = {} as EventApi;
+	const events = useEvents();
 
 	useEffect(() => {
 		// useCalendar.calendarParam 기본값
 		const task = { id: 'personal', name: '개인일정', color: taskColor.personal };
 		calendarAction.setCalendarParam({ display: 'block', task });
+		calendarAction.setFilterEvents(events.filter((item) => ['personal'].includes(item.extendedProps?.task.id)));
 	}, []);
 	const activeTask = (task: CalendarTaskType) => {
 		if (task.id !== selectedTask.id) {
@@ -68,7 +70,18 @@ const CompanyCalendar = () => {
 											</div>
 										</div>
 										<div className="mt-3 h-px w-full bg-gray-200 dark:bg-white/20 " />
-										<CheckboxGroup defaultValue={['personal']}>
+										<CheckboxGroup
+											onChange={(e) => {
+												// e = arrayList
+												/**
+												 *  e를 param으로
+												 */
+												const filterParam = Object.assign([], e);
+												console.log(filterParam);
+												calendarAction.setFilterEvents(events.filter((item) => filterParam.includes(item.extendedProps?.task.id)));
+											}}
+											defaultValue={['personal']}
+										>
 											{taskLists.map((e) => {
 												return (
 													<div

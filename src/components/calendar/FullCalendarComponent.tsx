@@ -9,7 +9,7 @@ import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
 
-import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents } from '../../store/useCalendar';
+import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents, useFilteredEvents } from '../../store/useCalendar';
 
 type PropsType = {
 	param: CalendarParam;
@@ -24,10 +24,11 @@ const FullCalendarComponent = () => {
 	const isDialogOpen = useCalendarDialogOpen();
 	const calendarAction = useCalendarAction();
 	const calendar = calendarRef.current?.getApi();
-	const initEvents = useEvents();
+	const initEvents = useFilteredEvents();
 	const [data, setData] = useState<CalendarParam>(calendarParam);
 	useEffect(() => {
 		calendarAction.setCalendarEvents(INITIAL_EVENTS);
+		calendarAction.setFilterEvents(INITIAL_EVENTS);
 	}, []);
 	useEffect(() => {
 		// console.log(initEvents);

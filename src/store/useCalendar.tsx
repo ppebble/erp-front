@@ -6,6 +6,7 @@ import { CalendarParam } from '../components/calendar/utils/event-utils';
 interface CalendarStoreProps {
 	calendarParam: CalendarParam;
 	calendarEvents: EventInput[];
+	filteredEvents: EventInput[];
 	calendarType: string | undefined;
 	addEventFlag: boolean;
 	calendarEvent: EventApi | null;
@@ -18,6 +19,7 @@ interface ActionItem {
 	setCalendarParam: (param: CalendarParam) => void;
 	setCalendarEvents: (param: EventInput[]) => void;
 	setCalendarDialogFlag: (param: boolean) => void;
+	setFilterEvents: (param: any) => void;
 	setCalendarEventParam: (param: EventApi) => void;
 	setCalendarType: (param: string | undefined) => void;
 	setAddEventParam: (paran: EventInput | undefined) => void;
@@ -32,6 +34,7 @@ const useCalendar = create<CalendarStoreProps>()(
 		calendarType: 'dayGridMonth',
 		calendarEvents: [] as EventInput[],
 		calendarEvent: {} as EventApi | null,
+		filteredEvents: [] as EventInput[],
 		inputEvent: {} as EventInput,
 		workType: '',
 		addEventFlag: true,
@@ -62,6 +65,14 @@ const useCalendar = create<CalendarStoreProps>()(
 					},
 					false,
 				),
+			setFilterEvents: (param: any[]) =>
+				set(
+					(state) => ({
+						filteredEvents: param,
+					}),
+					false,
+					'FILTERED_CALENDAR_EVENTS',
+				),
 			setCalendarEvents: (param: EventInput[]) =>
 				set(
 					(state) => ({
@@ -70,14 +81,7 @@ const useCalendar = create<CalendarStoreProps>()(
 					false,
 					'CALENDAR_EVENTS',
 				),
-			// setCalendarEvents: (param: EventInput[]) =>
-			// 	set(
-			// 		{
-			// 			calendarEvents: param,
-			// 		},
-			// 		false,
-			// 		'CALENDAR_EVENTS',
-			// 	),
+
 			setAddEventParam: (param: EventInput | undefined) => {
 				set({
 					inputEvent: param,
@@ -103,6 +107,7 @@ const useCalendar = create<CalendarStoreProps>()(
 );
 export const useCalendarEvnetParam = () => useCalendar((state) => state.calendarEvent);
 export const useCalendarParam = () => useCalendar((state) => state.calendarParam);
+export const useFilteredEvents = () => useCalendar((state) => state.filteredEvents);
 export const useCalendarDialogOpen = () => useCalendar((state) => state.isDialogOpen);
 export const useCalendarType = () => useCalendar((state) => state.calendarType);
 export const useAddEventFlag = () => useCalendar((state) => state.addEventFlag);
