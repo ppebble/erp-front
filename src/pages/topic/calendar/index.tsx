@@ -1,14 +1,13 @@
 import { MdAddCircleOutline, MdApps, MdSearch } from 'react-icons/md';
 import { BsSquareFill } from 'react-icons/bs';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EventApi } from '@fullcalendar/react';
 import { Checkbox, CheckboxGroup } from '@chakra-ui/react';
 import FullCalendarComponent from '../../../components/calendar/FullCalendarComponent';
 import Dropdown from '../../../components/dropdown';
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useEvents, useFilteredEvents } from '../../../store/useCalendar';
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
-import { CalendarTaskType, INITIAL_EVENTS } from '../../../components/calendar/utils/event-utils';
-import { taskList } from '../../../store/common/useCommon';
+import { CalendarTaskType } from '../../../components/calendar/utils/event-utils';
 
 const taskColor = {
 	sc: '#1cb9e0',
@@ -33,11 +32,8 @@ const CompanyCalendar = () => {
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();
 	const isDialogOpen = useCalendarDialogOpen();
-	const currentEventParam = useCalendarParam();
 	const eventParam = {} as EventApi;
-	// const events = useEvents();
 	const events = useEvents();
-	const filteredEvents = useFilteredEvents();
 
 	useEffect(() => {
 		// useCalendar.calendarParam 기본값
@@ -77,11 +73,7 @@ const CompanyCalendar = () => {
 										<CheckboxGroup
 											onChange={(e) => {
 												// e = arrayList
-												/**
-												 *  e를 param으로
-												 */
 												const filterParam = Object.assign([], e);
-												console.log(filterParam);
 												calendarAction.setFilterEvents(events.filter((item) => filterParam.includes(item.extendedProps?.task.id)));
 											}}
 											defaultValue={['personal']}
