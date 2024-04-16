@@ -4,27 +4,32 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/react';
-import { CalendarParam, INITIAL_EVENTS } from './utils/event-utils';
-import '../../assets/css/FullCalendar.css';
-import { useSideBar } from '../../store/useSideBar';
-import Card from '../card';
+import '../../../../assets/css/FullCalendar.css';
+import { useSideBar } from '../../../../store/useSideBar';
+import { CalendarParam, INITIAL_EVENTS } from '../../../../components/calendar/utils/event-utils';
+import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents } from '../../../../store/useCalendar';
+import Card from '../../../../components/card';
 
-import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents, useFilteredEvents } from '../../store/useCalendar';
+type PropsType = {
+	param: CalendarParam;
+};
 
-const FullCalendarComponent = () => {
+const DashboardCalendarComponent = () => {
 	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
 	const { isSideBar } = useSideBar();
 	const calendarRef = useRef<FullCalendar>(null);
 	const calendarParam = useCalendarParam();
+	const calendarType = useCalendarType();
 	const isDialogOpen = useCalendarDialogOpen();
 	const calendarAction = useCalendarAction();
 	const calendar = calendarRef.current?.getApi();
-	const initEvents = useFilteredEvents();
+	const initEvents = useEvents();
+	const [data, setData] = useState<CalendarParam>(calendarParam);
 	useEffect(() => {
 		calendarAction.setCalendarEvents(INITIAL_EVENTS);
-		calendarAction.setFilterEvents(INITIAL_EVENTS);
 	}, []);
 	useEffect(() => {
+		// console.log(initEvents);
 		if (initEvents && calendar) {
 			calendar.addEvent(initEvents);
 		}
@@ -37,23 +42,17 @@ const FullCalendarComponent = () => {
 			setTimeout(() => {
 				calendar?.updateSize();
 			}, 250);
+			// calendarAction.setCalendarEvents(INITIAL_EVENTS);
 		}
 	}, [isSideBar]);
-	useEffect(() => {}, [currentEvents]);
-	const handleEventClick = useCallback(
-		(clickInfo: EventClickArg) => {
-			if (!isDialogOpen) {
-				calendarAction.setWorkType('edit');
-				calendarAction.setCalendarEventParam(clickInfo.event);
-				calendarAction.setCalendarDialogFlag(true);
-			}
-		},
-		[isDialogOpen],
-	);
+	useEffect(() => {
+		// console.log(currentEvents);
+	}, [currentEvents]);
+
 	const renderEventContent = (eventContent: EventContentArg) => (
 		<>
 			{/* <b>{eventContent.timeText}</b> */}
-			<p className="hover:cursor-pointer">{eventContent.event.title}</p>
+			<p className="text-sm font-medium base text-white-300 dark:text-white">{eventContent.event.title}</p>
 		</>
 	);
 	return (
@@ -65,16 +64,20 @@ const FullCalendarComponent = () => {
 			>
 				<FullCalendar
 					rerenderDelay={250}
+					// progressiveEventRendering
 					ref={calendarRef}
-					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+					plugins={[dayGridPlugin]}
 					headerToolbar={{
-						start: 'prev',
+						start: '',
 						center: 'title',
-						end: 'today next',
+						// end: 'dayGridMonth,timeGridWeek,timeGridDay next',
+						end: '',
 					}}
-					height="85vh"
+					height="60vh"
 					initialView="dayGridMonth"
 					eventContent={renderEventContent}
+					// selectable
+					// editable
 					eventDisplay="block"
 					selectMirror
 					dayMaxEvents
@@ -82,17 +85,12 @@ const FullCalendarComponent = () => {
 					businessHours
 					events={initEvents}
 					locale="kr"
-					eventClick={handleEventClick}
-					dateClick={() => {
-						return false;
-					}}
-					navLinkDayClick={() => {
-						return false;
-					}}
+					// eventsSet={handleEvents}
+					// select={handleDateSelect}
 				/>
 			</div>
 		</Card>
 	);
 };
 
-export default FullCalendarComponent;
+export default DashboardCalendarComponent;
