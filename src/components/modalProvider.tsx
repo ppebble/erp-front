@@ -11,6 +11,7 @@ import {
 	Input,
 	Textarea,
 } from '@chakra-ui/react';
+import useModal from '../store/useModal';
 
 type ModalProps = {
 	change: () => void;
@@ -129,7 +130,9 @@ const SetModal = ({ change, contents, open, type }: ModalProps) => {
 	return dialog;
 };
 
-const NormalModal = ({ change, contents, open, type, closeOnOverlay }: ModalProps) => {
+const ModalProvider = () => {
+	const { open, contents, type, closeOnOverlay, action } = useModal();
+
 	const cancelRef = useRef<any>();
 
 	// closeOnOverlayClick 영역밖 클릭시 Dialog 닫히는지
@@ -138,14 +141,14 @@ const NormalModal = ({ change, contents, open, type, closeOnOverlay }: ModalProp
 			motionPreset="slideInBottom"
 			closeOnOverlayClick={closeOnOverlay}
 			leastDestructiveRef={cancelRef}
-			onClose={change}
+			onClose={action.closeModal}
 			isOpen={open}
 			isCentered
 		>
 			<AlertDialogOverlay />
-			<SetModal change={change} contents={contents} open={open} type={type} />
+			<SetModal change={action.closeModal} contents={contents} open={open} type={type} />
 		</AlertDialog>
 	);
 };
 
-export default NormalModal;
+export default ModalProvider;
