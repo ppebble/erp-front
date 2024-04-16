@@ -74,7 +74,7 @@ export const INITIAL_EVENTS: EventInput[] = [
 		id: 'event2',
 		title: 'Timed event',
 		start: `${todayStr}T12:00:00`,
-		end: '2024-04-13T15:00:00',
+		end: '2024-04-30T15:00:00',
 		extendedProps: {
 			register: 'heap userId',
 			eventDesc: '상세 이벤트 설명 설명 설명 설명',

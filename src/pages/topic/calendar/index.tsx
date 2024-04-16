@@ -27,7 +27,7 @@ const taskLists = [
 	{ id: 'personal', name: '개인일정', color: taskColor.personal },
 	{ id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
 ] as const;
-
+let filter = ['personal'] as string[];
 const CompanyCalendar = () => {
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();
@@ -47,7 +47,7 @@ const CompanyCalendar = () => {
 		}
 	};
 	useEffect(() => {
-		calendarAction.setFilterEvents(events.filter((item) => ['personal'].includes(item.extendedProps?.task.id)));
+		calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
 	}, [events]);
 
 	return (
@@ -73,10 +73,10 @@ const CompanyCalendar = () => {
 										<CheckboxGroup
 											onChange={(e) => {
 												// e = arrayList
-												const filterParam = Object.assign([], e);
-												calendarAction.setFilterEvents(events.filter((item) => filterParam.includes(item.extendedProps?.task.id)));
+												filter = Object.assign([], e);
+												calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
 											}}
-											defaultValue={['personal']}
+											defaultValue={filter}
 										>
 											{taskLists.map((e) => {
 												return (
