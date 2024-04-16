@@ -25,7 +25,7 @@ const taskLists = [
 	{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
 	{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
 	{ id: 'personal', name: '개인일정', color: taskColor.personal },
-	{ id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
+	// { id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
 ] as const;
 let filter = ['personal'] as string[];
 const CompanyCalendar = () => {
@@ -88,9 +88,7 @@ const CompanyCalendar = () => {
 														}}
 													>
 														<Checkbox color={e.color} className="mr-2" value={e.id} />
-														<p
-															className={`text-sm ${selectedTask.id === e.id ? 'text-gray-900' : 'text-gray-200'} hover:text-gray-600 dark:text-white hover:dark:text-white`}
-														>{`|  ${e.name}`}</p>
+														<p className="text-sm text-gray-700  dark:text-white hover:dark:text-white">{`|  ${e.name}`}</p>
 													</div>
 												);
 											})}
