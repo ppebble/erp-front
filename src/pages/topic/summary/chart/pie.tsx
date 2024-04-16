@@ -44,7 +44,7 @@ const Pie = () => {
 					fit={false}
 					activeInnerRadiusOffset={10}
 					activeOuterRadiusOffset={20}
-					colors={{ scheme: 'set1' }}
+					colors={{ scheme: 'accent' }}
 					borderColor={{
 						from: 'color',
 						modifiers: [['brighter', 0.2]],

@@ -104,23 +104,27 @@ const Organization = () => {
 	};
 
 	const MyNodeComponent = ({ node }: any) => {
-		let name: any = '';
+		let tag: any = '';
 		if (node.name !== ' ') {
-			name = (
-				<div className="initechNode" onClick={() => console.log(node.name)} style={{ backgroundColor: `${node.background}`, color: `${node.color}` }}>
+			tag = (
+				<div
+					className="initechNode"
+					onClick={() => console.log(node.name.replace('\n', ' '))}
+					style={{ backgroundColor: `${node.background}`, color: `${node.color}` }}
+				>
 					<pre>{node.name}</pre>
 				</div>
 			);
 		}
-		return name;
+		return tag;
 	};
 
 	return (
-		<Card className="w-full h-full p-4">
-			<div style={{ marginRight: '200px', minWidth: '500px', zIndex: '10' }}>
+		<Card className="w-full h-full p-4 overflow-x-auto">
+			<div style={{ marginRight: '200px', minWidth: '450px', zIndex: '10' }}>
 				<OrgChart tree={initechOrg1} NodeComponent={MyNodeComponent} />
 			</div>
-			<div style={{ marginTop: '-75px', minWidth: '500px' }}>
+			<div style={{ marginTop: '-75px', minWidth: '450px' }}>
 				<OrgChart tree={initechOrg2} NodeComponent={MyNodeComponent} />
 			</div>
 		</Card>

@@ -13,7 +13,7 @@ export const useScroll = create(
 	devtools(
 		persist<ScrollState>(
 			(set) => ({
-				isScroll: false,
+				isScroll: true,
 				setScroll: (select) => set((state) => ({ ...state, isScroll: select })),
 				divHeight: 0,
 				setDivHeight: (select) => set((state) => ({ ...state, divHeight: select })),
