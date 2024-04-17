@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import InputField from '../../../components/fields/InputField';
 import Checkbox from '../../../components/checkbox';
 import { useLoginAction, UserInfo } from '../../../store/useLogin';
-import useModal, { modalProps, useModalAction } from '../../../store/useModal';
+import useModal from '../../../store/useModal';
 
 const Login = () => {
 	const navigation = useNavigate();
@@ -14,22 +14,16 @@ const Login = () => {
 	const refUserPwd = useRef<HTMLInputElement>(null);
 	const refRemeberId = useRef<HTMLInputElement>(null);
 	const [isRemember, setIsRemember] = useState<boolean>(false);
-	const [contents, setContents] = useState<string>();
-	const modalAction = useModalAction();
+	const { openModal } = useModal();
 
 	const doLogin = () => {
 		const param = {
 			userId: refUserId.current?.value,
 			userPwd: refUserPwd.current?.value,
 		};
+
 		if (!param.userId || !param.userPwd) {
-			const modal: modalProps = {
-				open: true,
-				contents,
-				type: 3,
-				closeOnOverlay: true,
-			};
-			modalAction.openModal(modal);
+			openModal({ type: 3, contents: 'id / pwd 를 입력해주세요' });
 		} else {
 			// loginAction(param)
 			//  >> param ::  로그인 후에 결과값(UserInfo)

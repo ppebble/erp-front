@@ -1,58 +1,28 @@
 import { create } from 'zustand';
-import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
-export type modalProps = {
-	open: boolean;
+type modalProps = {
+	type: number;
 	contents?: any;
-	type: number;
-	closeOnOverlay: boolean;
-};
-type ActionItem = {
-	openModal: (modal: modalProps) => void | null;
-	closeModal: () => void | null;
+	closeOnOverlay?: boolean;
 };
 
-export interface ModalStore {
+interface ModalStore {
 	open: boolean;
-	contents: any;
 	type: number;
+	contents: any;
 	closeOnOverlay: boolean;
-	action: ActionItem;
+	openModal: (select: modalProps) => void;
+	closeModal: () => void;
 }
 
-const useModal = create<ModalStore>()(
-	devtools(
-		persist(
-			(set) => ({
-				open: false,
-				contents: null,
-				type: 0,
-				closeOnOverlay: true,
+const useModal = create<ModalStore>()((set) => ({
+	open: false,
+	closeOnOverlay: true,
+	contents: null,
+	type: 0,
+	openModal: (select) =>
+		set((state) => ({ ...state, open: true, type: select.type, contents: select.contents, closeOnOverlay: select.closeOnOverlay })),
+	closeModal: () => set((state) => ({ ...state, open: false, type: 0, contents: null, closeOnOverlay: true })),
+}));
 
-				action: {
-					openModal: (modal: modalProps) =>
-						set({
-							open: modal.open,
-							contents: modal.contents,
-							type: modal.type,
-							closeOnOverlay: modal.closeOnOverlay,
-						}),
-
-					closeModal: () =>
-						set({
-							open: false,
-							contents: null,
-							type: 0,
-							closeOnOverlay: true,
-						}),
-				},
-			}),
-			{
-				name: 'modal-store',
-				storage: createJSONStorage(() => localStorage),
-			},
-		),
-	),
-);
-export const useModalAction = () => useModal((state) => state.action);
 export default useModal;

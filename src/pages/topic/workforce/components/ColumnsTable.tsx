@@ -1,11 +1,10 @@
-/* eslint-disable react/no-unstable-nested-components */
 import { useState, useMemo, useEffect } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
 import { Button } from '@chakra-ui/react';
 import CardMenu from '../../../../components/card/CardMenu';
 import Card from '../../../../components/card';
-import NormalModal from '../../../../components/modal';
+import useModal from '../../../../store/useModal';
 
 type RowObj = {
 	name: string;
@@ -21,13 +20,13 @@ type tableProps = {
 
 const ColumnsTable = ({ tableData, low }: tableProps) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const columnHelper = createColumnHelper<RowObj>();
-
-	const [totalPage] = useState(Math.ceil(tableData.length / low));
 	const [currentPage, setCurrentPage] = useState(0);
-
 	const [startIndex, setStartIndex] = useState(0);
 	const [endIndex, setEndIndex] = useState(low);
+	const [totalPage] = useState(Math.ceil(tableData.length / low));
+	const [data] = useState(() => [...tableData]);
+	const columnHelper = createColumnHelper<RowObj>();
+	const { openModal } = useModal();
 
 	const previousPage = () => {
 		setCurrentPage(currentPage - 1);
@@ -56,26 +55,28 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 		setEndIndex(startIndex + low);
 	}, [currentPage, low, startIndex]);
 
+	const addTag = (value: any) => {
+		return <p className="text-sm font-bold text-navy-700 dark:text-white">{value}</p>;
+	};
+
 	const columns = [
 		columnHelper.accessor('name', {
 			id: '이름',
-			cell: (info: any) => <p className="text-sm font-bold text-navy-700 dark:text-white">{info.getValue()}</p>,
+			cell: (info: any) => addTag(info.getValue()),
 		}),
 		columnHelper.accessor('position', {
 			id: '직책',
-			cell: (info) => <p className="text-sm font-bold text-navy-700 dark:text-white">{info.getValue()}</p>,
+			cell: (info) => addTag(info.getValue()),
 		}),
 		columnHelper.accessor('rank', {
 			id: '직급',
-			cell: (info) => <p className="text-sm font-bold text-navy-700 dark:text-white">{info.getValue()}</p>,
+			cell: (info) => addTag(info.getValue()),
 		}),
 		columnHelper.accessor('team', {
 			id: '부서',
-			cell: (info) => <p className="text-sm font-bold text-navy-700 dark:text-white">{info.getValue()}</p>,
+			cell: (info) => addTag(info.getValue()),
 		}),
 	];
-
-	const [data, setData] = useState(() => [...tableData]);
 
 	const table = useReactTable({
 		data,
@@ -89,33 +90,13 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 		debugTable: true,
 	});
 
-	const [open, setOpen] = useState(false);
-	const [contents, setContents] = useState<RowObj>();
-	const [type, setType] = useState<number>(1);
-	const [detailsSize, setDetailsSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
-
-	const changeOpen = () => {
-		setOpen(!open);
-	};
-
 	const details = (con: RowObj) => {
-		setType(1);
-		setContents(con);
-		changeOpen();
+		openModal({ type: 1, contents: con, closeOnOverlay: false });
 	};
 
 	const newWrite = () => {
-		setType(2);
-		changeOpen();
+		openModal({ type: 2, closeOnOverlay: false });
 	};
-
-	useEffect(() => {
-		const changeSize = () => {
-			window.innerWidth < 1441 ? setDetailsSize(['80%', '80%']) : setDetailsSize(['50%', '75%']);
-		};
-		window.addEventListener('resize', changeSize);
-		return () => window.removeEventListener('resize', changeSize);
-	}, []);
 
 	return (
 		<div className="mt-5 grid">
@@ -211,8 +192,6 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 						</ul>
 					</div>
 				</div>
-
-				<NormalModal change={changeOpen} contents={contents} open={open} type={type} closeOnOverlay={false} />
 			</Card>
 		</div>
 	);

@@ -4,7 +4,7 @@ import { HashRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { CookiesProvider } from 'react-cookie';
 import App from './App';
-import ModalProvider from './components/modalProvider';
+import ModalProvider from './components/modal';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
