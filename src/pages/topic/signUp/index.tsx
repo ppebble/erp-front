@@ -3,7 +3,7 @@ import Basic from './tab/basic';
 import Career from './tab/career';
 import License from './tab/license';
 
-const SiginUp = () => {
+const SignUp = () => {
 	return (
 		<div className="mt-5 grid">
 			<Card className="w-full pb-10 p-4 h-full">
@@ -39,9 +39,7 @@ const SiginUp = () => {
 						</TabPanels>
 					</Tabs>
 					<div className="flex items-end w-full ">
-						<Button className="w-1/5" onClick={() => updateProfile()}>
-							수정
-						</Button>
+						<Button className="w-1/5">수정</Button>
 					</div>
 				</div>
 			</Card>
@@ -49,4 +47,4 @@ const SiginUp = () => {
 	);
 };
 
-export default SiginUp;
+export default SignUp;
