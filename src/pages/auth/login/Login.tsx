@@ -14,7 +14,11 @@ const Login = () => {
 	const refUserPwd = useRef<HTMLInputElement>(null);
 	const refRemeberId = useRef<HTMLInputElement>(null);
 	const [isRemember, setIsRemember] = useState<boolean>(false);
-	const { openModal } = useModal();
+	const { openModal, closeModal } = useModal();
+
+	// const modalOk = () => {
+	// 	closeModal();
+	// };
 
 	const doLogin = () => {
 		const param = {
@@ -23,6 +27,7 @@ const Login = () => {
 		};
 
 		if (!param.userId || !param.userPwd) {
+			// openModal({ type: 3, contents: 'id / pwd 를 입력해주세요', okClick: modalOk });
 			openModal({ type: 3, contents: 'id / pwd 를 입력해주세요' });
 		} else {
 			// loginAction(param)
