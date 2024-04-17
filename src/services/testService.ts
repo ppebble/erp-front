@@ -7,7 +7,7 @@ export const TestService = () => {
 	const postMutation = useMutation({
 		mutationFn: (params: postSampleParams) => postQuery('/datainfo/rest/v1.0/users/auth', params),
 		onSuccess: (result) => {
-			return result.data;
+			return result.response;
 		},
 		onError: (error) => {
 			console.log(error);
@@ -18,8 +18,8 @@ export const TestService = () => {
 		mutationFn: (variables: getSampleParams) =>
 			getQuery(`/api/getMyHistory?empNo=${variables.empNo}&offset=${variables.offset}&limit=${variables.limit}`),
 		onSuccess: (result) => {
-			console.log(JSON.stringify(result.data));
-			return result.data;
+			console.log(JSON.stringify(result.response));
+			return result.response;
 		},
 		onError: (error) => {
 			console.log(error);

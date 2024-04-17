@@ -1,53 +1,61 @@
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import { useRef, useState } from 'react';
+import { ForwardedRef, useEffect, useRef, useState } from 'react';
+import { useQuery } from 'react-query';
 import InputField from '../../../components/fields/InputField';
 import Checkbox from '../../../components/checkbox';
 import { useLoginAction, UserInfo } from '../../../store/useLogin';
+import NormalModal from '../../../components/modal';
+import { loginParam } from '../../../store/authParams';
+import AuthService from '../../../services/authService';
+import { loginResult } from '../../../store/baseParams/baseParams';
 import useModal from '../../../store/useModal';
 
 const Login = () => {
 	const navigation = useNavigate();
 	const loginAction = useLoginAction();
-	const [cookies, setCookie, removeCookie] = useCookies(['userId']);
+	const [cookies, setCookie, removeCookie] = useCookies(['nex_refToken']);
 	const refUserId = useRef<HTMLInputElement>(null);
 	const refUserPwd = useRef<HTMLInputElement>(null);
 	const refRemeberId = useRef<HTMLInputElement>(null);
 	const [isRemember, setIsRemember] = useState<boolean>(false);
 	const { openModal, closeModal } = useModal();
 
-	// const modalOk = () => {
-	// 	closeModal();
-	// };
+	const login = AuthService().loginMutation;
+	// const test = AuthService().testQuery;
+	const { isLoading, error, data } = useQuery('getUserInfo', AuthService().sampleQuery);
 
 	const doLogin = () => {
-		const param = {
+		const param: loginParam = {
 			userId: refUserId.current?.value,
-			userPwd: refUserPwd.current?.value,
+			userPassword: refUserPwd.current?.value,
 		};
-
-		if (!param.userId || !param.userPwd) {
-			// openModal({ type: 3, contents: 'id / pwd 를 입력해주세요', okClick: modalOk });
+		if (!param.userId || !param.userPassword) {
 			openModal({ type: 3, contents: 'id / pwd 를 입력해주세요' });
 		} else {
-			// loginAction(param)
-			//  >> param ::  로그인 후에 결과값(UserInfo)
-			const heapUserInfo: UserInfo = {
-				isAuthorized: true,
-				token: 'token1',
-				userId: refUserId.current?.value, // 원래는 API에서 리턴되는 userId
-				userName: 'userName',
-			};
-			if (isRemember) {
-				setCookie('userId', refUserId.current?.value, {
+			login.mutate(param);
+		}
+	};
+
+	useEffect(() => {
+		if (login.isSuccess) {
+			const loginData: loginResult = login.data.response;
+
+			if (loginData.isSuccessful && loginData.result.accessToken !== undefined) {
+				sessionStorage.setItem('nex_accessToken', loginData.result.accessToken);
+				setCookie('nex_refToken', loginData.result.refreshToken, {
 					path: '/',
 					expires: new Date(Date.now() + 86400000),
 				});
+
+				navigation('/erp/dashboard');
 			}
-			loginAction.login(heapUserInfo);
-			navigation('/erp/dashboard');
 		}
-	};
+	}, [login.data, login.isSuccess, navigation, setCookie]);
+
+	useEffect(() => {
+		console.log(data);
+	}, [data]);
 
 	return (
 		<div className="mt-16 mb-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
