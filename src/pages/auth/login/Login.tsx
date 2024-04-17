@@ -1,11 +1,10 @@
-import { FcGoogle } from 'react-icons/fc';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import { ForwardedRef, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import InputField from '../../../components/fields/InputField';
 import Checkbox from '../../../components/checkbox';
 import { useLoginAction, UserInfo } from '../../../store/useLogin';
-import NormalModal from '../../../components/modal';
+import useModal from '../../../store/useModal';
 
 const Login = () => {
 	const navigation = useNavigate();
@@ -15,21 +14,21 @@ const Login = () => {
 	const refUserPwd = useRef<HTMLInputElement>(null);
 	const refRemeberId = useRef<HTMLInputElement>(null);
 	const [isRemember, setIsRemember] = useState<boolean>(false);
-	const [open, setOpen] = useState(false);
-	const [contents, setContents] = useState<string>();
+	const { openModal, closeModal } = useModal();
 
-	const changeOpen = () => {
-		setOpen(!open);
-	};
+	// const modalOk = () => {
+	// 	closeModal();
+	// };
 
 	const doLogin = () => {
 		const param = {
 			userId: refUserId.current?.value,
 			userPwd: refUserPwd.current?.value,
 		};
+
 		if (!param.userId || !param.userPwd) {
-			changeOpen();
-			setContents('id / pwd 를 입력해주세요');
+			// openModal({ type: 3, contents: 'id / pwd 를 입력해주세요', okClick: modalOk });
+			openModal({ type: 3, contents: 'id / pwd 를 입력해주세요' });
 		} else {
 			// loginAction(param)
 			//  >> param ::  로그인 후에 결과값(UserInfo)
@@ -93,7 +92,6 @@ const Login = () => {
 					</a>
 				</div>
 			</div>
-			<NormalModal change={changeOpen} contents={contents} open={open} type={3} closeOnOverlay />
 		</div>
 	);
 };

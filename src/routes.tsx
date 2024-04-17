@@ -99,11 +99,5 @@ const routes = [
 			},
 		],
 	},
-	{
-		name: '테스트',
-		layout: '/erp',
-		path: 'test',
-		icon: <MdHome className="h-6 w-6" />,
-	},
 ];
 export default routes;

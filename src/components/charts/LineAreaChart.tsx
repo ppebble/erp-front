@@ -16,27 +16,19 @@ class LineChart extends React.Component<ChartProps, ChartState> {
 
 		this.state = {
 			chartData: [],
-			chartOptions: {}
+			chartOptions: {},
 		};
 	}
 
 	componentDidMount() {
 		this.setState({
 			chartData: this.props.chartData,
-			chartOptions: this.props.chartOptions
+			chartOptions: this.props.chartOptions,
 		});
 	}
 
 	render() {
-		return (
-			<ReactApexChart
-				options={this.state.chartOptions}
-				series={this.state.chartData}
-				type='area'
-				width='100%'
-				height='100%'
-			/>
-		);
+		return <ReactApexChart options={this.state.chartOptions} series={this.state.chartData} type="area" width="100%" height="100%" />;
 	}
 }
 

@@ -12,8 +12,7 @@ import Profile from './pages/topic/profile';
 import Summary from './pages/topic/summary';
 import Workforce from './pages/topic/workforce';
 import CompanyCalendar from './pages/topic/calendar';
-
-import Test from './pages/topic/test';
+import SignUp from './pages/topic/signUp';
 
 import NotFound from './pages/error/notFound';
 import Topic from './pages/topic';
@@ -40,7 +39,7 @@ const App = () => {
 				<Route path="seminar" element={<Profile />} />
 				<Route path="board" element={<Summary />} />
 				<Route path="suggestions" element={<Equipment />} />
-				<Route path="test" element={<Test />} />
+				<Route path="signup" element={<SignUp />} />
 			</Route>
 			<Route path="/" element={<Navigate to="/auth/login" replace />} />
 			<Route path="*" element={<NotFound />} />

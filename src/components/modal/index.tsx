@@ -11,16 +11,16 @@ import {
 	Input,
 	Textarea,
 } from '@chakra-ui/react';
+import useModal from '../../store/useModal';
 
 type ModalProps = {
 	change: () => void;
 	contents: any;
-	open: boolean;
 	type: number;
-	closeOnOverlay?: boolean;
+	okClick: () => void;
 };
 
-const SetModal = ({ change, contents, open, type }: ModalProps) => {
+const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 	const [detailsSize, setDetailsSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
 
 	useEffect(() => {
@@ -75,7 +75,7 @@ const SetModal = ({ change, contents, open, type }: ModalProps) => {
 						<Button ref={cancelRef} onClick={change}>
 							취소
 						</Button>
-						<Button colorScheme="blue" ml={3}>
+						<Button colorScheme="blue" ml={3} onClick={okClick}>
 							확인
 						</Button>
 					</AlertDialogFooter>
@@ -93,7 +93,30 @@ const SetModal = ({ change, contents, open, type }: ModalProps) => {
 					</AlertDialogBody>
 
 					<AlertDialogFooter className="!flow-root w-full text-center">
-						<Button className="w-1/2 !ml-0" colorScheme="blue" ml={3} onClick={change}>
+						<Button className="w-1/2 !ml-0" colorScheme="blue" ml={3} onClick={okClick}>
+							확인
+						</Button>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			);
+			break;
+		case 4: // 업데이트
+			dialog = (
+				<AlertDialogContent minW="50%" minH="50%">
+					<AlertDialogHeader />
+					<AlertDialogCloseButton />
+
+					<AlertDialogBody>
+						<div>
+							<div>수정 하시겠습니까?</div>
+						</div>
+					</AlertDialogBody>
+
+					<AlertDialogFooter>
+						<Button ref={cancelRef} onClick={change}>
+							취소
+						</Button>
+						<Button colorScheme="blue" ml={3} onClick={okClick}>
 							확인
 						</Button>
 					</AlertDialogFooter>
@@ -106,7 +129,8 @@ const SetModal = ({ change, contents, open, type }: ModalProps) => {
 	return dialog;
 };
 
-const NormalModal = ({ change, contents, open, type, closeOnOverlay }: ModalProps) => {
+const ModalProvider = () => {
+	const { open, contents, type, closeOnOverlay, okClick, closeModal } = useModal();
 	const cancelRef = useRef<any>();
 
 	// closeOnOverlayClick 영역밖 클릭시 Dialog 닫히는지
@@ -115,14 +139,14 @@ const NormalModal = ({ change, contents, open, type, closeOnOverlay }: ModalProp
 			motionPreset="slideInBottom"
 			closeOnOverlayClick={closeOnOverlay}
 			leastDestructiveRef={cancelRef}
-			onClose={change}
+			onClose={closeModal}
 			isOpen={open}
 			isCentered
 		>
 			<AlertDialogOverlay />
-			<SetModal change={change} contents={contents} open={open} type={type} />
+			<SetModal change={closeModal} type={type} contents={contents} okClick={okClick} />
 		</AlertDialog>
 	);
 };
 
-export default NormalModal;
+export default ModalProvider;

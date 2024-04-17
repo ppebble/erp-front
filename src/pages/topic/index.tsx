@@ -11,27 +11,38 @@ const Topic = (props: { [x: string]: any }) => {
 	const { isSideBar, setSideBar } = useSideBar();
 	const { isScroll, setScroll, divHeight, setDivHeight } = useScroll();
 	const divRef = useRef<HTMLDivElement>(null);
-	const location = useLocation();
 
 	useEffect(() => {
-		const checkHeight = () => {
+		const checkWidth = () => {
 			window.innerWidth < 1200 ? setSideBar(false) : setSideBar(true);
-			if (window.innerHeight <= divHeight) {
+		};
+
+		window.addEventListener('resize', checkWidth);
+
+		return () => window.removeEventListener('resize', checkWidth);
+	}, [setSideBar]);
+
+	useEffect(() => {
+		const checkHeight = (entry: ResizeObserverEntry) => {
+			if (window.innerHeight <= entry.contentRect.height + 180) {
 				setScroll(true);
 			} else {
 				setScroll(false);
 			}
 		};
 
+		// Outlet 높이 변화를 감지함
+		const observer = new ResizeObserver((entries) => {
+			entries.map((entry) => checkHeight(entry));
+		});
+
 		if (divRef.current) {
-			setDivHeight(divRef.current.offsetHeight + 180);
-			checkHeight();
+			observer.observe(divRef.current);
 		}
 
-		window.addEventListener('resize', checkHeight);
-
-		return () => window.removeEventListener('resize', checkHeight);
-	}, [divHeight, location, setDivHeight, setScroll, setSideBar]);
+		// Outlet 높이 변화 감지를 해제함
+		return () => observer.disconnect();
+	}, [setScroll]);
 
 	return (
 		<div className="bg-lightPrimary dark:!bg-navy-900">
