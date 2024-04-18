@@ -1,8 +1,7 @@
-import axios, { type AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import axiosRetry from 'axios-retry';
 import { Cookies } from 'react-cookie';
-import { replaceEtcUrlToData } from './services/base/AxiosUtil';
-import { errorCode } from './store/common/useCommon';
+import mem from 'mem';
 
 export type { AxiosResponse };
 
@@ -43,23 +42,27 @@ const client = axios.create({
 // 		Promise.reject(error).then(() => {});
 // 	},
 // );
-const refTokenQuery = async (): Promise<string> => {
-	try {
-		const result = await client.post('/api/auth/tokenRefresh');
+const refTokenQuery = mem(
+	async (): Promise<string> => {
+		try {
+			const result = await client.post('/api/auth/tokenRefresh');
 
-		console.log(`ref token:: ${result.data}`);
-		sessionStorage.setItem('nex_accessToken', result.data.result.accessToken);
-		new Cookies().set('nex_refToken', result.data.result.refreshToken, {
-			path: '/',
-			expires: new Date(Date.now() + 86400000),
-		});
-		return result.data.result.accessToken;
-	} catch (e) {
-		sessionStorage.removeItem('nex_accessToken');
-		new Cookies().remove('nex_refToken');
-		return '';
-	}
-};
+			console.log(`ref token:: ${result.data}`);
+			sessionStorage.setItem('nex_accessToken', result.data.result.accessToken);
+			new Cookies().set('nex_refToken', result.data.result.refreshToken, {
+				path: '/',
+				expires: new Date(Date.now() + 86400000),
+			});
+			return result.data.result.accessToken;
+		} catch (e) {
+			sessionStorage.removeItem('nex_accessToken');
+			new Cookies().remove('nex_refToken');
+			return '';
+		}
+	},
+	// 10초 동안 들어오는 토큰 갱신 요청 대기
+	{ maxAge: 10000 },
+);
 client.interceptors.request.use((config) => {
 	if (!config.headers) return config;
 
