@@ -38,7 +38,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 			dialog = (
 				<AlertDialogContent minW={detailsSize[0]} minH={detailsSize[1]}>
 					<AlertDialogHeader>상세보기</AlertDialogHeader>
-					<AlertDialogCloseButton />
+					<AlertDialogCloseButton size="lg" />
 					<AlertDialogBody>
 						<div>
 							<p>이름 : {contents?.name}</p>
@@ -54,7 +54,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
 					<AlertDialogHeader>글쓰기</AlertDialogHeader>
-					<AlertDialogCloseButton />
+					<AlertDialogCloseButton size="lg" />
 
 					<AlertDialogBody>
 						<div>
@@ -86,7 +86,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 			dialog = (
 				<AlertDialogContent minW="20%" minH="20%">
 					<AlertDialogHeader />
-					<AlertDialogCloseButton />
+					<AlertDialogCloseButton size="lg" />
 
 					<AlertDialogBody className="content-center text-center text-xl">
 						<div>{contents}</div>
@@ -104,7 +104,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
 					<AlertDialogHeader />
-					<AlertDialogCloseButton />
+					<AlertDialogCloseButton size="lg" />
 
 					<AlertDialogBody>
 						<div>

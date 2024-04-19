@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { Button, Card, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import Basic from './tab/basic';
 import Career from './tab/career';
 import License from './tab/license';
+import Coursework from './tab/coursework';
+import Skill from './tab/skill';
 
 const SignUp = () => {
+	const [mode, setMode] = useState('edit');
 	return (
 		<div className="mt-5 grid">
 			<Card className="w-full pb-10 p-4 h-full">
@@ -19,12 +23,11 @@ const SignUp = () => {
 							<Tab>자격증</Tab>
 							<Tab>교육</Tab>
 							<Tab>보유기술 및 외국어능력</Tab>
-							<Tab>Skill Inventory</Tab>
-							<Tab>증빙서류</Tab>
+							<Button className="flex ml-[auto] mr-[20px] w-[300px]">수정</Button>
 						</TabList>
 						<TabPanels>
 							<TabPanel>
-								<Basic />
+								<Basic mode={mode} />
 							</TabPanel>
 							<TabPanel>
 								<Career />
@@ -32,15 +35,14 @@ const SignUp = () => {
 							<TabPanel>
 								<License />
 							</TabPanel>
-							<TabPanel>4</TabPanel>
-							<TabPanel>5</TabPanel>
-							<TabPanel>6</TabPanel>
-							<TabPanel>7</TabPanel>
+							<TabPanel>
+								<Coursework />
+							</TabPanel>
+							<TabPanel>
+								<Skill />
+							</TabPanel>
 						</TabPanels>
 					</Tabs>
-					<div className="flex items-end w-full ">
-						<Button className="w-1/5">수정</Button>
-					</div>
 				</div>
 			</Card>
 		</div>

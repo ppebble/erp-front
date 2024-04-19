@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import {
 	Accordion,
 	AccordionButton,
@@ -11,11 +10,16 @@ import {
 	Input,
 	InputGroup,
 	InputLeftAddon,
+	InputRightAddon,
 	InputRightElement,
 	Select,
 } from '@chakra-ui/react';
 
-const Basic = () => {
+type BasicProps = {
+	mode: string;
+};
+
+const Basic = ({ mode }: BasicProps) => {
 	const [show, setShow] = useState(false);
 	const handleClick = () => setShow(!show);
 
@@ -32,6 +36,7 @@ const Basic = () => {
 			<InputGroup className="mb-2">
 				<InputLeftAddon className="!min-w-[100px]">이메일</InputLeftAddon>
 				<Input id="userEmail" type="email" />
+				<InputRightAddon>@nexmore.co.kr</InputRightAddon>
 			</InputGroup>
 			<InputGroup className="mb-2">
 				<InputLeftAddon className="!min-w-[100px]">비밀번호</InputLeftAddon>
