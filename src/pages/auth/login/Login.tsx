@@ -26,15 +26,18 @@ const Login = () => {
 	const { isLoading, error, data } = useQuery('getUserInfo', AuthService().sampleQuery);
 
 	const doLogin = () => {
-		const param: loginParam = {
-			userId: refUserId.current?.value,
-			userPassword: refUserPwd.current?.value,
-		};
-		if (!param.userId || !param.userPassword) {
-			openModal({ type: 3, contents: 'id / pwd 를 입력해주세요' });
-		} else {
-			login.mutate(param);
-		}
+		// const param: loginParam = {
+		// 	userId: refUserId.current?.value,
+		// 	userPassword: refUserPwd.current?.value,
+		// 	isEmail: false,
+		// };
+		// if (!param.userId || !param.userPassword) {
+		// 	openModal({ type: 3, contents: 'id / pwd 를 입력해주세요' });
+		// } else {
+		// 	login.mutate(param);
+		// }
+		// TODO 추후 주석 해제
+		navigation('/erp/dashboard');
 	};
 
 	useEffect(() => {
