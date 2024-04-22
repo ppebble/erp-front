@@ -17,25 +17,25 @@ import {
 const routes = [
 	{
 		name: '대시보드',
-		layout: '/erp',
+		layout: '/topic',
 		path: 'dashboard',
 		icon: <MdHome className="h-6 w-6" />,
 	},
 	{
 		name: '인력현황',
-		layout: '/erp',
+		layout: '/topic',
 		path: 'profile',
 		icon: <MdOutlinePerson className="h-6 w-6" />,
 		child: [
 			{
 				name: '요약통계',
-				layout: '/erp',
+				layout: '/topic',
 				path: 'summary',
 				icon: <MdOutlineAutoGraph className="h-6 w-6" />,
 			},
 			{
 				name: '인력사항',
-				layout: '/erp',
+				layout: '/topic',
 				path: 'workforce',
 				icon: <MdOutlinePeople className="h-6 w-6" />,
 			},
@@ -43,19 +43,19 @@ const routes = [
 	},
 	{
 		name: '사업계획',
-		layout: '/erp',
+		layout: '/topic',
 		path: 'business',
 		icon: <MdOutlineBusiness className="h-6 w-6" />,
 		child: [
 			{
 				name: '일정표',
-				layout: '/erp',
+				layout: '/topic',
 				path: 'calendar',
 				icon: <MdOutlineCalendarMonth className="h-6 w-6" />,
 			},
 			{
 				name: '프로젝트',
-				layout: '/erp',
+				layout: '/topic',
 				path: 'project',
 				icon: <MdOutlineWorkHistory className="h-6 w-6" />,
 			},
@@ -63,37 +63,37 @@ const routes = [
 	},
 	{
 		name: '물자현황',
-		layout: '/erp',
+		layout: '/topic',
 		path: 'equipment',
 		icon: <MdOutlineLaptopChromebook className="h-6 w-6" />,
 	},
 	{
 		name: '게시판',
-		layout: '/erp',
+		layout: '/topic',
 		path: 'notices',
 		icon: <MdOutlineDashboard className="h-6 w-6" />,
 		child: [
 			{
 				name: '회사소식',
-				layout: '/erp',
+				layout: '/topic',
 				path: 'news',
 				icon: <MdOutlineNewspaper className="h-6 w-6" />,
 			},
 			{
 				name: '세미나',
-				layout: '/erp',
+				layout: '/topic',
 				path: 'seminar',
 				icon: <MdPeople className="h-6 w-6" />,
 			},
 			{
 				name: '자유게시판',
-				layout: '/erp',
+				layout: '/topic',
 				path: 'board',
 				icon: <MdOutlineComment className="h-6 w-6" />,
 			},
 			{
 				name: '건의사항',
-				layout: '/erp',
+				layout: '/topic',
 				path: 'suggestions',
 				icon: <MdEmojiPeople className="h-6 w-6" />,
 			},

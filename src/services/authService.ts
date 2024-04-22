@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from 'react-query';
-import { loginParam } from '../store/authParams';
+import { loginParam } from '../network/request/authParams';
 import { getQuery, postQuery } from './base/AxiosQueryService';
 
 export const AuthService = () => {

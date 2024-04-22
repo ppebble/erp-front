@@ -6,10 +6,11 @@ import InputField from '../../../components/fields/InputField';
 import Checkbox from '../../../components/checkbox';
 import { useLoginAction, UserInfo } from '../../../store/useLogin';
 import NormalModal from '../../../components/modal';
-import { loginParam } from '../../../store/authParams';
+import { loginParam } from '../../../network/request/authParams';
 import AuthService from '../../../services/authService';
-import { loginResult } from '../../../store/baseParams/baseParams';
 import useModal from '../../../store/useModal';
+import { loginResult } from '../../../network/response/loginResult';
+import { commonResult } from '../../../network/commonResult';
 
 const Login = () => {
 	const navigation = useNavigate();
@@ -37,28 +38,25 @@ const Login = () => {
 		// 	login.mutate(param);
 		// }
 		// TODO 추후 주석 해제
-		navigation('/erp/dashboard');
+		navigation('/topic/dashboard');
 	};
 
 	useEffect(() => {
 		if (login.isSuccess) {
-			const loginData: loginResult = login.data.response;
+			const loginData: commonResult = login.data.response;
+			const mResult: loginResult = loginData.result;
 
-			if (loginData.isSuccessful && loginData.result.accessToken !== undefined) {
-				sessionStorage.setItem('nex_accessToken', loginData.result.accessToken);
-				setCookie('nex_refToken', loginData.result.refreshToken, {
+			if (loginData.isSuccessful && mResult.accessToken !== undefined) {
+				sessionStorage.setItem('nex_accessToken', mResult.accessToken);
+				setCookie('nex_refToken', mResult.refreshToken, {
 					path: '/',
 					expires: new Date(Date.now() + 86400000),
 				});
 
-				navigation('/erp/dashboard');
+				navigation('/topic/dashboard');
 			}
 		}
 	}, [login.data, login.isSuccess, navigation, setCookie]);
-
-	useEffect(() => {
-		console.log(data);
-	}, [data]);
 
 	return (
 		<div className="mt-16 mb-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">

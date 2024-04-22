@@ -14,7 +14,7 @@ import Workforce from './pages/topic/workforce';
 import CompanyCalendar from './pages/topic/calendar';
 import SignUp from './pages/topic/signUp';
 
-import NotFound from './pages/error/notFound';
+import NotFound from './pages/error/NotFound';
 import Topic from './pages/topic';
 import Equipment from './pages/topic/equipment';
 
@@ -24,7 +24,7 @@ const App = () => {
 			<Route path="auth" element={<AuthLayout />}>
 				<Route path="login" element={<Login />} />
 			</Route>
-			<Route path="/erp" element={<Topic />}>
+			<Route path="/topic" element={<Topic />}>
 				<Route path="dashboard" element={<Dashboard />} />
 				<Route path="summary" element={<Summary />} />
 				<Route path="workforce" element={<Workforce />} />
