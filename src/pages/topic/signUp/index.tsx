@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button, Card, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import useProfile from '../../../store/useProfile';
 import Basic from './tab/basic';
 import Career from './tab/career';
 import License from './tab/license';
@@ -7,7 +8,12 @@ import Coursework from './tab/coursework';
 import Skill from './tab/skill';
 
 const SignUp = () => {
-	const [mode, setMode] = useState('edit');
+	const { profile, career, license, coursework, skill } = useProfile();
+
+	const update = () => {
+		console.log(profile);
+	};
+
 	return (
 		<div className="mt-5 grid">
 			<Card className="w-full pb-10 p-4 h-full">
@@ -23,11 +29,13 @@ const SignUp = () => {
 							<Tab>자격증</Tab>
 							<Tab>교육</Tab>
 							<Tab>보유기술 및 외국어능력</Tab>
-							<Button className="flex ml-[auto] mr-[20px] w-[300px]">수정</Button>
+							<Button className="flex ml-[auto] mr-[20px] w-[300px]" onClick={() => update()}>
+								수정
+							</Button>
 						</TabList>
 						<TabPanels>
 							<TabPanel>
-								<Basic mode={mode} />
+								<Basic />
 							</TabPanel>
 							<TabPanel>
 								<Career />
