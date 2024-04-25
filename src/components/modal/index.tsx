@@ -18,9 +18,11 @@ type ModalProps = {
 	contents: any;
 	type: number;
 	okClick: () => void;
+	updataClick: () => void;
+	deleteClick: () => void;
 };
 
-const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
+const SetModal = ({ change, type, contents, okClick, updataClick, deleteClick }: ModalProps) => {
 	const [detailsSize, setDetailsSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
 
 	useEffect(() => {
@@ -47,6 +49,14 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 							<p>부서 : {contents?.team}</p>
 						</div>
 					</AlertDialogBody>
+					<AlertDialogFooter>
+						<Button colorScheme="green" ref={cancelRef} onClick={updataClick}>
+							수정
+						</Button>
+						<Button colorScheme="red" ml={3} onClick={deleteClick}>
+							삭제
+						</Button>
+					</AlertDialogFooter>
 				</AlertDialogContent>
 			);
 			break;
@@ -93,7 +103,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 					</AlertDialogBody>
 
 					<AlertDialogFooter className="!flow-root w-full text-center">
-						<Button className="w-1/2 !ml-0" colorScheme="blue" ml={3} onClick={okClick}>
+						<Button className="w-1/2 !ml-0" colorScheme="blue" ml={3} onClick={change}>
 							확인
 						</Button>
 					</AlertDialogFooter>
@@ -130,7 +140,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 };
 
 const ModalProvider = () => {
-	const { open, contents, type, closeOnOverlay, okClick, closeModal } = useModal();
+	const { open, contents, type, closeOnOverlay, okClick, updataClick, deleteClick, closeModal } = useModal();
 	const cancelRef = useRef<any>();
 
 	// closeOnOverlayClick 영역밖 클릭시 Dialog 닫히는지
@@ -144,7 +154,7 @@ const ModalProvider = () => {
 			isCentered
 		>
 			<AlertDialogOverlay />
-			<SetModal change={closeModal} type={type} contents={contents} okClick={okClick} />
+			<SetModal change={closeModal} type={type} contents={contents} okClick={okClick} updataClick={updataClick} deleteClick={deleteClick} />
 		</AlertDialog>
 	);
 };

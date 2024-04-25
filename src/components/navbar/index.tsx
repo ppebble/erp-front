@@ -36,7 +36,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
 				</span>
 
 				<Menu>
-					<MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+					<MenuButton className="!bg-white" as={Button} rightIcon={<ChevronDownIcon />}>
 						UserName
 					</MenuButton>
 					<MenuList>

@@ -5,6 +5,8 @@ type modalProps = {
 	contents?: any;
 	closeOnOverlay?: boolean;
 	okClick?: () => void;
+	updataClick?: () => void;
+	deleteClick?: () => void;
 };
 
 interface ModalStore {
@@ -13,6 +15,8 @@ interface ModalStore {
 	contents: any;
 	closeOnOverlay: boolean;
 	okClick: () => void;
+	updataClick: () => void;
+	deleteClick: () => void;
 	openModal: (select: modalProps) => void;
 	closeModal: () => void;
 }
@@ -23,6 +27,8 @@ const useModal = create<ModalStore>()((set) => ({
 	contents: null,
 	closeOnOverlay: true,
 	okClick: () => {},
+	updataClick: () => {},
+	deleteClick: () => {},
 	openModal: (select) =>
 		set((state) => ({
 			...state,
@@ -31,8 +37,11 @@ const useModal = create<ModalStore>()((set) => ({
 			contents: select.contents,
 			closeOnOverlay: select.closeOnOverlay,
 			okClick: select.okClick,
+			updataClick: select.updataClick,
+			deleteClick: select.deleteClick,
 		})),
-	closeModal: () => set(() => ({ open: false, type: 0, contents: null, closeOnOverlay: true, okClick: () => {} })),
+	closeModal: () =>
+		set(() => ({ open: false, type: 0, contents: null, closeOnOverlay: true, okClick: () => {}, updataClick: () => {}, deleteClick: () => {} })),
 }));
 
 export default useModal;

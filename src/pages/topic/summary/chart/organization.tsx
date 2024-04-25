@@ -1,4 +1,4 @@
-import { Card, background, color } from '@chakra-ui/react';
+import { Card } from '@chakra-ui/react';
 import OrgChart from 'react-orgchart';
 import 'react-orgchart/index.css';
 
