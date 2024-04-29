@@ -1,39 +1,18 @@
 import { create } from 'zustand';
-
-interface ProfileProps {
-	empNo: string;
-	userId: string;
-	userEmail: string;
-	pw: string;
-	task: string;
-	team: string;
-	position: string;
-	rank: string;
-	sciTechCertify: string;
-	employmentDate: string;
-	name: string;
-	eName: string;
-	tel: string;
-	address: string;
-	residentNumber: string;
-	birthday: string;
-	family: string;
-	armyBranch: string;
-	armyStart: string;
-	armyEnd: string;
-	highSchool: string;
-	collage: string;
-	doubleMajor: string;
-	graduateSchool: string;
-}
+import { persist } from 'zustand/middleware';
+import { profileVO } from './baseParams/baseParams';
 
 interface ProfileStore {
 	// 기본정보
-	profile: ProfileProps | undefined;
+	profile: profileVO | undefined;
 	setProfile: (state: any) => void;
 	// 경력사항
 	career: any[];
 	setCareer: (state: any) => void;
+	careerDetail: any[];
+	setCareerDetail: (state: any) => void;
+	careerIndex: number;
+	setCareerIndex: (state: number) => void;
 	// 자격증
 	license: any;
 	setLicense: (state: any) => void;
@@ -45,32 +24,87 @@ interface ProfileStore {
 	setSkill: (state: any) => void;
 }
 
-const useProfile = create<ProfileStore>()((set) => ({
-	profile: undefined,
-	setProfile: (state) =>
-		set(() => ({
-			profile: state,
-		})),
-	career: [],
-	setCareer: (state) =>
-		set(() => ({
-			career: state,
-		})),
-	license: [],
-	setLicense: (state) =>
-		set(() => ({
-			license: state,
-		})),
-	coursework: [],
-	setCoursework: (state) =>
-		set(() => ({
-			coursework: state,
-		})),
-	skill: [],
-	setSkill: (state) =>
-		set(() => ({
-			skill: state,
-		})),
-}));
+// const useProfile = create<ProfileStore>()((set) => ({
+// 	profile: undefined,
+// 	setProfile: (state) =>
+// 		set(() => ({
+// 			profile: state,
+// 		})),
+// 	career: [],
+// 	setCareer: (state) =>
+// 		set(() => ({
+// 			career: state,
+// 		})),
+// 	careerDetail: [],
+// 	setCareerDetail: (state) =>
+// 		set(() => ({
+// 			careerDetail: state,
+// 		})),
+// 	careerIndex: 0,
+// 	setCareerIndex: (state) =>
+// 		set(() => ({
+// 			careerIndex: state,
+// 		})),
+// 	license: [],
+// 	setLicense: (state) =>
+// 		set(() => ({
+// 			license: state,
+// 		})),
+// 	coursework: [],
+// 	setCoursework: (state) =>
+// 		set(() => ({
+// 			coursework: state,
+// 		})),
+// 	skill: [],
+// 	setSkill: (state) =>
+// 		set(() => ({
+// 			skill: state,
+// 		})),
+// }));
+
+const useProfile = create(
+	persist<ProfileStore>(
+		(set) => ({
+			profile: undefined,
+			setProfile: (state) =>
+				set(() => ({
+					profile: state,
+				})),
+			career: [],
+			setCareer: (state) =>
+				set(() => ({
+					career: state,
+				})),
+			careerDetail: [],
+			setCareerDetail: (state) =>
+				set(() => ({
+					careerDetail: state,
+				})),
+			careerIndex: 0,
+			setCareerIndex: (state) =>
+				set(() => ({
+					careerIndex: state,
+				})),
+			license: [],
+			setLicense: (state) =>
+				set(() => ({
+					license: state,
+				})),
+			coursework: [],
+			setCoursework: (state) =>
+				set(() => ({
+					coursework: state,
+				})),
+			skill: [],
+			setSkill: (state) =>
+				set(() => ({
+					skill: state,
+				})),
+		}),
+		{
+			name: 'SideBarStorage',
+		},
+	),
+);
 
 export default useProfile;

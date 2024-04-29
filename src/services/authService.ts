@@ -45,9 +45,19 @@ export const AuthService = () => {
 		enabled: !!sessionStorage.getItem('nex_accessToken'),
 	};
 
+	const profieMutation = useMutation({
+		mutationFn: (params: string) => getQuery('/api/profile/profile'),
+		onSuccess: (result) => {
+			return result.response;
+		},
+		onError: (error) => {
+			console.log(error);
+		},
+	});
+
 	// const commonQuery
 
-	return { loginMutation, testMutation, sampleQuery };
+	return { loginMutation, testMutation, sampleQuery, profieMutation };
 };
 
 export default AuthService;

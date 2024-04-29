@@ -5,13 +5,17 @@ type InputProps = {
 	props: any;
 	count: number;
 	setCount: (count: number) => void;
-	setValue?: (state: any) => void;
+	setValue: (state: any) => void;
 	type: string;
-	select?: number;
 };
 
-const InputContainer = ({ props, count, setCount, type, select, setValue }: InputProps) => {
+const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) => {
 	const [state, setState] = useState<any>([props]);
+
+	useEffect(() => {
+		setValue(state);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [state]);
 
 	useEffect(() => {
 		if (count !== 0) {
@@ -33,12 +37,7 @@ const InputContainer = ({ props, count, setCount, type, select, setValue }: Inpu
 			[e.target.id]: e.target.value,
 		};
 
-		const changeState = state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item));
-
-		if (setValue) {
-			setValue(changeState);
-		}
-		setState(changeState);
+		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 	};
 
 	return <InputComponent inputItems={state} addInput={AddInput} InputDelete={InputDelete} onChange={onChange} type={type} />;

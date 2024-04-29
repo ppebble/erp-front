@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { InputGroup, InputLeftAddon, Input, CloseButton, Button, AccordionItem, AccordionButton, Box, AccordionPanel } from '@chakra-ui/react';
+import useProfile from '../../store/useProfile';
 import CareerDetail from '../../pages/topic/signUp/tab/careerDetail';
-import InputContainer from '.';
 
 type InputComponentprops = {
 	inputItems: any;
@@ -12,11 +12,10 @@ type InputComponentprops = {
 };
 
 const InputComponent = ({ inputItems, addInput, InputDelete, onChange, type }: InputComponentprops) => {
-	const [count, setCount] = useState(0);
-	const [select, setSelect] = useState(0);
+	const { careerIndex, setCareerIndex } = useProfile();
 
 	const changeSelect = (index: number) => {
-		setSelect(index);
+		setCareerIndex(index);
 	};
 
 	const inputComponent = () => {
@@ -84,7 +83,7 @@ const InputComponent = ({ inputItems, addInput, InputDelete, onChange, type }: I
 					<div>
 						{inputItems.map((item: any, index: any) => {
 							return (
-								<div key={`careerDetail_${select}_${item.id}`}>
+								<div key={`careerDetail_${careerIndex}_${item.id}`}>
 									{index === 0 && (
 										<Button className="mb-[10px]" onClick={() => addInput(index)}>
 											추가
@@ -94,9 +93,9 @@ const InputComponent = ({ inputItems, addInput, InputDelete, onChange, type }: I
 										<InputLeftAddon className="!min-w-[100px]">프로젝트명</InputLeftAddon>
 										<Input id="projectName" name={`projectName_${item.id}`} defaultValue={item.licenseName} onChange={(e) => onChange(e, index)} />
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">수행업무</InputLeftAddon>
-										<Input id="task" name={`task_${item.id}`} defaultValue={item.licenseDate} onChange={(e) => onChange(e, index)} />
+										<Input id="projectTask" name={`task_${item.id}`} defaultValue={item.licenseDate} onChange={(e) => onChange(e, index)} />
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">프로젝트 수행일수</InputLeftAddon>
-										<Input id="term" name={`term_${item.id}`} defaultValue={item.licenseDate} onChange={(e) => onChange(e, index)} />
+										<Input id="projectTerm" name={`term_${item.id}`} defaultValue={item.licenseDate} onChange={(e) => onChange(e, index)} />
 										{index > 0 && inputItems[index - 1] ? <CloseButton onClick={() => InputDelete(index)} /> : ''}
 									</InputGroup>
 								</div>
