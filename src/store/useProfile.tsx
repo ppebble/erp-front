@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { profileVO } from './baseParams/baseParams';
+import { profileDto } from './baseParams/baseParams';
 
 interface ProfileStore {
 	// 기본정보
-	profile: profileVO | undefined;
+	profile: profileDto | undefined;
 	setProfile: (state: any) => void;
 	// 경력사항
 	career: any[];
