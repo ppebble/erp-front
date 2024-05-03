@@ -11,38 +11,53 @@ import {
 	InputGroup,
 	InputLeftAddon,
 	InputRightAddon,
-	InputRightElement,
 	Select,
 } from '@chakra-ui/react';
+import ProfileService from '../../../../services/profileService';
 import useProfile from '../../../../store/useProfile';
+import useModal from '../../../../store/useModal';
 
 const Basic = () => {
 	const [show, setShow] = useState(false);
-	const handleClick = () => setShow(!show);
-
-	const [values, setValues] = useState({});
-	const { profile, setProfile } = useProfile();
 	const [highSchool, setHighSchool] = useState<string[]>();
 	const [collage, setCollage] = useState<string[]>();
 	const [graduateSchool, setGraduateSchool] = useState<string[]>();
 
-	const handleChange = (e: any) => {
-		const { id, value } = e.target;
-		setValues((preValues) => ({ ...preValues, [id]: value }));
+	const { basic, setBasic } = useProfile();
+	const { openModal } = useModal();
+
+	const idCheck = ProfileService().idCheckMutation;
+
+	const handleClick = () => setShow(!show);
+
+	const isAvailable = () => {
+		idCheck.mutate(basic.userId);
 	};
 
 	useEffect(() => {
-		if (profile) {
-			setHighSchool(profile?.highSchool?.split('/'));
-			setCollage(profile?.collage?.split('/'));
-			setGraduateSchool(profile?.graduateSchool?.split('/'));
+		if (basic) {
+			setHighSchool(basic.highSchool.split('/'));
+			setCollage(basic.collage.split('/'));
+			setGraduateSchool(basic.graduateSchool.split('/'));
 		}
-	}, [profile]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const handleChange = (e: any) => {
+		const { id, value } = e.target;
+		setBasic({ ...basic, [id]: value });
+	};
 
 	useEffect(() => {
-		setProfile(values);
+		if (idCheck.isSuccess) {
+			if (idCheck.data.response.isSuccessful) {
+				openModal({ type: 3, contents: '사용 가능한 아이디 입니다.' });
+			} else {
+				openModal({ type: 3, contents: '사용할수 없는 아이디 입니다.', color: 'red' });
+			}
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [values]);
+	}, [idCheck.isSuccess, idCheck.isError]);
 
 	// profile, profileDept, profileDetail, profileArmy, profileEducation
 	return (
@@ -51,29 +66,71 @@ const Basic = () => {
 				{/* profile */}
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">사원번호</InputLeftAddon>
-					<Input id="empNo" readOnly defaultValue={profile?.empNo || ''} />
-					<InputLeftAddon className="!min-w-[100px] ml-[20px]">아이디</InputLeftAddon>
-					<Input id="userId" readOnly defaultValue={profile?.userId || ''} />
+					<Input id="empNo" className="!min-w-[100px]" readOnly defaultValue={basic?.empNo || ''} />
+					<InputLeftAddon className="!min-w-[150px] ml-[20px]">국가연구자번호</InputLeftAddon>
+					<Input id="sciTechCertify" onChange={(e) => handleChange(e)} defaultValue={basic?.sciTechCertify || ''} />
 				</InputGroup>
 				<InputGroup className="mb-2">
-					<InputLeftAddon className="!min-w-[100px]">이메일</InputLeftAddon>
-					<Input id="userEmail" defaultValue={profile?.userEmail || ''} />
+					<InputLeftAddon className="!min-w-[100px]">아이디</InputLeftAddon>
+					{basic?.userId === '' ? (
+						<>
+							<Input id="userId" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.userId || ''} />
+							<InputRightAddon>
+								<Button onClick={() => isAvailable()}>중복확인</Button>
+							</InputRightAddon>
+						</>
+					) : (
+						<Input id="userId" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.userId || ''} />
+					)}
+
+					<InputLeftAddon className="!min-w-[100px] ml-[20px]">이메일</InputLeftAddon>
+					<Input id="userEmail" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.userEmail || ''} />
 					<InputRightAddon>@nexmore.co.kr</InputRightAddon>
 				</InputGroup>
-				<InputGroup className="mb-2">
-					<InputLeftAddon className="!min-w-[100px]">비밀번호</InputLeftAddon>
-					<Input id="pw" autoComplete="off" pr="4.5rem" type={show ? 'text' : 'password'} placeholder="변경할 비밀번호를 입력하세요." />
-					<InputRightElement width="4.5rem">
-						<Button h="1.75rem" size="sm" onClick={handleClick}>
-							{show ? '숨김' : '보기'}
-						</Button>
-					</InputRightElement>
-				</InputGroup>
+
+				<Accordion className="mb-[10px]" allowMultiple>
+					<AccordionItem>
+						<h2>
+							<AccordionButton>
+								<Box as="span" flex="1" textAlign="left">
+									+ 비밀번호 변경
+								</Box>
+								<AccordionIcon />
+							</AccordionButton>
+						</h2>
+						<AccordionPanel>
+							<InputGroup className="mb-2">
+								<InputLeftAddon className="!min-w-[100px]">비밀번호</InputLeftAddon>
+								<Input
+									id="pw"
+									className="!min-w-[100px]"
+									onChange={(e) => handleChange(e)}
+									autoComplete="off"
+									pr="4.5rem"
+									type={show ? 'text' : 'password'}
+									placeholder="변경할 비밀번호를 입력하세요."
+								/>
+								<InputLeftAddon className="!min-w-[100px] ml-[20px]">비밀번호 확인</InputLeftAddon>
+								<Input
+									id="re_pw"
+									className="!min-w-[100px]"
+									autoComplete="off"
+									pr="4.5rem"
+									type={show ? 'text' : 'password'}
+									placeholder="변경할 비밀번호를 한번 더 입력하세요."
+								/>
+								<Button className="ml-[20px] w-[150px]" size="md" onClick={handleClick}>
+									{show ? '숨김' : '보기'}
+								</Button>
+							</InputGroup>
+						</AccordionPanel>
+					</AccordionItem>
+				</Accordion>
 
 				{/* profileDept */}
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">부서</InputLeftAddon>
-					<Select id="task" className="!min-w-[150px]" defaultValue={profile?.task || ''}>
+					<Select id="task" key="task" className="!min-w-[160px]" onChange={(e) => handleChange(e)} defaultValue={basic?.task || ''}>
 						<option value="SC사업본부">SC사업본부</option>
 						<option value="SF&신사업본부">SF&신사업본부</option>
 						<option value="경영팀">경영팀</option>
@@ -81,13 +138,17 @@ const Basic = () => {
 						<option value="기업부설연구소">기업부설연구소</option>
 						<option value="없음">없음</option>
 					</Select>
-					<InputLeftAddon className="!min-w-[100px] ml-[20px]">팀</InputLeftAddon>
-					<Select id="team" className="!min-w-[150px]" defaultValue={profile?.team || ''}>
+					<InputLeftAddon className="!min-w-[70px] ml-[20px]">팀</InputLeftAddon>
+					<Select id="team" key="team" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.team || ''}>
 						<option value="개발1팀">개발1팀</option>
 						<option value="개발2팀">개발2팀</option>
 					</Select>
-					<InputLeftAddon className="!min-w-[100px] ml-[20px]">직책</InputLeftAddon>
-					<Select id="position" className="!min-w-[150px]" defaultValue={profile?.position || ''}>
+				</InputGroup>
+				<InputGroup className="mb-2">
+					<InputLeftAddon className="!min-w-[100px]" onChange={(e) => handleChange(e)}>
+						직책
+					</InputLeftAddon>
+					<Select id="position" key="position" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.position || ''}>
 						<option value="CEO">CEO</option>
 						<option value="사업부장">사업부장</option>
 						<option value="본부장">본부장</option>
@@ -95,9 +156,10 @@ const Basic = () => {
 						<option value="실장">실장</option>
 						<option value="팀장">팀장</option>
 						<option value="파트장">파트장</option>
+						<option value="">없음</option>
 					</Select>
-					<InputLeftAddon className="!min-w-[100px] ml-[20px]">직급</InputLeftAddon>
-					<Select id="rank" className="!min-w-[150px]" defaultValue={profile?.rank || ''}>
+					<InputLeftAddon className="!min-w-[70px] ml-[20px]">직급</InputLeftAddon>
+					<Select id="rank" key="rank" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.rank || ''}>
 						<option value="주임">주임</option>
 						<option value="대리">대리</option>
 						<option value="과장">과장</option>
@@ -110,54 +172,51 @@ const Basic = () => {
 					</Select>
 				</InputGroup>
 				<InputGroup className="mb-2">
-					<InputLeftAddon className="!min-w-[180px]">과학기술인등록번호</InputLeftAddon>
-					<Input id="sciTechCertify" defaultValue={profile?.sciTechCertify || ''} />
-				</InputGroup>
-				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">근무지</InputLeftAddon>
-					<Select id="place" className="!min-w-[150px]" defaultValue={profile?.place || ''}>
+					<Select id="place" key="place" className="!min-w-[150px]" onChange={(e) => handleChange(e)} defaultValue={basic?.place || ''}>
 						<option value="SKT">SKT</option>
 						<option value="본사">본사</option>
 						<option value="안산">안산</option>
 						<option value="윤선생">윤선생</option>
 						<option value="미라콤">미라콤</option>
 					</Select>
+					<InputLeftAddon className="!min-w-[100px] ml-[20px]">입사일</InputLeftAddon>
+					<Input id="employmentDate" type="date" onChange={(e) => handleChange(e)} defaultValue={basic?.employmentDate || ''} />
 				</InputGroup>
-				<InputGroup className="mb-2">
-					<InputLeftAddon className="!min-w-[100px]">입사일</InputLeftAddon>
-					<Input id="employmentDate" type="date" defaultValue={profile?.employmentDate || ''} />
-				</InputGroup>
-
 				{/* profileDetail */}
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
-					<Input id="name" className="!min-w-[200px]" defaultValue={profile?.name || ''} />
+					<Input id="name" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.name || ''} />
 					<InputLeftAddon className="!min-w-[100px] ml-[20px]">영문이름</InputLeftAddon>
-					<Input id="eName" className="!min-w-[200px]" defaultValue={profile?.ename || ''} />
+					<Input id="eName" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.ename || ''} />
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">전화번호</InputLeftAddon>
-					<Input id="tel" type="tel" defaultValue={profile?.tel || ''} />
+					<Input id="tel" type="tel" onChange={(e) => handleChange(e)} defaultValue={basic?.tel || ''} />
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">주소</InputLeftAddon>
-					<Input id="address" defaultValue={profile?.address || ''} />
+					<Input id="address" onChange={(e) => handleChange(e)} defaultValue={basic?.address || ''} />
 				</InputGroup>
-				<InputGroup className="mb-2">
-					<InputLeftAddon className="!min-w-[120px]">주민등록번호</InputLeftAddon>
-					<Input id="residentNumber" placeholder="변경할 주민등록번호를 입력하세요." />
-				</InputGroup>
+				{basic?.residentNumber === '' || basic?.residentNumber === undefined ? (
+					<InputGroup className="mb-2">
+						<InputLeftAddon className="!min-w-[120px]">주민등록번호</InputLeftAddon>
+						<Input id="residentNumber" onChange={(e) => handleChange(e)} placeholder="변경할 주민등록번호를 입력하세요." />
+					</InputGroup>
+				) : (
+					''
+				)}
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">생일</InputLeftAddon>
-					<Input id="birthday" type="date" defaultValue={profile?.birthday || ''} />
+					<Input id="birthday" type="date" onChange={(e) => handleChange(e)} defaultValue={basic?.birthday || ''} />
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">가족관계</InputLeftAddon>
-					<Input id="family" defaultValue={profile?.family || ''} />
+					<Input id="family" onChange={(e) => handleChange(e)} defaultValue={basic?.family || ''} />
 				</InputGroup>
 
 				{/* profileArmy */}
-				<Accordion allowMultiple>
+				<Accordion className="mb-[10px]" allowMultiple>
 					<AccordionItem>
 						<h2>
 							<AccordionButton>
@@ -170,11 +229,17 @@ const Basic = () => {
 						<AccordionPanel>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[100px]">병과</InputLeftAddon>
-								<Input id="armyBranch" className="!min-w-[100px]" defaultValue={profile?.armyBranch || ''} />
+								<Input id="armyBranch" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.armyBranch || ''} />
 								<InputLeftAddon className="!min-w-[100px] ml-[20px]">복무기간</InputLeftAddon>
-								<Input id="armyStart" type="date" className="!min-w-[100px]" defaultValue={profile?.armyStart || ''} />
+								<Input
+									id="armyStart"
+									type="date"
+									className="!min-w-[100px]"
+									onChange={(e) => handleChange(e)}
+									defaultValue={basic?.armyStart || ''}
+								/>
 								<b style={{ alignContent: 'center', margin: '0 10px' }}>~</b>
-								<Input id="armyEnd" type="date" className="!min-w-[100px]" defaultValue={profile?.armyEnd || ''} />
+								<Input id="armyEnd" type="date" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.armyEnd || ''} />
 							</InputGroup>
 						</AccordionPanel>
 					</AccordionItem>
@@ -195,42 +260,42 @@ const Basic = () => {
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[100px]">고등학교</InputLeftAddon>
 								<Input id="highSchool" className="!min-w-[200px]" defaultValue={highSchool ? highSchool[0] : ''} />
-								<InputLeftAddon className="!min-w-[100px] ml-[20px]">구분</InputLeftAddon>
-								<Select id="h_type" className="!min-w-[120px]" defaultValue={highSchool ? highSchool[1] : ''}>
+								<InputLeftAddon className="!min-w-[70px] ml-[20px]">구분</InputLeftAddon>
+								<Select id="highType" key="highType" className="!min-w-[120px]" defaultValue={highSchool ? highSchool[1] : ''}>
 									<option value="졸업">졸업</option>
 									<option value="중퇴">중퇴</option>
 									<option value="졸업예정">졸업예정</option>
 								</Select>
-								<InputLeftAddon className="min-w-[100px] ml-[20px]">날짜</InputLeftAddon>
-								<Input id="h_date" type="month" className="!min-w-[150px]" defaultValue={highSchool ? highSchool[2] : ''} />
+								<InputLeftAddon className="min-w-[70px] ml-[20px]">날짜</InputLeftAddon>
+								<Input id="highDate" type="month" className="!min-w-[150px]" defaultValue={highSchool ? highSchool[2] : ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[100px]">대학교</InputLeftAddon>
 								<Input id="collage" className="!min-w-[200px]" defaultValue={collage ? collage[0] : ''} />
-								<InputLeftAddon className="!min-w-[100px] ml-[20px]">전공</InputLeftAddon>
-								<Input id="c_major" className="!min-w-[200px]" defaultValue={collage ? collage[1] : ''} />
-								<InputLeftAddon className="!min-w-[100px] ml-[20px]">구분</InputLeftAddon>
-								<Select id="c_type" className="!min-w-[120px]" defaultValue={collage ? collage[2] : ''}>
+								<InputLeftAddon className="!min-w-[70px] ml-[20px]">전공</InputLeftAddon>
+								<Input id="collageMajor" className="!min-w-[200px]" defaultValue={collage ? collage[1] : ''} />
+								<InputLeftAddon className="!min-w-[70px] ml-[20px]">구분</InputLeftAddon>
+								<Select id="collageType" key="collageType" className="!min-w-[120px]" defaultValue={collage ? collage[2] : ''}>
 									<option value="졸업">졸업</option>
 									<option value="중퇴">중퇴</option>
 									<option value="졸업예정">졸업예정</option>
 								</Select>
-								<InputLeftAddon className="!min-w-[100px] ml-[20px]">날짜</InputLeftAddon>
+								<InputLeftAddon className="!min-w-[70px] ml-[20px]">날짜</InputLeftAddon>
 								<Input id="c_date" type="month" className="!min-w-[150px]" defaultValue={collage ? collage[3] : ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[100px]">대학원</InputLeftAddon>
 								<Input id="graduateSchool" className="!min-w-[200px]" defaultValue={graduateSchool ? graduateSchool[0] : ''} />
-								<InputLeftAddon className="!min-w-[100px] ml-[20px]">전공</InputLeftAddon>
-								<Input id="g_major" className="!min-w-[200px]" defaultValue={graduateSchool ? graduateSchool[1] : ''} />
-								<InputLeftAddon className="!min-w-[100px] ml-[20px]">구분</InputLeftAddon>
-								<Select id="g_type" className="!min-w-[120px]" defaultValue={graduateSchool ? graduateSchool[2] : ''}>
+								<InputLeftAddon className="!min-w-[70px] ml-[20px]">전공</InputLeftAddon>
+								<Input id="graduateMajor" className="!min-w-[200px]" defaultValue={graduateSchool ? graduateSchool[1] : ''} />
+								<InputLeftAddon className="!min-w-[70px] ml-[20px]">구분</InputLeftAddon>
+								<Select id="graduateType" key="graduateType" className="!min-w-[120px]" defaultValue={graduateSchool ? graduateSchool[2] : ''}>
 									<option value="졸업">졸업</option>
 									<option value="중퇴">중퇴</option>
 									<option value="졸업예정">졸업예정</option>
 								</Select>
-								<InputLeftAddon className="!min-w-[100px] ml-[20px]">날짜</InputLeftAddon>
-								<Input id="g_date" type="date" className="!min-w-[150px]" defaultValue={graduateSchool ? graduateSchool[3] : ''} />
+								<InputLeftAddon className="!min-w-[70px] ml-[20px]">날짜</InputLeftAddon>
+								<Input id="graduateDate" type="date" className="!min-w-[150px]" defaultValue={graduateSchool ? graduateSchool[3] : ''} />
 							</InputGroup>
 						</AccordionPanel>
 					</AccordionItem>

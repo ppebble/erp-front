@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import InputComponent from './inputComponent';
+import useProfile from '../../store/useProfile';
+import Career from '../../pages/topic/signUp/tab/careerDetail';
 
 type InputProps = {
 	props: any;
@@ -10,12 +12,41 @@ type InputProps = {
 };
 
 const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) => {
+	const { career, license, coursework, skill } = useProfile();
 	const [state, setState] = useState<any>([props]);
 
+	// useEffect(() => {
+	// 	setValue(state);
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [state]);
+
 	useEffect(() => {
-		setValue(state);
+		switch (type) {
+			case 'career':
+				if (career?.length !== 0) {
+					setState(career);
+				}
+				break;
+			case 'license':
+				if (license?.length !== 0) {
+					setState(license);
+				}
+				break;
+			case 'cursework':
+				if (coursework?.length !== 0) {
+					setState(coursework);
+				}
+				break;
+			case 'skill':
+				if (skill?.length !== 0) {
+					setState(skill);
+				}
+				break;
+			default:
+				break;
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [state]);
+	}, [type]);
 
 	useEffect(() => {
 		if (count !== 0) {
@@ -37,6 +68,7 @@ const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) 
 			[e.target.id]: e.target.value,
 		};
 
+		setValue(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 	};
 

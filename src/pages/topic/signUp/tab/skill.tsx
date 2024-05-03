@@ -9,6 +9,7 @@ const Skill = () => {
 
 	useEffect(() => {
 		setSkill(value);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
 	return (

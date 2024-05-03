@@ -50,19 +50,53 @@ export interface profileDto {
 	armyBranch: string;
 }
 
+export interface career {
+	careerNo?: number;
+	companyName: string;
+	jobClassification: string;
+	employmentDate: string;
+	resignationDate: string;
+}
+
+export interface careerDetail {
+	carDetailNo?: number;
+	projectName: string;
+	projectTask: string;
+	projectTerm: string;
+}
+
+export interface license {
+	licenseNo?: number;
+	licenseName: string;
+	licenseDate: string;
+}
+
+export interface coursework {
+	eduNo?: number;
+	eduName: string;
+	eduStartDate: string;
+	eduEndDate: string;
+	institutation: string;
+}
+
+export interface skill {
+	skillNo?: number;
+	skilName: string;
+	skillGrade: string;
+	criteria: string;
+}
+
 export interface profile {
 	isSuccessful: boolean;
 	resultCode: string;
 	resultMsg: string;
 	dateTime: string;
 	result: {
-		profileDto: {
-			profileDto: any;
-		};
-		career: {};
-		careerDetail: {};
-		license: {};
-		coursework: {};
-		skill: {};
+		profileDto: profileDto;
+		career: career[];
+		careerDetail: careerDetail[];
+		license: license[];
+		coursework: coursework[];
+		skill: skill[];
 	};
 }

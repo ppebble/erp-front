@@ -6,12 +6,17 @@ import useProfile from '../../../../store/useProfile';
 const Career = () => {
 	const [count, setCount] = useState(0);
 	const [value, setValue] = useState<any>();
-	const { careerDetail, setCareerDetail, careerIndex } = useProfile();
+	const { careerDetail, setCareerDetail, careerIndex, setCareerIndex } = useProfile();
 
 	useEffect(() => {
-		setCareerDetail({ ...careerDetail, [careerIndex]: value });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		if (value !== undefined) {
+			setCareerDetail({ ...careerDetail, [careerIndex]: value });
+		}
 	}, [value]);
+
+	// useEffect(() => {
+	// 	console.log(careerDetail);
+	// }, [careerDetail]);
 
 	return (
 		<AccordionPanel id="panel">

@@ -3,6 +3,7 @@ import { create } from 'zustand';
 type modalProps = {
 	type: number;
 	contents?: any;
+	color?: string;
 	closeOnOverlay?: boolean;
 	okClick?: () => void;
 	updataClick?: () => void;
@@ -13,6 +14,7 @@ interface ModalStore {
 	open: boolean;
 	type: number;
 	contents: any;
+	color: string;
 	closeOnOverlay: boolean;
 	okClick: () => void;
 	updataClick: () => void;
@@ -25,6 +27,7 @@ const useModal = create<ModalStore>()((set) => ({
 	open: false,
 	type: 0,
 	contents: null,
+	color: '',
 	closeOnOverlay: true,
 	okClick: () => {},
 	updataClick: () => {},
@@ -35,6 +38,7 @@ const useModal = create<ModalStore>()((set) => ({
 			open: true,
 			type: select.type,
 			contents: select.contents,
+			color: select?.color,
 			closeOnOverlay: select.closeOnOverlay,
 			okClick: select.okClick,
 			updataClick: select.updataClick,
