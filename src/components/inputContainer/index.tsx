@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import InputComponent from './inputComponent';
 import useProfile from '../../store/useProfile';
-import Career from '../../pages/topic/signUp/tab/careerDetail';
 
 type InputProps = {
 	props: any;
@@ -12,7 +11,7 @@ type InputProps = {
 };
 
 const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) => {
-	const { career, license, coursework, skill } = useProfile();
+	const { career, license, coursework, skill, careerDetail, setCareerDetail, careerIndex } = useProfile();
 	const [state, setState] = useState<any>([props]);
 
 	// useEffect(() => {
@@ -21,10 +20,22 @@ const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) 
 	// }, [state]);
 
 	useEffect(() => {
+		if (state) {
+			setValue(state);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [state]);
+
+	useEffect(() => {
 		switch (type) {
 			case 'career':
 				if (career?.length !== 0) {
 					setState(career);
+				}
+				break;
+			case 'careerDetail':
+				if (careerDetail?.length !== 0) {
+					setState(careerDetail[careerIndex]);
 				}
 				break;
 			case 'license':
@@ -50,6 +61,9 @@ const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) 
 
 	useEffect(() => {
 		if (count !== 0) {
+			if (type === 'career') {
+				setCareerDetail({ ...careerDetail, [career.length]: { id: count, projectName: '', task: '', term: '' } });
+			}
 			setState(state.concat(props));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,6 +74,7 @@ const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) 
 	};
 
 	const InputDelete = (idx: any) => {
+		// setValue(state.filter((item: any, index: any) => index !== idx));
 		setState(state.filter((item: any, index: any) => index !== idx));
 	};
 
@@ -68,7 +83,7 @@ const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) 
 			[e.target.id]: e.target.value,
 		};
 
-		setValue(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
+		// setValue(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 	};
 

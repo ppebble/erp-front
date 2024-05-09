@@ -14,7 +14,7 @@ const Coursework = () => {
 
 	return (
 		<InputContainer
-			props={{ id: count, eduName: '', eduStartDate: '', eduEndDate: '', institutation: '' }}
+			props={{ id: count, eduName: '', eduStartDate: '', eduEndDate: '', institution: '' }}
 			count={count}
 			setCount={setCount}
 			setValue={setValue}

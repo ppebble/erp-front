@@ -17,7 +17,14 @@ const Career = () => {
 		<div>
 			<Accordion defaultIndex={[0]}>
 				<InputContainer
-					props={{ id: count, companyName: '', jobClassification: '', employmentDate: '', resignationDate: '' }}
+					props={{
+						id: count,
+						companyName: '',
+						jobClassification: '',
+						employmentDate: '',
+						resignationDate: '',
+						careerDetail: [{ projectName: '', tesk: '', term: '' }],
+					}}
 					count={count}
 					setCount={setCount}
 					setValue={setValue}

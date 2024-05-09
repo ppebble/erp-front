@@ -1,29 +1,47 @@
-// 서버에서 받아올 데이터 구조가 정해지기 전에 테스트용도
-
-export interface baseParams {
-	key: any;
-	value: any;
-}
-
-export interface loginResult {
+export interface profileParams {
 	isSuccessful: boolean;
 	resultCode: string;
 	resultMsg: string;
 	dateTime: string;
 	result: {
-		accessToken: string;
-		refreshToken: string;
+		profile: profile;
+		detail: detail;
+		dept: dept;
+		education: education;
+		army: army;
+		career: career[];
+		license: license[];
+		coursework: coursework[];
+		skill: skill[];
 	};
 }
 
-export interface profileDto {
+export interface profileResult {
+	result: {
+		profile: profile;
+		detail: detail;
+		dept: dept;
+		education: education;
+		army: army;
+		career: career[];
+		license: license[];
+		coursework: coursework[];
+		skill: skill[];
+	};
+}
+
+export interface profile {
 	profileNo: number;
 	empNo: string;
 	userId: string;
 	userEmail: string;
 	pw: string;
+	rePw: string; // 테스트
 	authority: number;
 	isDel: false;
+}
+
+export interface detail {
 	detailNo: number;
 	name: string;
 	ename: string;
@@ -32,6 +50,9 @@ export interface profileDto {
 	residentNumber: string;
 	birthday: string;
 	family: string;
+}
+
+export interface dept {
 	deptNo: number;
 	task: string;
 	team: string;
@@ -40,10 +61,16 @@ export interface profileDto {
 	sciTechCertify: string;
 	place: string;
 	employmentDate: string;
+}
+
+export interface education {
 	pEduNo: number;
 	highSchool: string;
 	collage: string;
 	graduateSchool: string;
+}
+
+export interface army {
 	armyNo: number;
 	armyStart: string;
 	armyEnd: string;
@@ -56,13 +83,15 @@ export interface career {
 	jobClassification: string;
 	employmentDate: string;
 	resignationDate: string;
+	careerDetail: careerDetail[];
 }
 
 export interface careerDetail {
+	id?: number;
 	carDetailNo?: number;
 	projectName: string;
-	projectTask: string;
-	projectTerm: string;
+	task: string;
+	term: string;
 }
 
 export interface license {
@@ -76,27 +105,12 @@ export interface coursework {
 	eduName: string;
 	eduStartDate: string;
 	eduEndDate: string;
-	institutation: string;
+	institution: string;
 }
 
 export interface skill {
 	skillNo?: number;
-	skilName: string;
+	skillName: string;
 	skillGrade: string;
 	criteria: string;
-}
-
-export interface profile {
-	isSuccessful: boolean;
-	resultCode: string;
-	resultMsg: string;
-	dateTime: string;
-	result: {
-		profileDto: profileDto;
-		career: career[];
-		careerDetail: careerDetail[];
-		license: license[];
-		coursework: coursework[];
-		skill: skill[];
-	};
 }

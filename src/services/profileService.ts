@@ -13,14 +13,13 @@ export const ProfileService = () => {
 	});
 
 	const profieQuery = {
-		queryFn: () => getQuery('/api/profile/profile'),
+		queryFn: () => getQuery('/api/profile/selprofile'),
 		onSuccess: (result: any) => {
 			return result;
 		},
 		onError: (error: any) => {
 			console.log(error);
 		},
-		enabled: !!sessionStorage.getItem('nex_accessToken'),
 	};
 
 	const updateProfileMutation = useMutation({

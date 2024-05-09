@@ -23,7 +23,7 @@ const Basic = () => {
 	const [collage, setCollage] = useState<string[]>();
 	const [graduateSchool, setGraduateSchool] = useState<string[]>();
 
-	const { basic, setBasic } = useProfile();
+	const { profile, detail, dept, education, army, setProfile, setDetail, setDept, setEducation, setArmy } = useProfile();
 	const { openModal } = useModal();
 
 	const idCheck = ProfileService().idCheckMutation;
@@ -31,21 +31,43 @@ const Basic = () => {
 	const handleClick = () => setShow(!show);
 
 	const isAvailable = () => {
-		idCheck.mutate(basic.userId);
+		if (profile) {
+			idCheck.mutate(profile.userId);
+		}
 	};
 
 	useEffect(() => {
-		if (basic) {
-			setHighSchool(basic.highSchool.split('/'));
-			setCollage(basic.collage.split('/'));
-			setGraduateSchool(basic.graduateSchool.split('/'));
+		if (education) {
+			setHighSchool(education.highSchool.split('/'));
+			setCollage(education.collage.split('/'));
+			setGraduateSchool(education.graduateSchool.split('/'));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handleChange = (e: any) => {
+	const changeProfile = (e: any) => {
 		const { id, value } = e.target;
-		setBasic({ ...basic, [id]: value });
+		setProfile({ ...profile, [id]: value });
+	};
+
+	const changeDetail = (e: any) => {
+		const { id, value } = e.target;
+		setDetail({ ...detail, [id]: value });
+	};
+
+	const changeDept = (e: any) => {
+		const { id, value } = e.target;
+		setDept({ ...dept, [id]: value });
+	};
+
+	const changeEducation = (e: any) => {
+		const { id, value } = e.target;
+		setEducation({ ...education, [id]: value });
+	};
+
+	const changeArmy = (e: any) => {
+		const { id, value } = e.target;
+		setArmy({ ...army, [id]: value });
 	};
 
 	useEffect(() => {
@@ -66,25 +88,25 @@ const Basic = () => {
 				{/* profile */}
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">사원번호</InputLeftAddon>
-					<Input id="empNo" className="!min-w-[100px]" readOnly defaultValue={basic?.empNo || ''} />
+					<Input id="empNo" className="!min-w-[100px]" readOnly defaultValue={profile.empNo || ''} />
 					<InputLeftAddon className="!min-w-[150px] ml-[20px]">국가연구자번호</InputLeftAddon>
-					<Input id="sciTechCertify" onChange={(e) => handleChange(e)} defaultValue={basic?.sciTechCertify || ''} />
+					<Input id="sciTechCertify" onChange={(e) => changeDept(e)} defaultValue={dept.sciTechCertify || ''} />
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">아이디</InputLeftAddon>
-					{basic?.userId === '' ? (
+					{profile.userId === '' ? (
 						<>
-							<Input id="userId" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.userId || ''} />
+							<Input id="userId" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userId || ''} />
 							<InputRightAddon>
 								<Button onClick={() => isAvailable()}>중복확인</Button>
 							</InputRightAddon>
 						</>
 					) : (
-						<Input id="userId" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.userId || ''} />
+						<Input id="userId" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userId || ''} />
 					)}
 
 					<InputLeftAddon className="!min-w-[100px] ml-[20px]">이메일</InputLeftAddon>
-					<Input id="userEmail" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.userEmail || ''} />
+					<Input id="userEmail" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userEmail || ''} />
 					<InputRightAddon>@nexmore.co.kr</InputRightAddon>
 				</InputGroup>
 
@@ -104,7 +126,7 @@ const Basic = () => {
 								<Input
 									id="pw"
 									className="!min-w-[100px]"
-									onChange={(e) => handleChange(e)}
+									onChange={(e) => changeProfile(e)}
 									autoComplete="off"
 									pr="4.5rem"
 									type={show ? 'text' : 'password'}
@@ -112,8 +134,9 @@ const Basic = () => {
 								/>
 								<InputLeftAddon className="!min-w-[100px] ml-[20px]">비밀번호 확인</InputLeftAddon>
 								<Input
-									id="re_pw"
+									id="rePw"
 									className="!min-w-[100px]"
+									onChange={(e) => changeProfile(e)}
 									autoComplete="off"
 									pr="4.5rem"
 									type={show ? 'text' : 'password'}
@@ -130,7 +153,7 @@ const Basic = () => {
 				{/* profileDept */}
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">부서</InputLeftAddon>
-					<Select id="task" key="task" className="!min-w-[160px]" onChange={(e) => handleChange(e)} defaultValue={basic?.task || ''}>
+					<Select id="task" key="task" className="!min-w-[160px]" onChange={(e) => changeDept(e)} defaultValue={dept.task || ''}>
 						<option value="SC사업본부">SC사업본부</option>
 						<option value="SF&신사업본부">SF&신사업본부</option>
 						<option value="경영팀">경영팀</option>
@@ -139,16 +162,14 @@ const Basic = () => {
 						<option value="없음">없음</option>
 					</Select>
 					<InputLeftAddon className="!min-w-[70px] ml-[20px]">팀</InputLeftAddon>
-					<Select id="team" key="team" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.team || ''}>
+					<Select id="team" key="team" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.team || ''}>
 						<option value="개발1팀">개발1팀</option>
 						<option value="개발2팀">개발2팀</option>
 					</Select>
 				</InputGroup>
 				<InputGroup className="mb-2">
-					<InputLeftAddon className="!min-w-[100px]" onChange={(e) => handleChange(e)}>
-						직책
-					</InputLeftAddon>
-					<Select id="position" key="position" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.position || ''}>
+					<InputLeftAddon className="!min-w-[100px]">직책</InputLeftAddon>
+					<Select id="position" key="position" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.position || ''}>
 						<option value="CEO">CEO</option>
 						<option value="사업부장">사업부장</option>
 						<option value="본부장">본부장</option>
@@ -159,7 +180,7 @@ const Basic = () => {
 						<option value="">없음</option>
 					</Select>
 					<InputLeftAddon className="!min-w-[70px] ml-[20px]">직급</InputLeftAddon>
-					<Select id="rank" key="rank" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.rank || ''}>
+					<Select id="rank" key="rank" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.rank || ''}>
 						<option value="주임">주임</option>
 						<option value="대리">대리</option>
 						<option value="과장">과장</option>
@@ -173,7 +194,7 @@ const Basic = () => {
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">근무지</InputLeftAddon>
-					<Select id="place" key="place" className="!min-w-[150px]" onChange={(e) => handleChange(e)} defaultValue={basic?.place || ''}>
+					<Select id="place" key="place" className="!min-w-[150px]" onChange={(e) => changeDept(e)} defaultValue={dept.place || ''}>
 						<option value="SKT">SKT</option>
 						<option value="본사">본사</option>
 						<option value="안산">안산</option>
@@ -181,38 +202,38 @@ const Basic = () => {
 						<option value="미라콤">미라콤</option>
 					</Select>
 					<InputLeftAddon className="!min-w-[100px] ml-[20px]">입사일</InputLeftAddon>
-					<Input id="employmentDate" type="date" onChange={(e) => handleChange(e)} defaultValue={basic?.employmentDate || ''} />
+					<Input id="employmentDate" type="date" onChange={(e) => changeDept(e)} defaultValue={dept.employmentDate || ''} />
 				</InputGroup>
 				{/* profileDetail */}
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
-					<Input id="name" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.name || ''} />
+					<Input id="name" className="!min-w-[100px]" onChange={(e) => changeDetail(e)} defaultValue={detail.name || ''} />
 					<InputLeftAddon className="!min-w-[100px] ml-[20px]">영문이름</InputLeftAddon>
-					<Input id="eName" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.ename || ''} />
+					<Input id="eName" className="!min-w-[100px]" onChange={(e) => changeDetail(e)} defaultValue={detail.ename || ''} />
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">전화번호</InputLeftAddon>
-					<Input id="tel" type="tel" onChange={(e) => handleChange(e)} defaultValue={basic?.tel || ''} />
+					<Input id="tel" type="tel" onChange={(e) => changeDetail(e)} defaultValue={detail.tel || ''} />
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">주소</InputLeftAddon>
-					<Input id="address" onChange={(e) => handleChange(e)} defaultValue={basic?.address || ''} />
+					<Input id="address" onChange={(e) => changeDetail(e)} defaultValue={detail.address || ''} />
 				</InputGroup>
-				{basic?.residentNumber === '' || basic?.residentNumber === undefined ? (
+				{detail.residentNumber === '' || detail.residentNumber === undefined ? (
 					<InputGroup className="mb-2">
 						<InputLeftAddon className="!min-w-[120px]">주민등록번호</InputLeftAddon>
-						<Input id="residentNumber" onChange={(e) => handleChange(e)} placeholder="변경할 주민등록번호를 입력하세요." />
+						<Input id="residentNumber" onChange={(e) => changeDetail(e)} placeholder="변경할 주민등록번호를 입력하세요." />
 					</InputGroup>
 				) : (
 					''
 				)}
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">생일</InputLeftAddon>
-					<Input id="birthday" type="date" onChange={(e) => handleChange(e)} defaultValue={basic?.birthday || ''} />
+					<Input id="birthday" type="date" onChange={(e) => changeDetail(e)} defaultValue={detail.birthday || ''} />
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">가족관계</InputLeftAddon>
-					<Input id="family" onChange={(e) => handleChange(e)} defaultValue={basic?.family || ''} />
+					<Input id="family" onChange={(e) => changeDetail(e)} defaultValue={detail.family || ''} />
 				</InputGroup>
 
 				{/* profileArmy */}
@@ -229,17 +250,11 @@ const Basic = () => {
 						<AccordionPanel>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[100px]">병과</InputLeftAddon>
-								<Input id="armyBranch" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.armyBranch || ''} />
+								<Input id="armyBranch" className="!min-w-[100px]" onChange={(e) => changeArmy(e)} defaultValue={army.armyBranch || ''} />
 								<InputLeftAddon className="!min-w-[100px] ml-[20px]">복무기간</InputLeftAddon>
-								<Input
-									id="armyStart"
-									type="date"
-									className="!min-w-[100px]"
-									onChange={(e) => handleChange(e)}
-									defaultValue={basic?.armyStart || ''}
-								/>
+								<Input id="armyStart" type="date" className="!min-w-[100px]" onChange={(e) => changeArmy(e)} defaultValue={army.armyStart || ''} />
 								<b style={{ alignContent: 'center', margin: '0 10px' }}>~</b>
-								<Input id="armyEnd" type="date" className="!min-w-[100px]" onChange={(e) => handleChange(e)} defaultValue={basic?.armyEnd || ''} />
+								<Input id="armyEnd" type="date" className="!min-w-[100px]" onChange={(e) => changeArmy(e)} defaultValue={army.armyEnd || ''} />
 							</InputGroup>
 						</AccordionPanel>
 					</AccordionItem>

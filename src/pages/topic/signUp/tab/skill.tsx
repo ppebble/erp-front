@@ -14,7 +14,7 @@ const Skill = () => {
 
 	return (
 		<InputContainer
-			props={{ id: count, skilName: '', skillGrade: '', criteria: '' }}
+			props={{ id: count, skillName: '', skillGrade: '', criteria: '' }}
 			count={count}
 			setCount={setCount}
 			setValue={setValue}

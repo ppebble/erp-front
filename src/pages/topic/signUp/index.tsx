@@ -8,20 +8,29 @@ import Career from './tab/career';
 import License from './tab/license';
 import Coursework from './tab/coursework';
 import Skill from './tab/skill';
-import { profile } from '../../../store/baseParams/baseParams';
+import { career as careerType, careerDetail as careerDetailType, profileParams } from '../../../store/profileParams';
 import useModal from '../../../store/useModal';
 
 const SignUp = () => {
-	const { isSuccess, isError, data } = useQuery('getProfile', ProfileService().profieQuery);
+	const { isSuccess, data } = useQuery('getProfile', ProfileService().profieQuery);
 	const updateProfile = ProfileService().updateProfileMutation;
 	const {
-		basic,
+		profile,
+		detail,
+		dept,
+		education,
+		army,
 		career,
 		careerDetail,
+		careerIndex,
 		license,
 		coursework,
 		skill,
-		setBasic,
+		setProfile,
+		setDetail,
+		setDept,
+		setEducation,
+		setArmy,
 		setCareer,
 		setCareerDetail,
 		setLicense,
@@ -30,6 +39,7 @@ const SignUp = () => {
 		setClear,
 	} = useProfile();
 	const [ready, setReady] = useState(false);
+	const [array, setArray] = useState<any[]>();
 	const { openModal } = useModal();
 
 	useEffect(() => {
@@ -40,26 +50,43 @@ const SignUp = () => {
 	}, []);
 
 	useEffect(() => {
-		if (isSuccess) {
-			const profileData: profile = data.response;
-			if (profileData.isSuccessful) {
-				setBasic(profileData.result.profileDto);
+		if (data && isSuccess) {
+			const profileData: profileParams = data.response;
+			if (profileData?.isSuccessful) {
+				setProfile(profileData.result.profile);
+				setDetail(profileData.result.detail);
+				setDept(profileData.result.dept);
+				setEducation(profileData.result.education);
+				setArmy(profileData.result.army);
 				setCareer(profileData.result.career);
-				setCareerDetail(profileData.result.careerDetail);
+				profileData.result?.career.forEach((item: careerType, index: number) => {
+					setCareerDetail({ ...careerDetail, [index]: item.careerDetail });
+					// setCareerDetail(item.careerDetail);
+				});
 				setLicense(profileData.result.license);
 				setCoursework(profileData.result.coursework);
 				setSkill(profileData.result.skill);
-				setReady(true);
-			} else if (isError) {
-				openModal({ type: 3, contents: profileData.resultMsg, color: 'red' });
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data]);
 
+	useEffect(() => {
+		if (profile) {
+			setReady(true);
+		}
+	}, [profile]);
+
 	const update = () => {
-		const param = { profileDto: basic, career, coursework, license, skill, careerDetail };
-		updateProfile.mutate(param);
+		if (ready) {
+			for (let i = 0; i < career.length; i += 1) {
+				career[i].careerDetail = careerDetail[i];
+			}
+
+			const param = { profile, detail, dept, education, army, career, coursework, license, skill };
+			console.log(param);
+			updateProfile.mutate(param);
+		}
 	};
 
 	useEffect(() => {
