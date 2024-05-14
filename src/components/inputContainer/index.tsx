@@ -6,18 +6,15 @@ type InputProps = {
 	props: any;
 	count: number;
 	setCount: (count: number) => void;
+	detailCount?: number;
+	setDetailCount?: (detailCount: number) => void;
 	setValue: (state: any) => void;
 	type: string;
 };
 
-const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) => {
-	const { career, license, coursework, skill, careerDetail, setCareerDetail, careerIndex } = useProfile();
+const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type }: InputProps) => {
+	const { career, license, coursework, skill, careerIndex, setCareer } = useProfile();
 	const [state, setState] = useState<any>([props]);
-
-	// useEffect(() => {
-	// 	setValue(state);
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [state]);
 
 	useEffect(() => {
 		if (state) {
@@ -29,27 +26,22 @@ const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) 
 	useEffect(() => {
 		switch (type) {
 			case 'career':
-				if (career?.length !== 0) {
+				if (career && career.length !== 0) {
 					setState(career);
 				}
 				break;
-			case 'careerDetail':
-				if (careerDetail?.length !== 0) {
-					setState(careerDetail[careerIndex]);
-				}
-				break;
 			case 'license':
-				if (license?.length !== 0) {
+				if (license && license.length !== 0) {
 					setState(license);
 				}
 				break;
 			case 'cursework':
-				if (coursework?.length !== 0) {
+				if (coursework && coursework.length !== 0) {
 					setState(coursework);
 				}
 				break;
 			case 'skill':
-				if (skill?.length !== 0) {
+				if (skill && skill.length !== 0) {
 					setState(skill);
 				}
 				break;
@@ -61,33 +53,65 @@ const InputContainer = ({ props, count, setCount, setValue, type }: InputProps) 
 
 	useEffect(() => {
 		if (count !== 0) {
-			if (type === 'career') {
-				setCareerDetail({ ...careerDetail, [career.length]: { id: count, projectName: '', task: '', term: '' } });
-			}
 			setState(state.concat(props));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [count]);
 
+	useEffect(() => {
+		if (detailCount) {
+			const newDetail = state[careerIndex]?.careerDetail.concat({ id: detailCount, projectName: '', task: '', term: '' });
+			setState((detail: any) => detail.map((item: any, index: number) => (index === careerIndex ? { ...item, careerDetail: newDetail } : item)));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [detailCount]);
+
 	const AddInput = () => {
 		setCount(count + 1);
 	};
 
+	const AddDetail = () => {
+		setDetailCount(detailCount + 1);
+	};
+
 	const InputDelete = (idx: any) => {
-		// setValue(state.filter((item: any, index: any) => index !== idx));
 		setState(state.filter((item: any, index: any) => index !== idx));
+	};
+
+	const DetailDelete = (idx: number) => {
+		const removeDetail = state[careerIndex].careerDetail.filter((item: any, index: any) => index !== idx);
+		setState((detail: any) => detail.map((item: any, index: number) => (index === careerIndex ? { ...item, careerDetail: removeDetail } : item)));
 	};
 
 	const onChange = (e: any, idx: any) => {
 		const data = {
 			[e.target.id]: e.target.value,
 		};
-
-		// setValue(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 	};
 
-	return <InputComponent inputItems={state} addInput={AddInput} InputDelete={InputDelete} onChange={onChange} type={type} />;
+	const onDetailChange = (e: any, idx: any) => {
+		if (type === 'career') {
+			const detailData = {
+				[e.target.id]: e.target.value,
+			};
+			const change = state[careerIndex].careerDetail.map((item: any, index: number) => (index === idx ? { ...item, ...detailData } : item));
+			setState((detail: any) => detail.map((item: any, index: number) => (index === careerIndex ? { ...item, careerDetail: change } : item)));
+		}
+	};
+
+	return (
+		<InputComponent
+			inputItems={state}
+			addInput={AddInput}
+			addDetail={AddDetail}
+			InputDelete={InputDelete}
+			detailDelete={DetailDelete}
+			onChange={onChange}
+			onDetailChange={onDetailChange}
+			type={type}
+		/>
+	);
 };
 
 export default InputContainer;

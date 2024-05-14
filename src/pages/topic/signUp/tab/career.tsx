@@ -5,6 +5,7 @@ import useProfile from '../../../../store/useProfile';
 
 const Career = () => {
 	const [count, setCount] = useState(0);
+	const [detailCount, setDetailCount] = useState(0);
 	const [value, setValue] = useState<any>();
 	const { setCareer } = useProfile();
 
@@ -23,10 +24,12 @@ const Career = () => {
 						jobClassification: '',
 						employmentDate: '',
 						resignationDate: '',
-						careerDetail: [{ projectName: '', tesk: '', term: '' }],
+						careerDetail: [{ id: count, skillName: '', skillGrade: '', criteria: '' }],
 					}}
 					count={count}
 					setCount={setCount}
+					detailCount={detailCount}
+					setDetailCount={setDetailCount}
 					setValue={setValue}
 					type="career"
 				/>

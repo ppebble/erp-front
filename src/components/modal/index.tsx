@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import { useEffect, useRef, useState } from 'react';
 import {
 	AlertDialog,
@@ -103,7 +104,7 @@ const SetModal = ({ change, type, contents, color, okClick, updataClick, deleteC
 					<AlertDialogCloseButton size="lg" />
 
 					<AlertDialogBody className="content-center text-center text-xl">
-						<div>{contents}</div>
+						<div dangerouslySetInnerHTML={{ __html: contents }} />
 					</AlertDialogBody>
 
 					<AlertDialogFooter className="!flow-root w-full text-center">
