@@ -1,6 +1,7 @@
 import {
 	Button,
 	Card,
+	Checkbox,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -14,6 +15,9 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { EventApi, EventInput } from '@fullcalendar/react';
 import { BsSquareFill } from 'react-icons/bs';
+import { useQuery, useQueryClient } from 'react-query';
+import { MdApps } from 'react-icons/md';
+import moment from 'moment';
 import {
 	useAddEventFlag,
 	useCalendarAction,
@@ -22,14 +26,23 @@ import {
 	useCalendarParam,
 	useEvents,
 	useInputEvent,
+	useMemberTags,
+	useSelectedTag,
 	useWorkType,
 } from '../../../store/useCalendar';
-import { getEventColor } from '../utils/event-utils';
+import { CalendarTaskType, getEventColor, getEventTask } from '../utils/event-utils';
+import { TagifyComponent } from '../../tagify/TagifyComponent';
+import CalendarService from '../../../services/calendarService';
+import Dropdown from '../../dropdown';
+import { scheduleResult } from '../../../network/response/scheduleResult';
+import { MemberTagInfo } from '../../../store/common/useCommon';
 
 export const CustomCalendarModal = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	// const [size, setSize] = useState('md');
 	const isDialogOpen = useCalendarDialogOpen();
+	const memberTags = useMemberTags();
+	const selectedTags = useSelectedTag();
 	const addEventParam = useInputEvent();
 	const [isConfirm, setIsConfirm] = useState<boolean>(false);
 	const events = useEvents();
@@ -46,15 +59,43 @@ export const CustomCalendarModal = () => {
 	const [defStartTime, setDefStartTime] = useState<string | undefined>('');
 	const [defEndTime, setDefEndTime] = useState<string | undefined>('');
 
+	const createEvent = CalendarService().createEventMutation;
+	const { updateEventMutation, deleteEventMutation } = CalendarService();
+
 	const refEventName = useRef<HTMLInputElement>(null);
+	// const token = sessionStorage.getItem('nex_accessToken');
 	const refEventStartDate = useRef<HTMLInputElement>(null);
+	const refAlterAnnCheck = useRef<HTMLInputElement>(null);
 	const refEventEndDate = useRef<HTMLInputElement>(null);
 	const refEventStartDateTime = useRef<HTMLInputElement>(null);
 	const refEventEndDateTime = useRef<HTMLInputElement>(null);
 	const refRegistUser = useRef<HTMLInputElement>(null);
-	const refEventDetail = useRef<HTMLInputElement>(null);
+	const members = useSelectedTag();
 
+	const queryClient = useQueryClient();
+
+	const refEventDetail = useRef<HTMLInputElement>(null);
+	useQuery(['getMembers'], CalendarService().availableProfile);
+	const taskColor = {
+		sc: '#1cb9e0',
+		sf: '#00e413',
+		manage: '#f52b4d',
+		dev: '#9842fa',
+		personal: '#787f8f',
+		sb: '#e9baba',
+		myPersonal: '#aaafbb',
+	};
+	const taskLists = [
+		{ id: 'sc', name: 'SC사업부', color: taskColor.sc },
+		{ id: 'sf', name: 'SF&신사업부', color: taskColor.sf },
+		{ id: 'manage', name: '경영팀', color: taskColor.manage },
+		{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
+		{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
+		{ id: 'personal', name: '개인일정', color: taskColor.personal },
+		// { id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
+	] as const;
 	const currentEventParam = useCalendarParam();
+	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 
 	useEffect(() => {
 		if (refAllDaySwitch.current) {
@@ -68,10 +109,11 @@ export const CustomCalendarModal = () => {
 		}
 	}, [refEventStartDate.current]);
 
-	const setEvnet = async () => {
+	const setEvent = async () => {
 		setEventParam({});
+		const newEvent = {} as scheduleResult;
+
 		// const color = getEventColor(currentEventParam.task.id);
-		eventParam.id = `${refEventName.current?.value}${refEventStartDate.current?.value}`;
 		eventParam.title = refEventName.current?.value;
 		// eventParam.allDay = isAllDay;
 		eventParam.allDay = refAllDaySwitch.current?.checked;
@@ -88,6 +130,21 @@ export const CustomCalendarModal = () => {
 		// eventParam.color = color;
 		eventParam.allDay = refAllDaySwitch.current?.checked;
 		const param = [...events];
+		// newEvent.scheduleNo = eventParam.scheduleId;
+		newEvent.title = eventParam.title || '';
+		newEvent.allDay = eventParam.allDay || false;
+		newEvent.start = eventParam.start || '';
+		newEvent.end = eventParam.end || '';
+		newEvent.eventDesc = eventParam.extendedProps.eventDesc;
+		newEvent.register = eventParam.extendedProps.register;
+		newEvent.task = eventParam.extendedProps.task.name;
+
+		const result = [] as MemberTagInfo[];
+		selectedTags.forEach((item) => {
+			const tag = item.split(' | ') || [];
+			result.push({ name: tag[0], team: tag[1] });
+		});
+		newEvent.members = result;
 		// calendarAction.setAddEventParam(eventParam);
 		if (!eventParam.title) {
 			alert('일정 타이틀 입력 누락');
@@ -109,37 +166,38 @@ export const CustomCalendarModal = () => {
 		if (workType === 'add') {
 			param.push(eventParam);
 			calendarAction.setCalendarEvents(param);
+			createEvent.mutate(newEvent);
 		} else if (workType === 'edit') {
 			const newParam = param.filter((e) => e.id !== eventParam.id);
 			newParam.push(eventParam);
 			calendarAction.setCalendarEvents(newParam);
+			newEvent.scheduleNo = Number.parseInt(selectedEvent?.id || '0', 10);
+			updateEventMutation.mutate(newEvent);
 		}
-		// console.log(defStart);
-		// console.log(defEnd);
-
-		// calendarAction.setCalendarEvents(events);
 		calendarAction.setCalendarDialogFlag(false);
 
-		// eventParam.allDay = false;
-		// eventParam.start = '';
-		// eventParam.end = '';
-		// eventParam.title = '';
+		onClose;
+	};
+	const deleteEvent = async () => {
+		if (workType === 'edit') {
+			const params = {} as { scheduleNo: number };
+			params.scheduleNo = Number.parseInt(selectedEvent?.id || '0', 10);
+			deleteEventMutation.mutate(params);
+		}
+		calendarAction.setCalendarDialogFlag(false);
 
 		onClose;
 	};
 	const onClickConfirm = () => {
-		setEvnet();
+		setEvent();
 	};
-
-	// useEffect(() => {
-	// 	setIsAllDay(selectedEvent?.allDay);
-	// }, []);
-	// useEffect(() => {
-	// 	setEvnet();
-	// }, [addEventParam]);
+	const onClickDelete = () => {
+		deleteEvent();
+	};
 
 	useEffect(() => {
 		if (isDialogOpen) {
+			// console.log(selectedEvent);
 			calendarAction.setCalendarParam({
 				display: 'block',
 				task: {
@@ -153,20 +211,24 @@ export const CustomCalendarModal = () => {
 
 				if (isDialogOpen && workType === 'edit') {
 					const startStr = selectedEvent?.startStr ? selectedEvent?.startStr : refEventStartDate.current?.value;
-					const endStr = selectedEvent?.endStr ? selectedEvent?.endStr : refEventEndDate.current?.value;
-					if (selectedEvent?.allDay && startStr?.length !== 10) {
+					let endStr = selectedEvent?.endStr ? selectedEvent?.endStr : refEventEndDate.current?.value;
+					if (selectedEvent.allDay) {
+						endStr = moment(endStr).subtract(1, 'seconds').toISOString();
+					}
+					if (selectedEvent?.allDay && endStr?.length !== 10) {
 						setDefStart(startStr?.slice(0, 10));
 						setDefEnd(endStr?.slice(0, 10));
-					} else if (startStr?.length === 10 && !selectedEvent?.allDay) {
+					} else if (endStr?.length === 10 && !selectedEvent?.allDay) {
 						setDefStartTime(`${startStr}T00:00:00`);
 						setDefEndTime(`${endStr}T23:59:59`);
-					} else if (startStr?.length === 10 && selectedEvent.allDay) {
+					} else if (endStr?.length === 10 && selectedEvent.allDay) {
 						setDefStart(startStr);
 						setDefEnd(endStr);
 					} else {
 						setDefStartTime(startStr?.slice(0, 16));
 						setDefEndTime(endStr?.slice(0, 16));
 					}
+					calendarAction.setSelectedMembers(selectedEvent?.extendedProps.members);
 				}
 			} else {
 				setIsAllDay(refAllDaySwitch.current?.checked);
@@ -191,7 +253,27 @@ export const CustomCalendarModal = () => {
 			onClose();
 		}
 	}, [isDialogOpen]);
-
+	const activeTask = (task: CalendarTaskType) => {
+		if (task.id !== selectedTask.id) {
+			setSelectedTask(task);
+			calendarAction.setCalendarParam({ display: 'block', task });
+		}
+	};
+	useEffect(() => {
+		if (refEventName.current) {
+			// if (isAlterAnn) {
+			if (refAlterAnnCheck.current?.checked) {
+				refEventName.current.disabled = true;
+				refEventName.current.setAttribute('value', '대체휴가');
+				refEventName.current.setAttribute('defaultValue', '대체휴가');
+			} else {
+				// refEventName.current?.setAttribute('disabled', 'false');
+				refEventName.current.disabled = false;
+				refEventName.current?.setAttribute('value', '');
+				refEventName.current?.setAttribute('defaultValue', '');
+			}
+		}
+	}, [refAlterAnnCheck.current?.checked]);
 	return (
 		<Modal
 			onClose={() => {
@@ -258,12 +340,52 @@ export const CustomCalendarModal = () => {
 				/>
 				<ModalBody>
 					<div className="grid h-full grid-cols-1">
-						<div className="mt-3 flex">
-							<BsSquareFill
-								color={workType === 'edit' && isDialogOpen ? getEventColor(selectedEvent?.extendedProps.task.id) : currentEventParam?.task.color}
-								className="mr-2 mt-1"
-							/>
-							<p className="text-sm text-gray-900">{`|  ${currentEventParam.task.name}`}</p>
+						<div className="mt-3 flex justify-between">
+							<div className="flex justify-between text-base font-medium text-brand-500 hover:cursor-pointer hover:text-brand-500 dark:text-white">
+								<Dropdown
+									button={
+										<>
+											<BsSquareFill color={currentEventParam.task.color} className="mr-2 mt-1" />
+											<p className="text-sm text-gray-900 hover:text-gray-600 dark:text-white hover:dark:text-white">{`|  ${currentEventParam.task.name}`}</p>
+										</>
+									}
+									classNames="py-2 top-8 -left-[180px] w-max text-base font-medium text-brand-500 hover:cursor-pointer hover:text-brand-500 dark:text-white"
+								>
+									<div className="flex w-[180px] flex-col  justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
+										<div className="mt-3 ml-4">
+											<div className="flex items-center gap-2">
+												<p className="text-sm font-bold text-navy-700 dark:text-white"> ✨부서 리스트 </p>{' '}
+											</div>
+										</div>
+										<div className="mt-3 h-px w-full bg-gray-200 dark:bg-white/20 " />
+										{taskLists.map((e) => {
+											return (
+												<div
+													className="mt-3 ml-4 flex"
+													key={e.name}
+													onClick={() => {
+														activeTask(e);
+													}}
+												>
+													<BsSquareFill color={e.color} className="mr-2" />
+													<p className="text-sm text-gray-900 hover:text-gray-600 dark:text-white hover:dark:text-white">{`|  ${e.name}`}</p>
+												</div>
+											);
+										})}
+
+										<div className="mt-3 ml-4 flex flex-col" />
+									</div>
+								</Dropdown>
+							</div>
+							<div className="flex items-center">
+								<Checkbox
+									ref={refAlterAnnCheck}
+									// onChange={() => {
+									// 	setIsAlterAnn(!isAlterAnn);
+									// }}
+								/>
+								<p className="ml-2 text-sm font-medium text-navy-700 dark:text-white">대체휴가 여부</p>
+							</div>
 						</div>
 						<div className="mt-5 start justify-start">
 							<div className="flex justify-start">
@@ -298,18 +420,13 @@ export const CustomCalendarModal = () => {
 									<p className="tex-base font-bold text-xl">-</p>
 								</div>
 								<input
-									// type="datetime-local"
-									// type={`${!isAllDay ? 'datetime-local' : 'date'}`}
 									type="datetime-local"
-									// type={`${!selectedEvent?.allDay ? 'datetime-local' : 'date'}`}
 									ref={refEventEndDateTime}
 									id="eventName"
 									disabled={false}
 									onChange={(e) => {
 										// console.log(refEventEndDate.current?.value);
 									}}
-									// defaultValue={selectedEvent?.endStr?.slice(0, 19)}
-									// defaultValue={refEventEndDate.current?.value}
 									defaultValue={defEndTime}
 									className="mt-2 ml-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 								/>
@@ -317,12 +434,9 @@ export const CustomCalendarModal = () => {
 							<div className={`flex justify-start ${!isAllDay ? 'invisible h-0 mb-0 ' : ''}`}>
 								<input
 									type="date"
-									// type={`${!selectedEvent?.allDay ? 'datetime-local' : 'date'}`}
 									ref={refEventStartDate}
 									id="eventName"
 									disabled={false}
-									// defaultValue={selectedEvent?.startStr?.slice(0, 19)}
-									// defaultValue={refEventStartDate.current?.value}
 									defaultValue={defStart}
 									className="mt-2 mr-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 								/>
@@ -330,24 +444,19 @@ export const CustomCalendarModal = () => {
 									<p className="tex-base font-bold text-xl">-</p>
 								</div>
 								<input
-									// type="datetime-local"
-									// type={`${!isAllDay ? 'datetime-local' : 'date'}`}
 									type="date"
-									// type={`${!selectedEvent?.allDay ? 'datetime-local' : 'date'}`}
 									ref={refEventEndDate}
 									id="eventName"
 									disabled={false}
 									onChange={(e) => {
 										// console.log(refEventEndDate.current?.value);
 									}}
-									// defaultValue={selectedEvent?.endStr?.slice(0, 19)}
-									// defaultValue={refEventEndDate.current?.value}
 									defaultValue={defEnd}
 									className="mt-2 ml-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 								/>
 							</div>
 						</div>
-						<div className="mt-5 start justify-start">
+						{/* <div className="mt-5 start justify-start">
 							<div className="flex justify-start">
 								<p className="text-base font-bold text-navy-700 dark:text-white">등록자 명 :</p>
 							</div>
@@ -361,7 +470,7 @@ export const CustomCalendarModal = () => {
 									className="mt-2 read-only flex h-12 w-full items-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 								/>
 							</div>
-						</div>
+						</div> */}
 						<div className="mt-5 start justify-start">
 							<div className="flex justify-start">
 								<p className="text-base font-bold text-navy-700 dark:text-white">일정 상세 :</p>
@@ -374,6 +483,18 @@ export const CustomCalendarModal = () => {
 									defaultValue={selectedEvent?.extendedProps?.eventDesc}
 									disabled={false}
 									className="mt-2 read-only flex h-12 w-full items-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
+								/>
+							</div>
+						</div>
+						<div className="mt-5 start justify-start">
+							<div className="flex justify-start">
+								<p className="text-base font-bold text-navy-700 dark:text-white mb-5">인원 :</p>
+							</div>
+							<div className="flex justify-start mb-5">
+								<TagifyComponent
+									// initValue에 edit이면 extendedProps.연관인원리스트 를 넣도록, 아니면 로그인한 인원 profile
+									initialValue={workType === 'edit' && isDialogOpen ? selectedEvent?.extendedProps.members : ['']}
+									suggestions={memberTags}
 								/>
 							</div>
 						</div>
@@ -405,6 +526,7 @@ export const CustomCalendarModal = () => {
 						colorScheme="red"
 						onClick={() => {
 							calendarAction.setCalendarDialogFlag(false);
+							onClickDelete();
 							onClose;
 						}}
 					>

@@ -5,38 +5,43 @@ import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/react';
 import '../../../../assets/css/FullCalendar.css';
+import { useQueries, useQuery } from 'react-query';
 import { useSideBar } from '../../../../store/useSideBar';
-import { CalendarParam, INITIAL_EVENTS } from '../../../../components/calendar/utils/event-utils';
+import { CalendarParam, getTodayString, INITIAL_EVENTS } from '../../../../components/calendar/utils/event-utils';
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents } from '../../../../store/useCalendar';
 import Card from '../../../../components/card';
+import CalendarService from '../../../../services/calendarService';
 
 type PropsType = {
 	param: CalendarParam;
 };
 
 const DashboardCalendarComponent = () => {
-	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
 	const { isSideBar } = useSideBar();
 	const calendarRef = useRef<FullCalendar>(null);
-	const calendarParam = useCalendarParam();
-	const calendarType = useCalendarType();
-	const isDialogOpen = useCalendarDialogOpen();
-	const calendarAction = useCalendarAction();
 	const calendar = calendarRef.current?.getApi();
+	const [currentDate, setCurrentDate] = useState<string>(getTodayString());
+
 	const initEvents = useEvents();
-	const [data, setData] = useState<CalendarParam>(calendarParam);
-	useEffect(() => {
-		calendarAction.setCalendarEvents(INITIAL_EVENTS);
-	}, []);
-	useEffect(() => {
-		// console.log(initEvents);
-		if (initEvents && calendar) {
-			calendar.addEvent(initEvents);
-		}
-	}, [initEvents]);
-	useEffect(() => {
-		calendarAction.setCalendarType(calendar?.view.type ? calendar?.view.type : 'dayGridMonth');
-	}, [calendar?.view.type]);
+	// const { isSuccess, data, refetch } = useQuery([`getEvents${getTodayString()}`], CalendarService(getTodayString()).getEventQuery);
+	// const { isSuccess, data, refetch } = useQuery([`getDashboardCalendarEvent`], CalendarService(currentDate).getWeekEventQuery);
+	const results = useQueries([
+		{
+			queryKey: [`getDashboardCalendarEvent`],
+			queryFn: CalendarService().getWeekEventQuery.queryFn,
+			onSuccess: CalendarService().getWeekEventQuery.onSuccess,
+			onError: CalendarService().getWeekEventQuery.onError,
+		},
+		{
+			queryKey: [`getDashboardDeptEvent`],
+			queryFn: CalendarService().getDeptEvent.queryFn,
+			onSuccess: CalendarService().getDeptEvent.onSuccess,
+			onError: CalendarService().getDeptEvent.onError,
+		},
+		// CalendarService().getWeekEventQuery,
+		// CalendarService().getDeptEvent,
+	]);
+
 	useEffect(() => {
 		if (calendarRef.current) {
 			setTimeout(() => {
@@ -45,9 +50,6 @@ const DashboardCalendarComponent = () => {
 			// calendarAction.setCalendarEvents(INITIAL_EVENTS);
 		}
 	}, [isSideBar]);
-	useEffect(() => {
-		// console.log(currentEvents);
-	}, [currentEvents]);
 
 	const renderEventContent = (eventContent: EventContentArg) => (
 		<>
@@ -56,25 +58,20 @@ const DashboardCalendarComponent = () => {
 		</>
 	);
 	return (
-		<Card extra="mt-15 flex w-full h-full flex-col px-3 py-3">
+		<Card extra="flex w-full h-full flex-col px-3 py-3">
 			<div
 				onContextMenu={(e) => {
 					e.preventDefault();
 				}}
 			>
 				<FullCalendar
-					rerenderDelay={250}
+					now={currentDate}
 					// progressiveEventRendering
 					ref={calendarRef}
 					plugins={[dayGridPlugin]}
-					headerToolbar={{
-						start: '',
-						center: 'title',
-						// end: 'dayGridMonth,timeGridWeek,timeGridDay next',
-						end: '',
-					}}
-					height="60vh"
-					initialView="dayGridMonth"
+					headerToolbar={false}
+					height="36vh"
+					initialView="dayGridWeek"
 					eventContent={renderEventContent}
 					// selectable
 					// editable
@@ -85,8 +82,12 @@ const DashboardCalendarComponent = () => {
 					businessHours
 					events={initEvents}
 					locale="kr"
-					// eventsSet={handleEvents}
-					// select={handleDateSelect}
+					// dateClick={() => {
+					// 	return false;
+					// }}
+					navLinkDayClick={() => {
+						return false;
+					}}
 				/>
 			</div>
 		</Card>

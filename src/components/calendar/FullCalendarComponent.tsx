@@ -4,29 +4,59 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/react';
-import { CalendarParam, INITIAL_EVENTS } from './utils/event-utils';
+import { useQuery, useQueryClient } from 'react-query';
+import moment from 'moment';
+import { CalendarParam, getTodayString, INITIAL_EVENTS } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
 
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents, useFilteredEvents } from '../../store/useCalendar';
+import CalendarService from '../../services/calendarService';
 
 const FullCalendarComponent = () => {
 	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
+
 	const { isSideBar } = useSideBar();
 	const calendarRef = useRef<FullCalendar>(null);
 	const calendarParam = useCalendarParam();
 	const isDialogOpen = useCalendarDialogOpen();
 	const calendarAction = useCalendarAction();
+	const events = useEvents();
 	const calendar = calendarRef.current?.getApi();
+
 	const initEvents = useFilteredEvents();
-	useEffect(() => {
-		calendarAction.setCalendarEvents(INITIAL_EVENTS);
-		calendarAction.setFilterEvents(INITIAL_EVENTS);
-	}, []);
+	const [currentDate, setCurrentDate] = useState<string>(getTodayString());
+	const { isSuccess, refetch } = useQuery(['getEvents', currentDate.slice(0, 7)], CalendarService(currentDate).getEventQuery);
+	const queryClient = useQueryClient();
+
+	const filter = [''] as string[];
+	const convertDate = (date: any) => {
+		const yyyy = date.getFullYear().toString();
+		const mm = date.getMonth() + 1;
+		const dd = date.getDate();
+		let ddString = '';
+		let mmString = '';
+
+		if (dd < 10) {
+			ddString = `0${dd}`;
+		} else {
+			ddString = dd.toString();
+		}
+		if (mm < 10) {
+			mmString = `0${mm}`;
+		} else {
+			mmString = mm.toString();
+		}
+		setCurrentDate(`${yyyy}-${mmString}-${ddString}`);
+		return `${yyyy}-${mmString}-${ddString}`;
+	};
 	useEffect(() => {
 		if (initEvents && calendar) {
 			calendar.addEvent(initEvents);
+			if (isSuccess) {
+				// calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
+			}
 		}
 	}, [initEvents]);
 	useEffect(() => {
@@ -39,11 +69,12 @@ const FullCalendarComponent = () => {
 			}, 250);
 		}
 	}, [isSideBar]);
-	useEffect(() => {}, [currentEvents]);
 	const handleEventClick = useCallback(
 		(clickInfo: EventClickArg) => {
 			if (!isDialogOpen) {
 				calendarAction.setWorkType('edit');
+				const event = { ...clickInfo.event };
+				// event.event.end = moment(clickInfo.event.end).subtract(1, 'days');
 				calendarAction.setCalendarEventParam(clickInfo.event);
 				calendarAction.setCalendarDialogFlag(true);
 			}
@@ -56,6 +87,11 @@ const FullCalendarComponent = () => {
 			<p className="hover:cursor-pointer">{eventContent.event.title}</p>
 		</>
 	);
+	// useEffect(() => {
+	// 	if (!isDialogOpen) {
+	// 		queryClient.invalidateQueries([`getEvents, ${currentDate.slice(0, 7)}`]);
+	// 	}
+	// }, [isDialogOpen]);
 	return (
 		<Card extra="mt-15 flex w-full h-full flex-col px-3 py-3">
 			<div
@@ -68,9 +104,9 @@ const FullCalendarComponent = () => {
 					ref={calendarRef}
 					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 					headerToolbar={{
-						start: 'prev',
+						start: 'cPrevBtn',
 						center: 'title',
-						end: 'today next',
+						end: 'today cNextBtn',
 					}}
 					height="85vh"
 					initialView="dayGridMonth"
@@ -81,6 +117,23 @@ const FullCalendarComponent = () => {
 					navLinks
 					businessHours
 					events={initEvents}
+					customButtons={{
+						cPrevBtn: {
+							// text: '<',
+							icon: 'chevron-left',
+							click: () => {
+								calendar?.prev();
+								convertDate(calendar?.getDate());
+							},
+						},
+						cNextBtn: {
+							icon: 'chevron-right',
+							click: () => {
+								calendar?.next();
+								convertDate(calendar?.getDate());
+							},
+						},
+					}}
 					locale="kr"
 					eventClick={handleEventClick}
 					dateClick={() => {

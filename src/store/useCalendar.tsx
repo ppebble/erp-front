@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { EventApi, EventInput } from '@fullcalendar/react';
 import { CalendarParam } from '../components/calendar/utils/event-utils';
+import { dailyEventProps, MemberTagInfo, MemberTagProps } from './common/useCommon';
 
 interface CalendarStoreProps {
 	calendarParam: CalendarParam;
@@ -9,22 +10,32 @@ interface CalendarStoreProps {
 	filteredEvents: EventInput[];
 	calendarType: string | undefined;
 	addEventFlag: boolean;
+	selectedMembers: string[];
 	calendarEvent: EventApi | null;
 	isDialogOpen: boolean;
 	inputEvent: EventInput;
 	workType: string;
+	filter: string[];
+	members: MemberTagProps[];
 	action: ActionItem;
+	dailyDeptEvents: dailyEventProps[];
+	dailyPersonalEvents: dailyEventProps[];
 }
 interface ActionItem {
 	setCalendarParam: (param: CalendarParam) => void;
 	setCalendarEvents: (param: EventInput[]) => void;
 	setCalendarDialogFlag: (param: boolean) => void;
 	setFilterEvents: (param: any) => void;
+	setFilter: (param: string[]) => void;
 	setCalendarEventParam: (param: EventApi) => void;
 	setCalendarType: (param: string | undefined) => void;
 	setAddEventParam: (paran: EventInput | undefined) => void;
 	setAddFlag: (param: boolean) => void;
 	setWorkType: (param: string) => void;
+	setMembers: (param: MemberTagProps[]) => void;
+	setSelectedMembers: (param: string[]) => void;
+	setDailyDeptEvents: (param: dailyEventProps[]) => void;
+	setDailyPersonalEvents: (param: dailyEventProps[]) => void;
 }
 
 const useCalendar = create<CalendarStoreProps>()(
@@ -39,6 +50,11 @@ const useCalendar = create<CalendarStoreProps>()(
 		workType: '',
 		addEventFlag: true,
 		isDialogOpen: false,
+		members: [] as MemberTagProps[],
+		selectedMembers: [] as string[],
+		filter: ['personal'] as string[],
+		dailyDeptEvents: [] as dailyEventProps[],
+		dailyPersonalEvents: [] as dailyEventProps[],
 
 		// set param
 		action: {
@@ -65,6 +81,10 @@ const useCalendar = create<CalendarStoreProps>()(
 					},
 					false,
 				),
+			setFilter: (param: string[]) =>
+				set({
+					filter: param,
+				}),
 			setFilterEvents: (param: any[]) =>
 				set(
 					(state) => ({
@@ -102,6 +122,26 @@ const useCalendar = create<CalendarStoreProps>()(
 					workType: param,
 				});
 			},
+			setMembers: (param: MemberTagProps[]) => {
+				set({
+					members: param,
+				});
+			},
+			setSelectedMembers: (param: string[]) => {
+				set({
+					selectedMembers: param,
+				});
+			},
+			setDailyDeptEvents: (param: dailyEventProps[]) => {
+				set({
+					dailyDeptEvents: param,
+				});
+			},
+			setDailyPersonalEvents: (param: dailyEventProps[]) => {
+				set({
+					dailyPersonalEvents: param,
+				});
+			},
 		},
 	})),
 );
@@ -115,3 +155,8 @@ export const useCalendarAction = () => useCalendar((state) => state.action);
 export const useInputEvent = () => useCalendar((state) => state.inputEvent);
 export const useEvents = () => useCalendar((state) => state.calendarEvents);
 export const useWorkType = () => useCalendar((state) => state.workType);
+export const useCalendarFilter = () => useCalendar((state) => state.filter);
+export const useMemberTags = () => useCalendar((state) => state.members);
+export const useSelectedTag = () => useCalendar((state) => state.selectedMembers);
+export const useDeptEvents = () => useCalendar((state) => state.dailyDeptEvents);
+export const usePersonalEvents = () => useCalendar((state) => state.dailyPersonalEvents);

@@ -2,12 +2,14 @@ import { MdAddCircleOutline, MdApps, MdSearch } from 'react-icons/md';
 import { BsSquareFill } from 'react-icons/bs';
 import { useEffect, useState } from 'react';
 import { EventApi } from '@fullcalendar/react';
-import { Checkbox, CheckboxGroup } from '@chakra-ui/react';
+import { Checkbox, CheckboxGroup, useModal } from '@chakra-ui/react';
+import { useQuery, useQueryClient } from 'react-query';
 import FullCalendarComponent from '../../../components/calendar/FullCalendarComponent';
 import Dropdown from '../../../components/dropdown';
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useEvents, useFilteredEvents } from '../../../store/useCalendar';
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
 import { CalendarTaskType } from '../../../components/calendar/utils/event-utils';
+import CalendarService from '../../../services/calendarService';
 
 const taskColor = {
 	sc: '#1cb9e0',
@@ -27,28 +29,41 @@ const taskLists = [
 	{ id: 'personal', name: '개인일정', color: taskColor.personal },
 	// { id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
 ] as const;
+
+// 부서 필터 default value ... 개인일정... + (로그인한 본인 부서)
 let filter = ['personal'] as string[];
 const CompanyCalendar = () => {
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();
 	const isDialogOpen = useCalendarDialogOpen();
+
 	const eventParam = {} as EventApi;
 	const events = useEvents();
+	const queryClient = useQueryClient();
 
 	useEffect(() => {
 		// useCalendar.calendarParam 기본값
 		const task = { id: 'personal', name: '개인일정', color: taskColor.personal };
 		calendarAction.setCalendarParam({ display: 'block', task });
 	}, []);
+	// useEffect(() => {
+	// 	if (!isDialogOpen) {
+	// 		queryClient.invalidateQueries('getEvents');
+	// 	}
+	// }, [isDialogOpen]);
 	const activeTask = (task: CalendarTaskType) => {
 		if (task.id !== selectedTask.id) {
 			setSelectedTask(task);
 			calendarAction.setCalendarParam({ display: 'block', task });
 		}
 	};
-	useEffect(() => {
-		calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
-	}, [events]);
+	// useEffect(() => {
+	// 	calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
+	// }, []);
+
+	// useEffect(() => {
+	// 	calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
+	// }, [events]);
 
 	return (
 		<>
@@ -74,7 +89,9 @@ const CompanyCalendar = () => {
 											onChange={(e) => {
 												// e = arrayList
 												filter = Object.assign([], e);
-												calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
+												// calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
+												calendarAction.setFilter(filter);
+												queryClient.invalidateQueries(['getEvents']);
 											}}
 											defaultValue={filter}
 										>
@@ -121,39 +138,6 @@ const CompanyCalendar = () => {
 										}}
 									/>
 								</p>
-							</li>
-							<li className="text-base font-medium text-brand-500 hover:cursor-pointer hover:text-brand-500 dark:text-white">
-								<Dropdown
-									button={<MdApps className="h-10 w-10" />}
-									classNames="py-2 top-8 -left-[180px] w-max text-base font-medium text-brand-500 hover:cursor-pointer hover:text-brand-500 dark:text-white"
-								>
-									<div className="flex w-[180px] flex-col  justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
-										<div className="mt-3 ml-4">
-											<div className="flex items-center gap-2">
-												<p className="text-sm font-bold text-navy-700 dark:text-white"> ✨부서 리스트 </p>{' '}
-											</div>
-										</div>
-										<div className="mt-3 h-px w-full bg-gray-200 dark:bg-white/20 " />
-										{taskLists.map((e) => {
-											return (
-												<div
-													className="mt-3 ml-4 flex"
-													key={e.name}
-													onClick={() => {
-														activeTask(e);
-													}}
-												>
-													<BsSquareFill color={e.color} className="mr-2" />
-													<p
-														className={`text-sm ${selectedTask.id === e.id ? 'text-gray-900' : 'text-gray-200'} hover:text-gray-600 dark:text-white hover:dark:text-white`}
-													>{`|  ${e.name}`}</p>
-												</div>
-											);
-										})}
-
-										<div className="mt-3 ml-4 flex flex-col" />
-									</div>
-								</Dropdown>
 							</li>
 						</ul>
 					</div>
