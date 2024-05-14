@@ -60,8 +60,22 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 
 	useEffect(() => {
 		if (detailCount) {
-			const newDetail = state[careerIndex]?.careerDetail.concat({ id: detailCount, projectName: '', task: '', term: '' });
-			setState((detail: any) => detail.map((item: any, index: number) => (index === careerIndex ? { ...item, careerDetail: newDetail } : item)));
+			const newDetail = state[careerIndex]?.careerDetail.concat({
+				id: detailCount,
+				projectName: '',
+				task: '',
+				term: '',
+			});
+			setState((detail: any) =>
+				detail.map((item: any, index: number) =>
+					index === careerIndex
+						? {
+								...item,
+								careerDetail: newDetail,
+							}
+						: item,
+				),
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [detailCount]);
@@ -71,7 +85,9 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 	};
 
 	const AddDetail = () => {
-		setDetailCount(detailCount + 1);
+		if (detailCount !== undefined && setDetailCount !== undefined) {
+			setDetailCount(detailCount + 1);
+		}
 	};
 
 	const InputDelete = (idx: any) => {
@@ -80,7 +96,16 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 
 	const DetailDelete = (idx: number) => {
 		const removeDetail = state[careerIndex].careerDetail.filter((item: any, index: any) => index !== idx);
-		setState((detail: any) => detail.map((item: any, index: number) => (index === careerIndex ? { ...item, careerDetail: removeDetail } : item)));
+		setState((detail: any) =>
+			detail.map((item: any, index: number) =>
+				index === careerIndex
+					? {
+							...item,
+							careerDetail: removeDetail,
+						}
+					: item,
+			),
+		);
 	};
 
 	const onChange = (e: any, idx: any) => {
@@ -96,7 +121,16 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 				[e.target.id]: e.target.value,
 			};
 			const change = state[careerIndex].careerDetail.map((item: any, index: number) => (index === idx ? { ...item, ...detailData } : item));
-			setState((detail: any) => detail.map((item: any, index: number) => (index === careerIndex ? { ...item, careerDetail: change } : item)));
+			setState((detail: any) =>
+				detail.map((item: any, index: number) =>
+					index === careerIndex
+						? {
+								...item,
+								careerDetail: change,
+							}
+						: item,
+				),
+			);
 		}
 	};
 
