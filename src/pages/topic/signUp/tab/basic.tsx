@@ -13,7 +13,7 @@ import {
 	InputRightAddon,
 	Select,
 } from '@chakra-ui/react';
-import ProfileService from '../../../../services/profileService';
+import { ProfileService } from '../../../../services/profileService';
 import useProfile from '../../../../store/useProfile';
 import useModal from '../../../../store/useModal';
 

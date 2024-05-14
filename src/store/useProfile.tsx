@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { profile, detail, dept, education, army, career, careerDetail, license, coursework, skill } from './profileParams';
+import { profile, detail, dept, education, army, career, license, coursework, skill } from '../network/response/profileParams';
 
 interface ProfileStore {
 	// 기본정보
@@ -17,8 +17,6 @@ interface ProfileStore {
 	// 경력사항
 	career: career[];
 	setCareer: (state: career[]) => void;
-	careerDetail: careerDetail[];
-	setCareerDetail: (state: careerDetail[]) => void;
 	careerIndex: number;
 	setCareerIndex: (state: number) => void;
 	// 자격증
@@ -50,8 +48,6 @@ const useProfile = create(
 				{ companyName: '', jobClassification: '', employmentDate: '', resignationDate: '', careerDetail: [{ projectName: '', task: '', term: '' }] },
 			],
 			setCareer: (select) => set((state) => ({ ...state, career: select })),
-			careerDetail: [{ projectName: '', task: '', term: '' }],
-			setCareerDetail: (select) => set((state) => ({ ...state, careerDetail: select })),
 			careerIndex: 0,
 			setCareerIndex: (select) => set((state) => ({ ...state, careerIndex: select })),
 			license: [{ licenseName: '', licenseDate: '' }],
@@ -78,7 +74,6 @@ const useProfile = create(
 							careerDetail: [{ projectName: '', task: '', term: '' }],
 						},
 					],
-					careerDetail: [{ projectName: '', task: '', term: '' }],
 					careerIndex: 0,
 					license: [{ licenseName: '', licenseDate: '' }],
 					coursework: [{ eduName: '', eduStartDate: '', eduEndDate: '', institution: '' }],

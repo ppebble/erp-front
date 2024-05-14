@@ -1,19 +1,20 @@
+import { InputGroup, InputLeftAddon, Input, CloseButton, Button, AccordionItem, AccordionButton, Box, AccordionPanel } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { InputGroup, InputLeftAddon, Input, CloseButton, Button, AccordionItem, AccordionButton, Box } from '@chakra-ui/react';
 import useProfile from '../../store/useProfile';
-import CareerDetail from '../../pages/topic/signUp/tab/careerDetail';
 
 type InputComponentprops = {
 	inputItems: any;
 	addInput: any;
+	addDetail: any;
 	InputDelete: (id: number) => void;
+	detailDelete?: (id: number) => void;
 	onChange: (e: any, id: any) => void;
+	onDetailChange?: (e: any, id: any) => void;
 	type: string;
 };
 
-const InputComponent = ({ inputItems, addInput, InputDelete, onChange, type }: InputComponentprops) => {
-	const { careerIndex, setCareerIndex, careerDetail } = useProfile();
-	const [detailItem, setDetailItem] = useState<any>();
+const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDelete, onChange, onDetailChange, type }: InputComponentprops) => {
+	const { careerIndex, setCareerIndex } = useProfile();
 
 	const changeSelect = (index: number) => {
 		setCareerIndex(index);
@@ -71,7 +72,46 @@ const InputComponent = ({ inputItems, addInput, InputDelete, onChange, type }: I
 												</InputGroup>
 											</Box>
 										</AccordionButton>
-										<CareerDetail />
+										<AccordionPanel>
+											{item.careerDetail.map((detailItem: any, detailIndex: any) => {
+												return (
+													<div key={`careerDetail_${careerIndex}_${detailItem.id ? detailItem.id : detailItem.carDetailNo}`}>
+														{detailIndex === 0 && (
+															<Button className="mb-[10px]" onClick={() => addDetail()}>
+																추가
+															</Button>
+														)}
+														<InputGroup className={`mb-2 ${detailIndex === 0 ? 'pr-[32px]' : ''}`}>
+															<InputLeftAddon>프로젝트명</InputLeftAddon>
+															<Input
+																id="projectName"
+																className="!min-w-[100px]"
+																name={`projectName_${detailItem.id}`}
+																defaultValue={detailItem.projectName}
+																onChange={(e) => onDetailChange && onDetailChange(e, detailIndex)}
+															/>
+															<InputLeftAddon className="ml-[20px]">수행업무</InputLeftAddon>
+															<Input
+																id="task"
+																className="!min-w-[100px]"
+																name={`task_${detailItem.id}`}
+																defaultValue={detailItem.task}
+																onChange={(e) => onDetailChange && onDetailChange(e, detailIndex)}
+															/>
+															<InputLeftAddon className="ml-[20px]">프로젝트 수행일수</InputLeftAddon>
+															<Input
+																id="term"
+																className="!min-w-[100px]"
+																name={`term_${detailItem.id}`}
+																defaultValue={detailItem.term}
+																onChange={(e) => onDetailChange && onDetailChange(e, detailIndex)}
+															/>
+															{detailIndex > 0 ? <CloseButton onClick={() => detailDelete && detailDelete(detailIndex)} /> : ''}
+														</InputGroup>
+													</div>
+												);
+											})}
+										</AccordionPanel>
 									</AccordionItem>
 								</div>
 							);
@@ -79,50 +119,50 @@ const InputComponent = ({ inputItems, addInput, InputDelete, onChange, type }: I
 					</>
 				);
 				break;
-			case 'careerDetail':
-				component = (
-					<>
-						{inputItems.map((item: any, index: any) => {
-							return (
-								<div key={`careerDetail_${careerIndex}_${item.id ? item.id : item.carDetailNo}`}>
-									{index === 0 && (
-										<Button className="mb-[10px]" onClick={() => addInput(index)}>
-											추가
-										</Button>
-									)}
-									<InputGroup className={`mb-2 ${index === 0 ? 'pr-[32px]' : ''}`}>
-										<InputLeftAddon>프로젝트명</InputLeftAddon>
-										<Input
-											id="projectName"
-											className="!min-w-[100px]"
-											name={`projectName_${item.id}`}
-											defaultValue={item.projectName}
-											onChange={(e) => onChange(e, index)}
-										/>
-										<InputLeftAddon className="ml-[20px]">수행업무</InputLeftAddon>
-										<Input
-											id="task"
-											className="!min-w-[100px]"
-											name={`task_${item.id}`}
-											defaultValue={item.task}
-											onChange={(e) => onChange(e, index)}
-										/>
-										<InputLeftAddon className="ml-[20px]">프로젝트 수행일수</InputLeftAddon>
-										<Input
-											id="term"
-											className="!min-w-[100px]"
-											name={`term_${item.id}`}
-											defaultValue={item.term}
-											onChange={(e) => onChange(e, index)}
-										/>
-										{index > 0 && inputItems[index - 1] ? <CloseButton onClick={() => InputDelete(index)} /> : ''}
-									</InputGroup>
-								</div>
-							);
-						})}
-					</>
-				);
-				break;
+			// case 'careerDetail':
+			// 	component = (
+			// 		<>
+			// 			{inputItems.map((item: any, index: any) => {
+			// 				return (
+			// 					<div key={`careerDetail_${careerIndex}_${item.id ? item.id : item.carDetailNo}`}>
+			// 						{index === 0 && (
+			// 							<Button className="mb-[10px]" onClick={() => addInput(index)}>
+			// 								추가
+			// 							</Button>
+			// 						)}
+			// 						<InputGroup className={`mb-2 ${index === 0 ? 'pr-[32px]' : ''}`}>
+			// 							<InputLeftAddon>프로젝트명</InputLeftAddon>
+			// 							<Input
+			// 								id="projectName"
+			// 								className="!min-w-[100px]"
+			// 								name={`projectName_${item.id}`}
+			// 								defaultValue={item.projectName}
+			// 								onChange={(e) => onChange(e, index)}
+			// 							/>
+			// 							<InputLeftAddon className="ml-[20px]">수행업무</InputLeftAddon>
+			// 							<Input
+			// 								id="task"
+			// 								className="!min-w-[100px]"
+			// 								name={`task_${item.id}`}
+			// 								defaultValue={item.task}
+			// 								onChange={(e) => onChange(e, index)}
+			// 							/>
+			// 							<InputLeftAddon className="ml-[20px]">프로젝트 수행일수</InputLeftAddon>
+			// 							<Input
+			// 								id="term"
+			// 								className="!min-w-[100px]"
+			// 								name={`term_${item.id}`}
+			// 								defaultValue={item.term}
+			// 								onChange={(e) => onChange(e, index)}
+			// 							/>
+			// 							{index > 0 && inputItems[index - 1] ? <CloseButton onClick={() => InputDelete(index)} /> : ''}
+			// 						</InputGroup>
+			// 					</div>
+			// 				);
+			// 			})}
+			// 		</>
+			// 	);
+			// 	break;
 			case 'license':
 				component = (
 					<>

@@ -1,91 +1,43 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Button, Card, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import ProfileService from '../../../services/profileService';
+import { ProfileService } from '../../../services/profileService';
 import useProfile from '../../../store/useProfile';
 import Basic from './tab/basic';
 import Career from './tab/career';
 import License from './tab/license';
 import Coursework from './tab/coursework';
 import Skill from './tab/skill';
-import { career as careerType, careerDetail as careerDetailType, profileParams } from '../../../store/profileParams';
 import useModal from '../../../store/useModal';
 
 const SignUp = () => {
-	const { isSuccess, data } = useQuery('getProfile', ProfileService().profieQuery);
-	const updateProfile = ProfileService().updateProfileMutation;
-	const {
-		profile,
-		detail,
-		dept,
-		education,
-		army,
-		career,
-		careerDetail,
-		careerIndex,
-		license,
-		coursework,
-		skill,
-		setProfile,
-		setDetail,
-		setDept,
-		setEducation,
-		setArmy,
-		setCareer,
-		setCareerDetail,
-		setLicense,
-		setCoursework,
-		setSkill,
-		setClear,
-	} = useProfile();
+	const { isSuccess, data } = useQuery('getProfile', ProfileService().profieQuery); // 조회
+	const updateProfile = ProfileService().updateProfileMutation; // 업데이트
+	const { profile, detail, dept, education, army, career, license, coursework, skill, setClear } = useProfile();
 	const [ready, setReady] = useState(false);
-	const [array, setArray] = useState<any[]>();
 	const { openModal } = useModal();
 
 	useEffect(() => {
-		return () => {
-			setClear();
-		};
+		return () => setClear();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-		if (data && isSuccess) {
-			const profileData: profileParams = data.response;
-			if (profileData?.isSuccessful) {
-				setProfile(profileData.result.profile);
-				setDetail(profileData.result.detail);
-				setDept(profileData.result.dept);
-				setEducation(profileData.result.education);
-				setArmy(profileData.result.army);
-				setCareer(profileData.result.career);
-				profileData.result?.career.forEach((item: careerType, index: number) => {
-					setCareerDetail({ ...careerDetail, [index]: item.careerDetail });
-					// setCareerDetail(item.careerDetail);
-				});
-				setLicense(profileData.result.license);
-				setCoursework(profileData.result.coursework);
-				setSkill(profileData.result.skill);
-			}
+		if (isSuccess) {
+			setReady(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data]);
 
-	useEffect(() => {
-		if (profile) {
-			setReady(true);
-		}
-	}, [profile]);
-
 	const update = () => {
 		if (ready) {
-			for (let i = 0; i < career.length; i += 1) {
-				career[i].careerDetail = careerDetail[i];
-			}
-
 			const param = { profile, detail, dept, education, army, career, coursework, license, skill };
-			console.log(param);
-			updateProfile.mutate(param);
+			// console.log(param);
+			if (profile.pw !== profile.rePw) {
+				openModal({ type: 3, contents: '변경할 비밀번호가 일치하지 않습니다.<br/>비밀번호를 다시 확인해 주세요.', color: 'red' });
+			} else {
+				updateProfile.mutate(param);
+			}
 		}
 	};
 
