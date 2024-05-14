@@ -81,7 +81,13 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 	}, [detailCount]);
 
 	const AddInput = () => {
-		setCount(count + 1);
+		if (type === 'project') {
+			if (count < 9) {
+				setCount(count + 1);
+			}
+		} else {
+			setCount(count + 1);
+		}
 	};
 
 	const AddDetail = () => {

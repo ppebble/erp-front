@@ -119,50 +119,6 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 					</>
 				);
 				break;
-			// case 'careerDetail':
-			// 	component = (
-			// 		<>
-			// 			{inputItems.map((item: any, index: any) => {
-			// 				return (
-			// 					<div key={`careerDetail_${careerIndex}_${item.id ? item.id : item.carDetailNo}`}>
-			// 						{index === 0 && (
-			// 							<Button className="mb-[10px]" onClick={() => addInput(index)}>
-			// 								추가
-			// 							</Button>
-			// 						)}
-			// 						<InputGroup className={`mb-2 ${index === 0 ? 'pr-[32px]' : ''}`}>
-			// 							<InputLeftAddon>프로젝트명</InputLeftAddon>
-			// 							<Input
-			// 								id="projectName"
-			// 								className="!min-w-[100px]"
-			// 								name={`projectName_${item.id}`}
-			// 								defaultValue={item.projectName}
-			// 								onChange={(e) => onChange(e, index)}
-			// 							/>
-			// 							<InputLeftAddon className="ml-[20px]">수행업무</InputLeftAddon>
-			// 							<Input
-			// 								id="task"
-			// 								className="!min-w-[100px]"
-			// 								name={`task_${item.id}`}
-			// 								defaultValue={item.task}
-			// 								onChange={(e) => onChange(e, index)}
-			// 							/>
-			// 							<InputLeftAddon className="ml-[20px]">프로젝트 수행일수</InputLeftAddon>
-			// 							<Input
-			// 								id="term"
-			// 								className="!min-w-[100px]"
-			// 								name={`term_${item.id}`}
-			// 								defaultValue={item.term}
-			// 								onChange={(e) => onChange(e, index)}
-			// 							/>
-			// 							{index > 0 && inputItems[index - 1] ? <CloseButton onClick={() => InputDelete(index)} /> : ''}
-			// 						</InputGroup>
-			// 					</div>
-			// 				);
-			// 			})}
-			// 		</>
-			// 	);
-			// 	break;
 			case 'license':
 				component = (
 					<>
@@ -234,6 +190,25 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">분류 기준</InputLeftAddon>
 										<Input id="criteria" defaultValue={item.criteria} onChange={(e) => onChange(e, index)} />
 										{index > 0 && inputItems[index - 1] ? <CloseButton onClick={() => InputDelete(index)} /> : ''}
+									</InputGroup>
+								</div>
+							);
+						})}
+					</>
+				);
+				break;
+			case 'project':
+				component = (
+					<>
+						<Button className="mb-[10px]" onClick={() => addInput()}>
+							추가
+						</Button>
+						{inputItems.map((item: any, index: any) => {
+							return (
+								<div key={`project_${item.id}`}>
+									<InputGroup className="mb-2">
+										<Input id={`file_${item.id}`} type="file" onChange={(e) => onChange(e, index)} />
+										<CloseButton onClick={() => InputDelete(index)} />
 									</InputGroup>
 								</div>
 							);
