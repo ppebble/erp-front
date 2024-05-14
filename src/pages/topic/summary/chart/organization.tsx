@@ -1,4 +1,4 @@
-import { Card, background, color } from '@chakra-ui/react';
+import { Card } from '@chakra-ui/react';
 import OrgChart from 'react-orgchart';
 import 'react-orgchart/index.css';
 
@@ -110,7 +110,7 @@ const Organization = () => {
 				<div
 					className="initechNode"
 					onClick={() => console.log(node.name.replace('\n', ' '))}
-					style={{ backgroundColor: `${node.background}`, color: `${node.color}` }}
+					style={{ backgroundColor: `${node.background}`, color: `${node.color}`, cursor: 'pointer' }}
 				>
 					<pre>{node.name}</pre>
 				</div>

@@ -2,19 +2,25 @@ import { useEffect, useState } from 'react';
 import InputContainer from '../../../../components/inputContainer';
 import useProfile from '../../../../store/useProfile';
 
-const License = () => {
+const Skill = () => {
 	const [count, setCount] = useState(0);
 	const [value, setValue] = useState<any>();
-	const { setLicense } = useProfile();
+	const { setSkill } = useProfile();
 
 	useEffect(() => {
-		setLicense(value);
+		setSkill(value);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
 	return (
-		<InputContainer props={{ id: count, licenseName: '', licenseDate: '' }} count={count} setCount={setCount} setValue={setValue} type="license" />
+		<InputContainer
+			props={{ id: count, skillName: '', skillGrade: '', criteria: '' }}
+			count={count}
+			setCount={setCount}
+			setValue={setValue}
+			type="skill"
+		/>
 	);
 };
 
-export default License;
+export default Skill;

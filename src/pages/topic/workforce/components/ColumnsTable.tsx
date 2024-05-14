@@ -90,12 +90,24 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 		debugTable: true,
 	});
 
+	const newBoard = () => {
+		console.warn('???');
+	};
+
+	const updateBoard = () => {
+		alert('updateBoard');
+	};
+
+	const deleteBoard = () => {
+		alert('deleteBoard');
+	};
+
 	const details = (con: RowObj) => {
-		openModal({ type: 1, contents: con, closeOnOverlay: false });
+		openModal({ type: 1, contents: con, closeOnOverlay: false, updataClick: updateBoard, deleteClick: deleteBoard });
 	};
 
 	const newWrite = () => {
-		openModal({ type: 2, closeOnOverlay: false });
+		openModal({ type: 2, closeOnOverlay: false, okClick: newBoard });
 	};
 
 	return (

@@ -2,19 +2,25 @@ import { useEffect, useState } from 'react';
 import InputContainer from '../../../../components/inputContainer';
 import useProfile from '../../../../store/useProfile';
 
-const License = () => {
+const Coursework = () => {
 	const [count, setCount] = useState(0);
 	const [value, setValue] = useState<any>();
-	const { setLicense } = useProfile();
+	const { setCoursework } = useProfile();
 
 	useEffect(() => {
-		setLicense(value);
+		setCoursework(value);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
 	return (
-		<InputContainer props={{ id: count, licenseName: '', licenseDate: '' }} count={count} setCount={setCount} setValue={setValue} type="license" />
+		<InputContainer
+			props={{ id: count, eduName: '', eduStartDate: '', eduEndDate: '', institution: '' }}
+			count={count}
+			setCount={setCount}
+			setValue={setValue}
+			type="cursework"
+		/>
 	);
 };
 
-export default License;
+export default Coursework;

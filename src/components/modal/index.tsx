@@ -18,12 +18,15 @@ import { CustomAnnualDetailModal } from '../../pages/topic/dashboard/components/
 
 type ModalProps = {
 	change: () => void;
-	contents: any;
 	type: number;
+	contents: any;
+	color?: string;
 	okClick: () => void;
+	updataClick: () => void;
+	deleteClick: () => void;
 };
 
-const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
+const SetModal = ({ change, type, contents, color, okClick, updataClick, deleteClick }: ModalProps) => {
 	const [detailsSize, setDetailsSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
 
 	useEffect(() => {
@@ -41,7 +44,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 			dialog = (
 				<AlertDialogContent minW={detailsSize[0]} minH={detailsSize[1]}>
 					<AlertDialogHeader>상세보기</AlertDialogHeader>
-					<AlertDialogCloseButton />
+					<AlertDialogCloseButton size="lg" />
 					<AlertDialogBody>
 						<div>
 							<p>이름 : {contents?.name}</p>
@@ -50,6 +53,14 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 							<p>부서 : {contents?.team}</p>
 						</div>
 					</AlertDialogBody>
+					<AlertDialogFooter>
+						<Button colorScheme={color || 'green'} ref={cancelRef} onClick={updataClick}>
+							수정
+						</Button>
+						<Button colorScheme={color || 'red'} ml={3} onClick={deleteClick}>
+							삭제
+						</Button>
+					</AlertDialogFooter>
 				</AlertDialogContent>
 			);
 			break;
@@ -57,7 +68,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
 					<AlertDialogHeader>글쓰기</AlertDialogHeader>
-					<AlertDialogCloseButton />
+					<AlertDialogCloseButton size="lg" />
 
 					<AlertDialogBody>
 						<div>
@@ -78,7 +89,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 						<Button ref={cancelRef} onClick={change}>
 							취소
 						</Button>
-						<Button colorScheme="blue" ml={3} onClick={okClick}>
+						<Button colorScheme={color || 'blue'} ml={3} onClick={okClick}>
 							확인
 						</Button>
 					</AlertDialogFooter>
@@ -89,14 +100,14 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 			dialog = (
 				<AlertDialogContent minW="20%" minH="20%">
 					<AlertDialogHeader />
-					<AlertDialogCloseButton />
+					<AlertDialogCloseButton size="lg" />
 
 					<AlertDialogBody className="content-center text-center text-xl">
 						<div>{contents}</div>
 					</AlertDialogBody>
 
 					<AlertDialogFooter className="!flow-root w-full text-center">
-						<Button className="w-1/2 !ml-0" colorScheme="blue" ml={3} onClick={okClick}>
+						<Button className="w-1/2 !ml-0" colorScheme={color || 'blue'} ml={3} onClick={change}>
 							확인
 						</Button>
 					</AlertDialogFooter>
@@ -107,7 +118,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
 					<AlertDialogHeader />
-					<AlertDialogCloseButton />
+					<AlertDialogCloseButton size="lg" />
 
 					<AlertDialogBody>
 						<div>
@@ -139,7 +150,7 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 };
 
 const ModalProvider = () => {
-	const { open, contents, type, closeOnOverlay, okClick, closeModal } = useModal();
+	const { open, contents, color, type, closeOnOverlay, okClick, updataClick, deleteClick, closeModal } = useModal();
 	const cancelRef = useRef<any>();
 
 	// closeOnOverlayClick 영역밖 클릭시 Dialog 닫히는지
@@ -153,7 +164,15 @@ const ModalProvider = () => {
 			isCentered
 		>
 			<AlertDialogOverlay />
-			<SetModal change={closeModal} type={type} contents={contents} okClick={okClick} />
+			<SetModal
+				change={closeModal}
+				type={type}
+				contents={contents}
+				color={color}
+				okClick={okClick}
+				updataClick={updataClick}
+				deleteClick={deleteClick}
+			/>
 		</AlertDialog>
 	);
 };
