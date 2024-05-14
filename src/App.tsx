@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
+import { ReactQueryDevtools } from 'react-query/devtools';
 import AuthLayout from './pages/auth';
 
 // auth
@@ -17,33 +18,38 @@ import SignUp from './pages/topic/signUp';
 import NotFound from './pages/error/NotFound';
 import Topic from './pages/topic';
 import Equipment from './pages/topic/equipment';
+import AnnualRequest from './pages/topic/dashboard/components/modal/AnnualRequest';
 
 const App = () => {
 	return (
-		<Routes>
-			<Route path="auth" element={<AuthLayout />}>
-				<Route path="login" element={<Login />} />
-			</Route>
-			<Route path="/topic" element={<Topic />}>
-				<Route path="dashboard" element={<Dashboard />} />
-				<Route path="summary" element={<Summary />} />
-				<Route path="workforce" element={<Workforce />} />
-				<Route path="calendar" element={<CompanyCalendar />} />
-				<Route path="project" element={<Profile />} />
-				{/* 추후 인력사항 추가 시 아래 주석 해제 */}
-				{/* <Route path="project" element={<Project />} /> */}
-				<Route path="equipment" element={<Equipment />} />
-				<Route path="nft" element={<NFTMarketplace />} />
-				<Route path="profile" element={<Profile />} />
-				<Route path="news" element={<NFTMarketplace />} />
-				<Route path="seminar" element={<Profile />} />
-				<Route path="board" element={<Summary />} />
-				<Route path="suggestions" element={<Equipment />} />
-				<Route path="signup" element={<SignUp />} />
-			</Route>
-			<Route path="/" element={<Navigate to="/auth/login" replace />} />
-			<Route path="*" element={<NotFound />} />
-		</Routes>
+		<>
+			<Routes>
+				<Route path="auth" element={<AuthLayout />}>
+					<Route path="login" element={<Login />} />
+				</Route>
+				<Route path="/topic" element={<Topic />}>
+					<Route path="dashboard" element={<Dashboard />} />
+					<Route path="annRequest" element={<AnnualRequest />} />
+					<Route path="summary" element={<Summary />} />
+					<Route path="workforce" element={<Workforce />} />
+					<Route path="calendar" element={<CompanyCalendar />} />
+					<Route path="project" element={<Profile />} />
+					{/* 추후 인력사항 추가 시 아래 주석 해제 */}
+					{/* <Route path="project" element={<Project />} /> */}
+					<Route path="equipment" element={<Equipment />} />
+					<Route path="nft" element={<NFTMarketplace />} />
+					<Route path="profile" element={<Profile />} />
+					<Route path="news" element={<NFTMarketplace />} />
+					<Route path="seminar" element={<Profile />} />
+					<Route path="board" element={<Summary />} />
+					<Route path="suggestions" element={<Equipment />} />
+					<Route path="signup" element={<SignUp />} />
+				</Route>
+				<Route path="/" element={<Navigate to="/auth/login" replace />} />
+				<Route path="*" element={<NotFound />} />
+			</Routes>
+			<ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+		</>
 	);
 };
 

@@ -1,3 +1,5 @@
+const { transform } = require('typescript');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	darkMode: 'class',
@@ -322,6 +324,20 @@ module.exports = {
 			},
 			shadow: {
 				500: 'rgba(112, 144, 176, 0.08)',
+			},
+			keyframes: {
+				slideX: {
+					'0%': {
+						transform: 'translateX(0%)',
+					},
+
+					'100%': {
+						transform: 'translateX(100%)',
+					},
+				},
+			},
+			animation: {
+				slideX: 'slideX 3s ease',
 			},
 		}),
 	},

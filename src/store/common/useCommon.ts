@@ -7,6 +7,43 @@ export const taskList = {
 	personal: { id: 'personal', name: '개인일정', color: '#787f8f' },
 } as const;
 
+export type MemberTagProps = {
+	name: string;
+	task: {
+		id: string;
+		name: string;
+	};
+	value?: string;
+};
+export type AnnualProps = {
+	validDate: string;
+	totalAnnualDay: number;
+	restAnnualDay: number;
+	restAnn: number;
+	january: number;
+	febuary: number;
+	march: number;
+	april: number;
+	may: number;
+	june: number;
+	july: number;
+	august: number;
+	september: number;
+	october: number;
+	november: number;
+	december: number;
+};
+export type MemberTagInfo = {
+	name: string;
+	team: string;
+};
+export type dailyEventProps = {
+	schduleNo: number;
+	title: string;
+	allDay: boolean;
+	date: string;
+	members?: string;
+};
 export type taskList = (typeof taskList)[keyof typeof taskList];
 
 type ValuesOf<E> = E[keyof E];

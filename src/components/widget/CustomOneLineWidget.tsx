@@ -1,14 +1,14 @@
 import Card from '../card';
 
-const CustomClickableOneLineWidget = (props: { icon: JSX.Element; title: string; onClickHandler: any }) => {
-	const { icon, title, onClickHandler } = props;
+const CustomClickableOneLineWidget = (props: { icon: JSX.Element; title: string; onClickHandler: any; selectedTitle: string }) => {
+	const { icon, title, onClickHandler, selectedTitle } = props;
 
 	return (
 		<div className="hover:cursor-pointer" onClick={onClickHandler}>
 			<Card extra="!flex-row flex-grow items-center rounded-[20px]">
 				<div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
-					<div className="rounded-full bg-lightPrimary p-3 dark:bg-navy-700">
-						<span className="flex items-center text-brand-500 dark:text-white">{icon}</span>
+					<div className={`rounded-full p-3 ${title !== selectedTitle ? 'bg-lightPrimary' : 'bg-navy-700'}`}>
+						<span className={`flex items-center ${title !== selectedTitle ? 'text-brand-500' : 'text-white'}`}>{icon}</span>
 					</div>
 				</div>
 

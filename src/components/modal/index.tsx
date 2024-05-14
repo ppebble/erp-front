@@ -12,6 +12,9 @@ import {
 	Textarea,
 } from '@chakra-ui/react';
 import useModal from '../../store/useModal';
+import { CustomCalendarModal } from '../calendar/modal/CustomCalendarModal';
+import { CustomAnnualAddModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualAddModal';
+import { CustomAnnualDetailModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualDetailModal';
 
 type ModalProps = {
 	change: () => void;
@@ -122,6 +125,12 @@ const SetModal = ({ change, type, contents, okClick }: ModalProps) => {
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			);
+			break;
+		case 5:
+			dialog = <CustomAnnualAddModal />;
+			break;
+		case 6:
+			dialog = <CustomAnnualDetailModal />;
 			break;
 		default:
 			break;

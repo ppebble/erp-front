@@ -42,6 +42,47 @@ export const getEventColor = (task: string | undefined) => {
 	}
 	return 'false';
 };
+export const getTodayString = () => {
+	const date = new Date();
+	const yyyy = date.getFullYear().toString();
+	const mm = date.getMonth() + 1;
+	const dd = date.getDate();
+	let ddString = '';
+	let mmString = '';
+
+	if (dd < 10) {
+		ddString = `0${dd}`;
+	} else {
+		ddString = dd.toString();
+	}
+	if (mm < 10) {
+		mmString = `0${mm}`;
+	} else {
+		mmString = mm.toString();
+	}
+	return `${yyyy}-${mmString}-${ddString}`;
+};
+export const getEventTask = (taskName: string | undefined) => {
+	if (taskName === '기술개발본부') {
+		return taskList.dev.id;
+	}
+	if (taskName === 'SF&신사업부') {
+		return taskList.sf.id;
+	}
+	if (taskName === '경영팀') {
+		return taskList.manage.id;
+	}
+	if (taskName === 'SC사업부') {
+		return taskList.sc.id;
+	}
+	if (taskName === '전략사업본부') {
+		return taskList.sb.id;
+	}
+	if (taskName === '개인일정') {
+		return taskList.personal.id;
+	}
+	return 'false';
+};
 
 /**
  *  scheduleNo = id

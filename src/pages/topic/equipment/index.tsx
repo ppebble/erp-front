@@ -1,16 +1,11 @@
-import { IoMdHome } from 'react-icons/io';
-import { IoDocuments } from 'react-icons/io5';
-import { MdBarChart, MdCatchingPokemon, MdDashboard, MdGrid3X3, MdLaptopChromebook, MdMonitorWeight } from 'react-icons/md';
+import { MdGrid3X3, MdLaptopChromebook } from 'react-icons/md';
 
-import { FaMobile, FaMobileAlt, FaServer } from 'react-icons/fa';
-import { HiDesktopComputer, HiOutlineDesktopComputer } from 'react-icons/hi';
+import { FaBook, FaMobileAlt, FaServer } from 'react-icons/fa';
+import { HiOutlineDesktopComputer } from 'react-icons/hi';
 import { FiMonitor } from 'react-icons/fi';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
-import WeeklyRevenue from './components/WeeklyRevenue';
-import Widget from '../../../components/widget/Widget';
-import TotalSpent from './components/TotalSpent';
-import EquipTable from './components/EquipTable';
+
 import {
 	tableDesktopData,
 	tableEtcData,
@@ -20,7 +15,8 @@ import {
 	tableServerData,
 } from './variables/tableHeapDataColumns';
 import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLineWidget';
-import CustomViewTable from '../../../components/table/CustomViewTable';
+import CustomScrollViewTable from '../../../components/table/CustomScrollViewTable';
+import CustomPagingViewTable from '../../../components/table/CustomPagingViewTable';
 
 type EquipRow = {
 	inUseEmp: string;
@@ -30,22 +26,25 @@ type EquipRow = {
 };
 
 const Equipment = () => {
-	const [title, setTitle] = useState<string>('');
-	const [data, setData] = useState<EquipRow[]>([]);
+	const [title, setTitle] = useState<string>('노트북');
+	const [data, setData] = useState<EquipRow[]>(tableNotebookData);
 	// useEffect(() => {}, [data]);
 	const columnHelper = createColumnHelper<EquipRow>();
 	const columns = [
 		columnHelper.accessor('inUseEmp', {
 			id: 'inUseEmp',
 			header: '사용자',
+			enableColumnFilter: true,
 		}),
 		columnHelper.accessor('equipModel', {
 			id: 'equipModel',
 			header: '장비 모델 명',
+			enableColumnFilter: true,
 		}),
 		columnHelper.accessor('state', {
 			id: 'state',
 			header: '상태',
+			enableColumnFilter: true,
 		}),
 		columnHelper.accessor('date', {
 			id: 'date',
@@ -53,10 +52,8 @@ const Equipment = () => {
 		}),
 	];
 	return (
-		<div>
-			{/* Card widget */}
-
-			<div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
+		<div className="flex grid grid-cols-12 min-h-[45rem]">
+			<div className="mt-3 mr-5 col-span-2">
 				<CustomClickableOneLineWidget
 					icon={<MdLaptopChromebook className="h-7 w-7" />}
 					title="노트북"
@@ -64,6 +61,7 @@ const Equipment = () => {
 						setTitle('노트북');
 						setData(tableNotebookData);
 					}}
+					selectedTitle={title}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<HiOutlineDesktopComputer className="h-6 w-6" />}
@@ -72,6 +70,7 @@ const Equipment = () => {
 						setTitle('데스크탑');
 					}}
 					title="데스크탑"
+					selectedTitle={title}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FiMonitor className="h-7 w-7" />}
@@ -80,6 +79,7 @@ const Equipment = () => {
 						setTitle('모니터');
 						setData(tableMonitorData);
 					}}
+					selectedTitle={title}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FaServer className="h-6 w-6" />}
@@ -88,6 +88,7 @@ const Equipment = () => {
 						setData(tableServerData);
 						setTitle('서버장비');
 					}}
+					selectedTitle={title}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FaMobileAlt className="h-7 w-7" />}
@@ -96,21 +97,29 @@ const Equipment = () => {
 						setData(tableMobileData);
 						setTitle('모바일');
 					}}
+					selectedTitle={title}
+				/>
+				<CustomClickableOneLineWidget
+					icon={<FaBook className="h-6 w-6" />}
+					title="도서"
+					onClickHandler={() => {
+						setData(tableEtcData);
+						setTitle('도서');
+					}}
+					selectedTitle={title}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<MdGrid3X3 className="h-6 w-6" />}
 					title="기타 장비"
 					onClickHandler={() => {
 						setData(tableEtcData);
-						setTitle('기타장비');
+						setTitle('기타 장비');
 					}}
+					selectedTitle={title}
 				/>
 			</div>
-
-			{/* Charts */}
-
-			<div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-1">
-				<CustomViewTable title={title} tableData={data} columns={columns} />
+			<div className="mt-5 grid grid-cols-1 col-span-10">
+				<CustomPagingViewTable tableData={data} columns={columns} />
 			</div>
 		</div>
 	);

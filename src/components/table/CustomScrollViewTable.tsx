@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useEffect } from 'react';
-import { flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
+import React, { useCallback, useEffect } from 'react';
+import { flexRender, getCoreRowModel, getSortedRowModel, OnChangeFn, SortingState, useReactTable } from '@tanstack/react-table';
 import Card from '../card';
 import CardMenu from '../card/CardMenu';
 
-const CustomViewTable = (props: { tableData: any; columns: any; title?: string }) => {
+const CustomScrollViewTable = (props: { tableData: any; columns: any; title?: string }) => {
 	const { tableData, columns, title } = props;
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const defaultData = tableData;
@@ -14,9 +14,6 @@ const CustomViewTable = (props: { tableData: any; columns: any; title?: string }
 		setData(tableData);
 	}, [tableData]);
 
-	// useEffect(() => {
-	// 	// console.log(columns);
-	// }, [columns]);
 	const table = useReactTable({
 		data,
 		columns,
@@ -33,7 +30,7 @@ const CustomViewTable = (props: { tableData: any; columns: any; title?: string }
 	return (
 		<Card extra="w-full pb-10 pl-4 p-2 h-full min-h-[17.5rem]">
 			{title && (
-				<header className="relative flex items-center justify-between ">
+				<header className="relative flex items-center justify-between pt-5 pb-5">
 					<div className="text-xl font-bold text-navy-700 dark:text-white py-1.5">{title}</div>
 				</header>
 			)}
@@ -86,4 +83,4 @@ const CustomViewTable = (props: { tableData: any; columns: any; title?: string }
 	);
 };
 
-export default CustomViewTable;
+export default CustomScrollViewTable;
