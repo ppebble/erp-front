@@ -24,7 +24,7 @@ const Login = () => {
 
 	const login = AuthService().loginMutation;
 	// const test = AuthService().testQuery;
-	const { isLoading, error, data } = useQuery('getUserInfo', AuthService().sampleQuery);
+	// const { isLoading, error, data } = useQuery('getUserInfo', AuthService().sampleQuery);
 
 	const doLogin = () => {
 		const param: loginParam = {
@@ -54,6 +54,8 @@ const Login = () => {
 				});
 
 				navigation('/topic/dashboard');
+			} else {
+				openModal({ type: 3, contents: loginData.resultMsg, color: 'red' });
 			}
 		}
 	}, [login.data, login.isSuccess, navigation, setCookie]);

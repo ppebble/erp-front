@@ -16,7 +16,6 @@ import useModal from '../../store/useModal';
 import { CustomCalendarModal } from '../calendar/modal/CustomCalendarModal';
 import { CustomAnnualAddModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualAddModal';
 import { CustomAnnualDetailModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualDetailModal';
-import DetailModal from './project/detailModal';
 
 type ModalProps = {
 	change: () => void;

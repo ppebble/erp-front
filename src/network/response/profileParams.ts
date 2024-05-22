@@ -1,22 +1,4 @@
 export interface profileParams {
-	isSuccessful: boolean;
-	resultCode: string;
-	resultMsg: string;
-	dateTime: string;
-	result: {
-		profile: profile;
-		detail: detail;
-		dept: dept;
-		education: education;
-		army: army;
-		career: career[];
-		license: license[];
-		coursework: coursework[];
-		skill: skill[];
-	};
-}
-
-export interface profileResult {
 	profile: profile;
 	detail: detail;
 	dept: dept;
