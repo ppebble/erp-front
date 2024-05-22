@@ -18,7 +18,6 @@ import useProfile from '../../../../store/useProfile';
 import useModal from '../../../../store/useModal';
 
 const Basic = () => {
-	const [show, setShow] = useState(false);
 	const [highSchool, setHighSchool] = useState<string[]>();
 	const [collage, setCollage] = useState<string[]>();
 	const [graduateSchool, setGraduateSchool] = useState<string[]>();
@@ -28,11 +27,9 @@ const Basic = () => {
 
 	const idCheck = ProfileService().idCheckMutation;
 
-	const handleClick = () => setShow(!show);
-
 	const isAvailable = () => {
 		if (profile) {
-			idCheck.mutate(profile.userId);
+			idCheck.mutate({ userId: profile.userId });
 		}
 	};
 
@@ -109,46 +106,6 @@ const Basic = () => {
 					<Input id="userEmail" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userEmail || ''} />
 					<InputRightAddon>@nexmore.co.kr</InputRightAddon>
 				</InputGroup>
-
-				<Accordion className="mb-[10px]" allowMultiple>
-					<AccordionItem>
-						<h2>
-							<AccordionButton>
-								<Box as="span" flex="1" textAlign="left">
-									+ 비밀번호 변경
-								</Box>
-								<AccordionIcon />
-							</AccordionButton>
-						</h2>
-						<AccordionPanel>
-							<InputGroup className="mb-2">
-								<InputLeftAddon className="!min-w-[100px]">비밀번호</InputLeftAddon>
-								<Input
-									id="pw"
-									className="!min-w-[100px]"
-									onChange={(e) => changeProfile(e)}
-									autoComplete="off"
-									pr="4.5rem"
-									type={show ? 'text' : 'password'}
-									placeholder="변경할 비밀번호를 입력하세요."
-								/>
-								<InputLeftAddon className="!min-w-[100px] ml-[20px]">비밀번호 확인</InputLeftAddon>
-								<Input
-									id="rePw"
-									className="!min-w-[100px]"
-									onChange={(e) => changeProfile(e)}
-									autoComplete="off"
-									pr="4.5rem"
-									type={show ? 'text' : 'password'}
-									placeholder="변경할 비밀번호를 한번 더 입력하세요."
-								/>
-								<Button className="ml-[20px] w-[150px]" size="md" onClick={handleClick}>
-									{show ? '숨김' : '보기'}
-								</Button>
-							</InputGroup>
-						</AccordionPanel>
-					</AccordionItem>
-				</Accordion>
 
 				{/* profileDept */}
 				<InputGroup className="mb-2">

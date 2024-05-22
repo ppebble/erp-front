@@ -11,33 +11,16 @@ import Skill from './tab/skill';
 import useModal from '../../../store/useModal';
 
 const SignUp = () => {
-	const { isSuccess, data } = useQuery('getProfile', ProfileService().profieQuery); // 조회
+	const { isSuccess } = useQuery('selProfile', ProfileService().selProfile); // 조회
 	const updateProfile = ProfileService().updateProfileMutation; // 업데이트
 	const { profile, detail, dept, education, army, career, license, coursework, skill, setClear } = useProfile();
-	const [ready, setReady] = useState(false);
 	const { openModal } = useModal();
 
-	useEffect(() => {
-		return () => setClear();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		if (isSuccess) {
-			setReady(true);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [data]);
-
 	const update = () => {
-		if (ready) {
+		if (isSuccess) {
 			const param = { profile, detail, dept, education, army, career, coursework, license, skill };
 			// console.log(param);
-			if (profile.pw !== profile.rePw) {
-				openModal({ type: 3, contents: '변경할 비밀번호가 일치하지 않습니다.<br/>비밀번호를 다시 확인해 주세요.', color: 'red' });
-			} else {
-				updateProfile.mutate(param);
-			}
+			updateProfile.mutate(param);
 		}
 	};
 
@@ -73,7 +56,7 @@ const SignUp = () => {
 								외국어
 							</Tab>
 						</TabList>
-						{ready ? (
+						{isSuccess ? (
 							<TabPanels>
 								<TabPanel>
 									<Basic />
