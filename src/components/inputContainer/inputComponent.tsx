@@ -1,4 +1,19 @@
-import { InputGroup, InputLeftAddon, Input, CloseButton, Button, AccordionItem, AccordionButton, Box, AccordionPanel } from '@chakra-ui/react';
+import {
+	InputGroup,
+	InputLeftAddon,
+	Input,
+	CloseButton,
+	Button,
+	AccordionItem,
+	AccordionButton,
+	Box,
+	AccordionPanel,
+	Flex,
+	Spacer,
+	FormLabel,
+	Badge,
+	Tag,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import useProfile from '../../store/useProfile';
 
@@ -200,15 +215,51 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 			case 'project':
 				component = (
 					<>
-						<Button className="mb-[10px]" onClick={() => addInput()}>
-							추가
-						</Button>
+						<div>
+							<Flex className="mb-[10px]">
+								<Tag size="lg" borderRadius="full" variant="solid" colorScheme="teal">
+									산출물
+								</Tag>
+								<Spacer />
+								<Button onClick={() => addInput()}>추가</Button>
+							</Flex>
+						</div>
 						{inputItems.map((item: any, index: any) => {
 							return (
 								<div key={`project_${item.id}`}>
 									<InputGroup className="mb-2">
 										<Input id={`file_${item.id}`} type="file" onChange={(e) => onChange(e, index)} />
 										<CloseButton onClick={() => InputDelete(index)} />
+									</InputGroup>
+								</div>
+							);
+						})}
+					</>
+				);
+				break;
+			case 'member':
+				component = (
+					<>
+						<div>
+							<Flex className="mb-[10px]">
+								<Tag size="lg" borderRadius="full" variant="solid" colorScheme="teal">
+									팀원
+								</Tag>
+								<Spacer />
+								<Button onClick={() => addInput()}>추가</Button>
+							</Flex>
+						</div>
+						{inputItems.map((item: any, index: any) => {
+							return (
+								<div key={`member_${item.id}`}>
+									<InputGroup className={`mb-2 ${index === 0 ? 'pr-[32px]' : ''}`}>
+										<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
+										<Input id="licenseName" defaultValue={item.member} onChange={(e) => onChange(e, index)} />
+										<InputLeftAddon className="!min-w-[100px] ml-[20px]">직책</InputLeftAddon>
+										<Input id="licenseDate" defaultValue={item.role} onChange={(e) => onChange(e, index)} />
+										<InputLeftAddon className="!min-w-[100px] ml-[20px]">업무</InputLeftAddon>
+										<Input id="licenseDate" defaultValue={item.task} onChange={(e) => onChange(e, index)} />
+										{index > 0 && inputItems[index - 1] ? <CloseButton onClick={() => InputDelete(index)} /> : ''}
 									</InputGroup>
 								</div>
 							);

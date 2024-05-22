@@ -9,13 +9,11 @@ import Login from './pages/auth/login/Login';
 // admin
 import Dashboard from './pages/topic/dashboard';
 import NFTMarketplace from './pages/topic/marketplace';
-import Profile from './pages/topic/profile';
 import Project from './pages/topic/project';
 import Summary from './pages/topic/summary';
 import Workforce from './pages/topic/workforce';
 import CompanyCalendar from './pages/topic/calendar';
 import SignUp from './pages/topic/signUp';
-
 import NotFound from './pages/error/NotFound';
 import Topic from './pages/topic';
 import Equipment from './pages/topic/equipment';
@@ -37,9 +35,7 @@ const App = () => {
 					<Route path="project" element={<Project />} />
 					<Route path="equipment" element={<Equipment />} />
 					<Route path="nft" element={<NFTMarketplace />} />
-					<Route path="profile" element={<Profile />} />
 					<Route path="news" element={<NFTMarketplace />} />
-					<Route path="seminar" element={<Profile />} />
 					<Route path="board" element={<Summary />} />
 					<Route path="suggestions" element={<Equipment />} />
 					<Route path="signup" element={<SignUp />} />

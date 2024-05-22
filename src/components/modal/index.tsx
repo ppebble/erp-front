@@ -16,14 +16,15 @@ import useModal from '../../store/useModal';
 import { CustomCalendarModal } from '../calendar/modal/CustomCalendarModal';
 import { CustomAnnualAddModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualAddModal';
 import { CustomAnnualDetailModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualDetailModal';
+import DetailModal from './project/detailModal';
 
 type ModalProps = {
 	change: () => void;
 	type: number;
-	contents: any;
+	contents?: any;
 	color?: string;
 	okClick: () => void;
-	updataClick: () => void;
+	updataClick: (update: any) => void;
 	deleteClick: () => void;
 };
 
@@ -143,6 +144,9 @@ const SetModal = ({ change, type, contents, color, okClick, updataClick, deleteC
 			break;
 		case 6:
 			dialog = <CustomAnnualDetailModal />;
+			break;
+		case 9:
+			dialog = <DetailModal detailsSize={detailsSize} cancelRef={cancelRef} />;
 			break;
 		default:
 			break;
