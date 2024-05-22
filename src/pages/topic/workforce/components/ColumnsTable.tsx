@@ -2,16 +2,12 @@ import { useState, useMemo, useEffect } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
 import { Button } from '@chakra-ui/react';
-import CardMenu from '../../../../components/card/CardMenu';
+import { useQuery } from 'react-query';
+import { ProfileService } from '../../../../services/profileService';
 import Card from '../../../../components/card';
 import useModal from '../../../../store/useModal';
-
-type RowObj = {
-	name: string;
-	position: string;
-	rank: string;
-	team: string;
-};
+import useProfile from '../../../../store/useProfile';
+import { profileList } from '../../../../network/response/profileList';
 
 type tableProps = {
 	tableData: any;
@@ -25,7 +21,7 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 	const [endIndex, setEndIndex] = useState(low);
 	const [totalPage] = useState(Math.ceil(tableData.length / low));
 	const [data] = useState(() => [...tableData]);
-	const columnHelper = createColumnHelper<RowObj>();
+	const columnHelper = createColumnHelper<profileList>();
 	const { openModal } = useModal();
 
 	const previousPage = () => {
@@ -72,9 +68,17 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 			id: '직급',
 			cell: (info) => addTag(info.getValue()),
 		}),
-		columnHelper.accessor('team', {
+		columnHelper.accessor('task', {
 			id: '부서',
 			cell: (info) => addTag(info.getValue()),
+		}),
+		columnHelper.accessor('place', {
+			id: '근무지',
+			cell: (info) => addTag(info.getValue()),
+		}),
+		columnHelper.accessor('userEmail', {
+			id: '이메일',
+			cell: (info) => addTag(info.getValue().concat('@nexmore.co.kr')),
 		}),
 	];
 
@@ -106,16 +110,11 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 		openModal({ type: 1, contents: con, closeOnOverlay: false, updataClick: updateBoard, deleteClick: deleteBoard });
 	};
 
-	const newWrite = () => {
-		openModal({ type: 2, closeOnOverlay: false, okClick: newBoard });
-	};
-
 	return (
 		<div className="mt-5 grid">
 			<Card extra="w-full pb-10 p-4 h-full">
 				<header className="relative flex items-center justify-between">
 					<div className="text-xl font-bold text-navy-700 dark:text-white">인력사항</div>
-					<CardMenu />
 				</header>
 
 				<div className="mt-8 overflow-x-scroll xl:overflow-x-hidden" style={{ height: '500px' }}>
@@ -165,11 +164,6 @@ const ColumnsTable = ({ tableData, low }: tableProps) => {
 						</tbody>
 					</table>
 				</div>
-
-				<div>
-					<Button onClick={() => newWrite()}>글쓰기</Button>
-				</div>
-
 				<div className="w-full  flex justify-center sm:justify-end flex-col sm:flex-row gap-5 mt-1.5 px-1 items-center">
 					<div className="flex">
 						<ul className="flex justify-center items-center gap-x-[10px] z-30" role="navigation" aria-label="Pagination">

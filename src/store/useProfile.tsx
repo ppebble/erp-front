@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { profile, detail, dept, education, army, career, license, coursework, skill } from '../network/response/profileParams';
+import { profileList } from '../network/response/profileList';
 
 interface ProfileStore {
 	// 기본정보
@@ -28,6 +29,10 @@ interface ProfileStore {
 	// 보유기술 및 외국어능력
 	skill: skill[];
 	setSkill: (state: skill[]) => void;
+	// 회원 목록
+	profileList: profileList[];
+	setProfileList: (state: profileList[]) => void;
+
 	setClear: () => void;
 }
 
@@ -56,6 +61,8 @@ const useProfile = create(
 			setCoursework: (select) => set((state) => ({ ...state, coursework: select })),
 			skill: [{ skillName: '', skillGrade: '', criteria: '' }],
 			setSkill: (select) => set((state) => ({ ...state, skill: select })),
+			profileList: [],
+			setProfileList: (select) => set((state) => ({ ...state, profileList: select })),
 			setClear: () =>
 				set(() => ({
 					basic: {
@@ -81,7 +88,7 @@ const useProfile = create(
 				})),
 		}),
 		{
-			name: 'SideBarStorage',
+			name: 'ProfileStorage',
 		},
 	),
 );

@@ -1,27 +1,30 @@
 import { useMutation, useQuery } from 'react-query';
 import { getQuery, postQuery } from './base/AxiosQueryService';
 import { commonResult } from '../network/commonResult';
-import { profileResult } from '../network/response/profileParams';
+import { profileParams } from '../network/response/profileParams';
+import useModal from '../store/useModal';
 import useProfile from '../store/useProfile';
+import { profileList } from '../network/response/profileList';
 
 export const ProfileService = () => {
-	const { setProfile, setDetail, setDept, setEducation, setArmy, setCareer, setLicense, setCoursework, setSkill } = useProfile();
+	const { setProfile, setDetail, setDept, setEducation, setArmy, setCareer, setLicense, setCoursework, setSkill, setProfileList } = useProfile();
+	const { openModal } = useModal();
 
 	const idCheckMutation = useMutation({
-		mutationFn: (params: string) => postQuery(`/api/profile/iddup?userId=${params}`),
+		mutationFn: (params: string) => postQuery('/api/profile/iddup', params),
 		onSuccess: (result) => {
 			return result.response;
 		},
 		onError: (error) => {
-			console.log(error);
+			openModal({ type: 3, contents: error, color: 'red' });
 		},
 	});
 
-	const profieQuery = {
-		queryFn: () => getQuery('/api/profile/selProfile'),
+	const selProfile = {
+		queryFn: () => getQuery('/api/profile/profile'),
 		onSuccess: (result: { response: commonResult }) => {
 			const common: commonResult = result.response;
-			const data: profileResult = common.result;
+			const data: profileParams = common.result;
 			if (common.isSuccessful) {
 				// console.log(data);
 				setProfile(data.profile);
@@ -37,7 +40,7 @@ export const ProfileService = () => {
 			}
 		},
 		onError: (error: any) => {
-			console.log(error);
+			openModal({ type: 3, contents: error, color: 'red' });
 		},
 	};
 
@@ -47,9 +50,33 @@ export const ProfileService = () => {
 			return result.response;
 		},
 		onError: (error) => {
-			console.log(error);
+			openModal({ type: 3, contents: error, color: 'red' });
 		},
 	});
 
-	return { idCheckMutation, profieQuery, updateProfileMutation };
+	const getProfileList = {
+		queryFn: () => getQuery('/api/profile/profileList'),
+		onSuccess: (result: { response: commonResult }) => {
+			const common: commonResult = result.response;
+			const data: profileList[] = common.result;
+			if (common.isSuccessful) {
+				setProfileList(data);
+			}
+		},
+		onError: (error: any) => {
+			openModal({ type: 3, contents: error, color: 'red' });
+		},
+	};
+
+	const modifyPw = useMutation({
+		mutationFn: (params: any) => postQuery(`/api/profile/modifyPw?pw=${params}`, params),
+		onSuccess: (result) => {
+			openModal({ type: 3, contents: '비밀번호가 변경 되었습니다.' });
+		},
+		onError: (error) => {
+			openModal({ type: 3, contents: error, color: 'red' });
+		},
+	});
+
+	return { idCheckMutation, selProfile, updateProfileMutation, getProfileList, modifyPw };
 };
