@@ -13,6 +13,7 @@ import {
 	FormLabel,
 	Badge,
 	Tag,
+	TagLabel,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import useProfile from '../../store/useProfile';
@@ -217,7 +218,7 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 					<>
 						<div>
 							<Flex className="mb-[10px]">
-								<Tag size="lg" borderRadius="full" variant="solid" colorScheme="teal">
+								<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px]">
 									산출물
 								</Tag>
 								<Spacer />
@@ -226,7 +227,7 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 						</div>
 						{inputItems.map((item: any, index: any) => {
 							return (
-								<div key={`project_${item.id}`}>
+								<div key={`project_${item.id}`} className="my-[2px]">
 									<InputGroup className="mb-2">
 										<Input id={`file_${item.id}`} type="file" onChange={(e) => onChange(e, index)} />
 										<CloseButton onClick={() => InputDelete(index)} />
@@ -242,7 +243,7 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 					<>
 						<div>
 							<Flex className="mb-[10px]">
-								<Tag size="lg" borderRadius="full" variant="solid" colorScheme="teal">
+								<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px]">
 									팀원
 								</Tag>
 								<Spacer />
@@ -252,14 +253,14 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 						{inputItems.map((item: any, index: any) => {
 							return (
 								<div key={`member_${item.id}`}>
-									<InputGroup className={`mb-2 ${index === 0 ? 'pr-[32px]' : ''}`}>
+									<InputGroup className="mb-2">
 										<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
 										<Input id="licenseName" defaultValue={item.member} onChange={(e) => onChange(e, index)} />
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">직책</InputLeftAddon>
 										<Input id="licenseDate" defaultValue={item.role} onChange={(e) => onChange(e, index)} />
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">업무</InputLeftAddon>
 										<Input id="licenseDate" defaultValue={item.task} onChange={(e) => onChange(e, index)} />
-										{index > 0 && inputItems[index - 1] ? <CloseButton onClick={() => InputDelete(index)} /> : ''}
+										<CloseButton onClick={() => InputDelete(index)} />
 									</InputGroup>
 								</div>
 							);

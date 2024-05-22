@@ -10,10 +10,12 @@ import Login from './pages/auth/login/Login';
 import Dashboard from './pages/topic/dashboard';
 import NFTMarketplace from './pages/topic/marketplace';
 import Project from './pages/topic/project';
+import ProjectDetail from './pages/topic/project/projectDetail';
 import Summary from './pages/topic/summary';
 import Workforce from './pages/topic/workforce';
 import CompanyCalendar from './pages/topic/calendar';
 import SignUp from './pages/topic/signUp';
+import Password from './pages/topic/password';
 import NotFound from './pages/error/NotFound';
 import Topic from './pages/topic';
 import Equipment from './pages/topic/equipment';
@@ -33,12 +35,14 @@ const App = () => {
 					<Route path="workforce" element={<Workforce />} />
 					<Route path="calendar" element={<CompanyCalendar />} />
 					<Route path="project" element={<Project />} />
+					<Route path="projectDetail" element={<ProjectDetail />} />
 					<Route path="equipment" element={<Equipment />} />
 					<Route path="nft" element={<NFTMarketplace />} />
 					<Route path="news" element={<NFTMarketplace />} />
 					<Route path="board" element={<Summary />} />
 					<Route path="suggestions" element={<Equipment />} />
 					<Route path="signup" element={<SignUp />} />
+					<Route path="password" element={<Password />} />
 				</Route>
 				<Route path="/" element={<Navigate to="/auth/login" replace />} />
 				<Route path="*" element={<NotFound />} />

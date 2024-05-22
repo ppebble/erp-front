@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import { getQuery, postQuery } from './base/AxiosQueryService';
 import { commonResult } from '../network/commonResult';
 import { projectDetailParams, project } from '../network/response/projectParams';
@@ -8,6 +9,7 @@ import useProject from '../store/useProject';
 export const ProjectService = () => {
 	const { projectNo, setProject, setProjectList, setProjectDetail, setProjectMember, setProjectNo } = useProject();
 	const { openModal } = useModal();
+	const navigate = useNavigate();
 
 	const projectList = {
 		queryFn: () => getQuery('/api/project/projectList'),
@@ -32,7 +34,7 @@ export const ProjectService = () => {
 				setProject(data.project);
 				setProjectDetail(data.projectDetail);
 				setProjectMember(data.projectMember);
-				setProjectNo(0);
+				navigate('/topic/projectDetail');
 			}
 		},
 		onError: (error: any) => {
