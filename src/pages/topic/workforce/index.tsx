@@ -6,26 +6,33 @@ import { Flex, Input, InputGroup, InputRightElement, Select, Spacer } from '@cha
 import { SearchIcon } from '@chakra-ui/icons';
 import { ProfileService } from '../../../services/profileService';
 import useProfile from '../../../store/useProfile';
-import useModal from '../../../store/useModal';
 import { profileList as profileListType } from '../../../network/response/profileList';
 import Card from '../../../components/card';
 
 const Workforce = () => {
-	const { isSuccess } = useQuery('getProfileList', ProfileService().getProfileList);
-	const { profileList } = useProfile();
-	const low = 10;
+	useQuery('getProfileList', ProfileService().getProfileList);
+	const { profileList } = useProfile(); // 전체 리스트
+	const row = 10;
 
-	const [profileListSplit, setProfileListSplit] = useState({});
+	const [totalPage, setTotalPage] = useState(Math.ceil(profileList.length / row));
 
-	const [search, setSearch] = useState({ option: 'name', input: '' }); // 검색
+	const splitList = () => {
+		const array = [];
+		for (let i = 0; i < totalPage; i += 1) {
+			array.push(profileList.slice(i * row, (i + 1) * row));
+		}
+		return array;
+	};
+
+	const [profileListSplit] = useState<any>(splitList()); // 10개(row)씩 나눈 리스트
+	const [searchSplit, setSearchSplit] = useState<any>(); // 검색 결과 리스트
+
+	const [data, setData] = useState(profileListSplit[0]);
+
+	const [search, setSearch] = useState({ option: 'name', input: '' });
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [currentPage, setCurrentPage] = useState(0);
-	const [startIndex, setStartIndex] = useState(0);
-	const [endIndex, setEndIndex] = useState(low);
-	const [data, setData] = useState(() => [...profileList]);
-	const [totalPage, setTotalPage] = useState(Math.ceil(profileList.length / low));
 	const columnHelper = createColumnHelper<profileListType>();
-	const { openModal } = useModal();
 
 	const previousPage = () => {
 		setCurrentPage(currentPage - 1);
@@ -46,22 +53,8 @@ const Workforce = () => {
 		for (let i = 0; i < totalPage; i += 1) {
 			arr[i] = i;
 		}
-		console.log(arr);
 		setCustomPagination(arr);
 	}, [totalPage]);
-
-	useEffect(() => {
-		const array = [];
-		for (let i = 0; i < totalPage; i += 1) {
-			array.push(data.splice(0, 10));
-		}
-		setProfileListSplit(array);
-	}, [profileList]);
-
-	useEffect(() => {
-		setStartIndex(currentPage * low);
-		setEndIndex(startIndex + low);
-	}, [currentPage, low, startIndex]);
 
 	const addTag = (value: any) => {
 		return <p className="text-md font-bold">{value}</p>;
@@ -70,7 +63,7 @@ const Workforce = () => {
 	const columns = [
 		columnHelper.accessor('name', {
 			id: '이름',
-			cell: (info: any) => addTag(info.getValue()),
+			cell: (info) => addTag(info.getValue()),
 			size: 200,
 		}),
 		columnHelper.accessor('position', {
@@ -95,7 +88,7 @@ const Workforce = () => {
 		}),
 		columnHelper.accessor('userEmail', {
 			id: '이메일',
-			cell: (info) => addTag(info.getValue().concat('@nexmore.co.kr')),
+			cell: (info) => addTag(`${info.getValue()}@nexmore.co.kr`),
 			size: 300,
 		}),
 	];
@@ -116,6 +109,15 @@ const Workforce = () => {
 		const { id, value } = e.target;
 		setSearch({ ...search, [id]: value });
 	};
+
+	useEffect(() => {
+		if (search.input) {
+			setData(searchSplit[currentPage]);
+		} else {
+			setData(profileListSplit[currentPage]);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentPage]);
 
 	useEffect(() => {
 		let filter;
@@ -139,8 +141,19 @@ const Workforce = () => {
 				break;
 		}
 		if (filter) {
-			setData(filter);
-			setTotalPage(Math.ceil(filter.length / low));
+			setCurrentPage(0);
+			if (search.input) {
+				const array = [];
+				for (let i = 0; i < Math.ceil(filter.length / row); i += 1) {
+					array.push(filter.slice(i * row, (i + 1) * row));
+				}
+				setSearchSplit(array);
+				setData(array[0]);
+			} else {
+				setData(profileListSplit[currentPage]);
+			}
+
+			setTotalPage(Math.ceil(filter.length / row));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [search]);
@@ -182,22 +195,19 @@ const Workforce = () => {
 							))}
 						</thead>
 						<tbody>
-							{table
-								.getRowModel()
-								.rows.slice(startIndex, endIndex)
-								.map((row) => {
-									return (
-										<tr key={row.id}>
-											{row.getVisibleCells().map((cell) => {
-												return (
-													<td key={cell.id} className="border-white/0 py-3 pr-4">
-														{flexRender(cell.column.columnDef.cell, cell.getContext())}
-													</td>
-												);
-											})}
-										</tr>
-									);
-								})}
+							{table.getRowModel().rows.map((row) => {
+								return (
+									<tr key={row.id}>
+										{row.getVisibleCells().map((cell) => {
+											return (
+												<td key={cell.id} className="border-white/0 py-3 pr-4">
+													{flexRender(cell.column.columnDef.cell, cell.getContext())}
+												</td>
+											);
+										})}
+									</tr>
+								);
+							})}
 						</tbody>
 					</table>
 				</div>
@@ -239,8 +249,7 @@ const Workforce = () => {
 											currentPage === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
 										}`}
 										onClick={() => changePage(index)}
-										// eslint-disable-next-line react/no-array-index-key
-										key={index}
+										key={_data}
 									>
 										{index + 1}
 									</li>
