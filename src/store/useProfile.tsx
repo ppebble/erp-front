@@ -1,6 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { profile, detail, dept, education, army, career, license, coursework, skill } from '../network/response/profileParams';
+import {
+	profile,
+	detail,
+	dept,
+	education,
+	army,
+	career,
+	license,
+	coursework,
+	skill,
+	highSchool,
+	collage,
+	graduateSchool,
+} from '../network/response/profileParams';
 import { profileList } from '../network/response/profileList';
 
 interface ProfileStore {
@@ -13,6 +26,12 @@ interface ProfileStore {
 	setDept: (state: dept) => void;
 	education: education;
 	setEducation: (state: education) => void;
+	highSchool: string[];
+	setHighSchool: (state: string[]) => void;
+	collage: string[];
+	setCollage: (state: string[]) => void;
+	graduateSchool: string[];
+	setGraduateSchool: (state: string[]) => void;
 	army: army;
 	setArmy: (state: army) => void;
 	// 경력사항
@@ -47,6 +66,22 @@ const useProfile = create(
 			setDept: (select) => set((state) => ({ ...state, dept: select })),
 			education: { pEduNo: 0, highSchool: '', collage: '', graduateSchool: '' },
 			setEducation: (select) => set((state) => ({ ...state, education: select })),
+			highSchool: [],
+			setHighSchool: (select) => set((state) => ({ ...state, highSchool: select })),
+			collage: {
+				collage1: '',
+				collage2: '',
+				collage3: '',
+				collage4: '',
+			},
+			setCollage: (select) => set((state) => ({ ...state, collage: select })),
+			graduateSchool: {
+				graduateSchool1: '',
+				graduateSchool2: '',
+				graduateSchool3: '',
+				graduateSchool4: '',
+			},
+			setGraduateSchool: (select) => set((state) => ({ ...state, graduateSchool: select })),
 			army: { armyNo: 0, armyStart: '', armyEnd: '', armyBranch: '' },
 			setArmy: (select) => set((state) => ({ ...state, army: select })),
 			career: [

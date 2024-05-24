@@ -18,11 +18,24 @@ import useProfile from '../../../../store/useProfile';
 import useModal from '../../../../store/useModal';
 
 const Basic = () => {
-	const [highSchool, setHighSchool] = useState<string[]>();
-	const [collage, setCollage] = useState<string[]>();
-	const [graduateSchool, setGraduateSchool] = useState<string[]>();
-
-	const { profile, detail, dept, education, army, setProfile, setDetail, setDept, setEducation, setArmy } = useProfile();
+	const {
+		profile,
+		detail,
+		dept,
+		education,
+		army,
+		collage,
+		graduateSchool,
+		setGraduateSchool,
+		setCollage,
+		setProfile,
+		setDetail,
+		setDept,
+		setArmy,
+		highSchool,
+		setHighSchool,
+		setEducation,
+	} = useProfile();
 	const { openModal } = useModal();
 
 	const idCheck = ProfileService().idCheckMutation;
@@ -57,15 +70,27 @@ const Basic = () => {
 		setDept({ ...dept, [id]: value });
 	};
 
-	const changeEducation = (e: any) => {
+	const changeHighSchool = (e: any) => {
 		const { id, value } = e.target;
-		setEducation({ ...education, [id]: value });
+		setHighSchool({ ...highSchool, [id.split('_')[1]]: value });
+	};
+
+	const changeCollage = (e: any) => {
+		const { id, value } = e.target;
+		setCollage({ ...collage, [id.split('_')[1]]: value });
+	};
+
+	const changeGraduateSchool = (e: any) => {
+		const { id, value } = e.target;
+		setGraduateSchool({ ...graduateSchool, [id.split('_')[1]]: value });
 	};
 
 	const changeArmy = (e: any) => {
 		const { id, value } = e.target;
 		setArmy({ ...army, [id]: value });
 	};
+
+	useEffect(() => {}, []);
 
 	useEffect(() => {
 		if (idCheck.isSuccess) {
@@ -110,23 +135,31 @@ const Basic = () => {
 				{/* profileDept */}
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">부서</InputLeftAddon>
-					<Select id="task" key="task" className="!min-w-[160px]" onChange={(e) => changeDept(e)} defaultValue={dept.task || ''}>
+					<Select id="task" key="task" className="!min-w-[160px]" onChange={(e) => changeDept(e)} defaultValue={dept.task || '-'}>
+						<option value="-">-</option>
 						<option value="SC사업본부">SC사업본부</option>
 						<option value="SF&신사업본부">SF&신사업본부</option>
 						<option value="경영팀">경영팀</option>
 						<option value="기술개발본부">기술개발본부</option>
 						<option value="기업부설연구소">기업부설연구소</option>
-						<option value="없음">없음</option>
 					</Select>
-					<InputLeftAddon className="!min-w-[70px] ml-[20px]">팀</InputLeftAddon>
-					<Select id="team" key="team" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.team || ''}>
-						<option value="개발1팀">개발1팀</option>
-						<option value="개발2팀">개발2팀</option>
-					</Select>
+					{dept.task === '기술개발본부' ? (
+						<>
+							<InputLeftAddon className="!min-w-[70px] ml-[20px]">팀</InputLeftAddon>
+							<Select id="team" key="team" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.team || '-'}>
+								<option value="-">-</option>
+								<option value="개발1팀">개발1팀</option>
+								<option value="개발2팀">개발2팀</option>
+							</Select>
+						</>
+					) : (
+						''
+					)}
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">직책</InputLeftAddon>
-					<Select id="position" key="position" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.position || ''}>
+					<Select id="position" key="position" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.position || '-'}>
+						<option value="-">-</option>
 						<option value="CEO">CEO</option>
 						<option value="사업부장">사업부장</option>
 						<option value="본부장">본부장</option>
@@ -134,10 +167,10 @@ const Basic = () => {
 						<option value="실장">실장</option>
 						<option value="팀장">팀장</option>
 						<option value="파트장">파트장</option>
-						<option value="">없음</option>
 					</Select>
 					<InputLeftAddon className="!min-w-[70px] ml-[20px]">직급</InputLeftAddon>
-					<Select id="rank" key="rank" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.rank || ''}>
+					<Select id="rank" key="rank" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.rank || '-'}>
+						<option value="-">-</option>
 						<option value="주임">주임</option>
 						<option value="대리">대리</option>
 						<option value="과장">과장</option>
@@ -151,7 +184,8 @@ const Basic = () => {
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">근무지</InputLeftAddon>
-					<Select id="place" key="place" className="!min-w-[150px]" onChange={(e) => changeDept(e)} defaultValue={dept.place || ''}>
+					<Select id="place" key="place" className="!min-w-[150px]" onChange={(e) => changeDept(e)} defaultValue={dept.place || '-'}>
+						<option value="-">-</option>
 						<option value="SKT">SKT</option>
 						<option value="본사">본사</option>
 						<option value="안산">안산</option>
@@ -231,43 +265,97 @@ const Basic = () => {
 						<AccordionPanel>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[100px]">고등학교</InputLeftAddon>
-								<Input id="highSchool" className="!min-w-[200px]" defaultValue={highSchool ? highSchool[0] : ''} />
+								<Input
+									id="highSchool_0"
+									className="!min-w-[200px]"
+									onChange={(e) => changeHighSchool(e)}
+									defaultValue={highSchool ? highSchool[0] : ''}
+								/>
 								<InputLeftAddon className="!min-w-[70px] ml-[20px]">구분</InputLeftAddon>
-								<Select id="highType" key="highType" className="!min-w-[120px]" defaultValue={highSchool ? highSchool[1] : ''}>
+								<Select
+									id="highSchool_1"
+									key="highType"
+									className="!min-w-[120px]"
+									onChange={(e) => changeHighSchool(e)}
+									defaultValue={highSchool ? highSchool[1] : '-'}
+								>
+									<option value="-">-</option>
 									<option value="졸업">졸업</option>
 									<option value="중퇴">중퇴</option>
 									<option value="졸업예정">졸업예정</option>
 								</Select>
 								<InputLeftAddon className="min-w-[70px] ml-[20px]">날짜</InputLeftAddon>
-								<Input id="highDate" type="month" className="!min-w-[150px]" defaultValue={highSchool ? highSchool[2] : ''} />
+								<Input
+									id="highSchool_2"
+									type="month"
+									className="!min-w-[150px]"
+									onChange={(e) => changeHighSchool(e)}
+									defaultValue={highSchool ? highSchool[2] : ''}
+								/>
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[100px]">대학교</InputLeftAddon>
-								<Input id="collage" className="!min-w-[200px]" defaultValue={collage ? collage[0] : ''} />
+								<Input id="collage_0" className="!min-w-[200px]" onChange={(e) => changeCollage(e)} defaultValue={collage ? collage[0] : ''} />
 								<InputLeftAddon className="!min-w-[70px] ml-[20px]">전공</InputLeftAddon>
-								<Input id="collageMajor" className="!min-w-[200px]" defaultValue={collage ? collage[1] : ''} />
+								<Input id="collage_1" className="!min-w-[200px]" onChange={(e) => changeCollage(e)} defaultValue={collage ? collage[1] : ''} />
 								<InputLeftAddon className="!min-w-[70px] ml-[20px]">구분</InputLeftAddon>
-								<Select id="collageType" key="collageType" className="!min-w-[120px]" defaultValue={collage ? collage[2] : ''}>
+								<Select
+									id="collage_2"
+									key="collageType"
+									className="!min-w-[120px]"
+									onChange={(e) => changeCollage(e)}
+									defaultValue={collage ? collage[2] : '-'}
+								>
+									<option value="-">-</option>
 									<option value="졸업">졸업</option>
 									<option value="중퇴">중퇴</option>
 									<option value="졸업예정">졸업예정</option>
 								</Select>
 								<InputLeftAddon className="!min-w-[70px] ml-[20px]">날짜</InputLeftAddon>
-								<Input id="c_date" type="month" className="!min-w-[150px]" defaultValue={collage ? collage[3] : ''} />
+								<Input
+									id="collage_3"
+									type="month"
+									className="!min-w-[150px]"
+									onChange={(e) => changeCollage(e)}
+									defaultValue={collage ? collage[3] : ''}
+								/>
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[100px]">대학원</InputLeftAddon>
-								<Input id="graduateSchool" className="!min-w-[200px]" defaultValue={graduateSchool ? graduateSchool[0] : ''} />
+								<Input
+									id="graduateSchool_0"
+									className="!min-w-[200px]"
+									onChange={(e) => changeGraduateSchool(e)}
+									defaultValue={graduateSchool ? graduateSchool[0] : ''}
+								/>
 								<InputLeftAddon className="!min-w-[70px] ml-[20px]">전공</InputLeftAddon>
-								<Input id="graduateMajor" className="!min-w-[200px]" defaultValue={graduateSchool ? graduateSchool[1] : ''} />
+								<Input
+									id="graduateSchool_1"
+									className="!min-w-[200px]"
+									onChange={(e) => changeGraduateSchool(e)}
+									defaultValue={graduateSchool ? graduateSchool[1] : ''}
+								/>
 								<InputLeftAddon className="!min-w-[70px] ml-[20px]">구분</InputLeftAddon>
-								<Select id="graduateType" key="graduateType" className="!min-w-[120px]" defaultValue={graduateSchool ? graduateSchool[2] : ''}>
+								<Select
+									id="graduateSchool_2"
+									key="graduateType"
+									className="!min-w-[120px]"
+									onChange={(e) => changeGraduateSchool(e)}
+									defaultValue={graduateSchool ? graduateSchool[2] : '-'}
+								>
+									<option value="-">-</option>
 									<option value="졸업">졸업</option>
 									<option value="중퇴">중퇴</option>
 									<option value="졸업예정">졸업예정</option>
 								</Select>
 								<InputLeftAddon className="!min-w-[70px] ml-[20px]">날짜</InputLeftAddon>
-								<Input id="graduateDate" type="date" className="!min-w-[150px]" defaultValue={graduateSchool ? graduateSchool[3] : ''} />
+								<Input
+									id="graduateSchool_3"
+									onChange={(e) => changeGraduateSchool(e)}
+									type="date"
+									className="!min-w-[150px]"
+									defaultValue={graduateSchool ? graduateSchool[3] : ''}
+								/>
 							</InputGroup>
 						</AccordionPanel>
 					</AccordionItem>

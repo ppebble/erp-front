@@ -13,14 +13,29 @@ import useModal from '../../../store/useModal';
 const SignUp = () => {
 	const { isSuccess } = useQuery('selProfile', ProfileService().selProfile); // 조회
 	const updateProfile = ProfileService().updateProfileMutation; // 업데이트
-	const { profile, detail, dept, education, army, career, license, coursework, skill, setClear } = useProfile();
+	const { profile, detail, dept, education, army, career, license, coursework, skill, highSchool, collage, graduateSchool } = useProfile();
 	const { openModal } = useModal();
 
 	const update = () => {
 		if (isSuccess) {
-			const param = { profile, detail, dept, education, army, career, coursework, license, skill };
-			// console.log(param);
-			updateProfile.mutate(param);
+			const param = {
+				profile,
+				detail,
+				dept,
+				education: {
+					pEduNo: education.pEduNo,
+					highSchool: `${highSchool[0]}/${highSchool[1]}/${highSchool[2]}`,
+					collage: `${collage[0]}/${collage[1]}/${collage[2]}/${collage[3]}`,
+					graduateSchool: `${graduateSchool[0]}/${graduateSchool[1]}/${graduateSchool[2]}/${graduateSchool[3]}`,
+				},
+				army,
+				career,
+				coursework,
+				license,
+				skill,
+			};
+			console.log(param);
+			// updateProfile.mutate(param);
 		}
 	};
 

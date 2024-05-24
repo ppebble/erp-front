@@ -13,10 +13,16 @@
 	}
 }
 
-html,
-body,
-#root {
+html, body, #root {
 	height: 100%;
+}
+
+div, p, a, img {
+	user-select: none;
+}
+
+img {
+	-webkit-user-drag: none;
 }
 
 #footer {
