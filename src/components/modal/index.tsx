@@ -144,9 +144,6 @@ const SetModal = ({ change, type, contents, color, okClick, updataClick, deleteC
 		case 6:
 			dialog = <CustomAnnualDetailModal />;
 			break;
-		case 9:
-			dialog = <DetailModal detailsSize={detailsSize} cancelRef={cancelRef} />;
-			break;
 		default:
 			break;
 	}
