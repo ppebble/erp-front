@@ -8,12 +8,11 @@ import useProfile from '../../../store/useProfile';
 import Card from '../../../components/card';
 
 const Workforce = () => {
-	useQuery('getProfileList', ProfileService().getProfileList);
-	const { profileList } = useProfile();
+	const { isSuccess } = useQuery('getProfileList', ProfileService().getProfileList);
+	const { profileList, search, setSearch } = useProfile();
 	const columnHelper = createColumnHelper<profileListType>();
-	const [search, setSearch] = useState({ option: 'name', input: '' });
 	const [filter, setFilter] = useState<any>();
-	const [show] = useState(10);
+	const [show, setShow] = useState(10);
 
 	const addTag = (value: any) => {
 		return <p className="text-md font-bold">{value}</p>;
@@ -60,6 +59,13 @@ const Workforce = () => {
 	];
 
 	useEffect(() => {
+		if (!search.input) {
+			setSearch({ option: 'name', input: '' });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
 		switch (search.option) {
 			case 'name':
 				setFilter(profileList.filter((item) => item.name.includes(search.input)));
@@ -89,15 +95,19 @@ const Workforce = () => {
 					<div className="text-xl font-bold text-navy-700 dark:text-white">인력사항</div>
 				</header>
 
-				<ColumnsTable
-					columns={columns}
-					searchItem={searchItem}
-					list={profileList}
-					show={show}
-					search={search}
-					setSearch={setSearch}
-					filter={filter}
-				/>
+				{isSuccess && (
+					<ColumnsTable
+						columns={columns}
+						list={profileList}
+						show={show}
+						isClick={false}
+						isSearch
+						searchItem={searchItem}
+						search={search}
+						setSearch={setSearch}
+						filter={filter}
+					/>
+				)}
 			</Card>
 		</div>
 	);

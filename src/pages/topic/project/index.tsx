@@ -16,8 +16,12 @@ const Project = () => {
 	const { projectList, setProjectNo, setClear } = useProject();
 	const [title, setTitle] = useState('프로젝트');
 
-	const cardClick = (index: number) => {
+	const projectClick = (index: number) => {
 		setProjectNo(index);
+	};
+
+	const researchClick = (index: number) => {
+		console.log(index);
 	};
 
 	useEffect(() => {
@@ -57,7 +61,7 @@ const Project = () => {
 								<SimpleGrid spacing={10} templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
 									{list.isSuccess
 										? projectList.map((item) => (
-												<Card key={item.projectNo} variant="outline" className="cursor-pointer" onClick={() => cardClick(item.projectNo)}>
+												<Card key={item.projectNo} variant="outline" className="cursor-pointer" onClick={() => projectClick(item.projectNo)}>
 													<CardHeader>
 														<Heading size="md"> {item.projectName}</Heading>
 													</CardHeader>
@@ -81,7 +85,27 @@ const Project = () => {
 								<div className="text-xl font-bold text-navy-700 dark:text-white">연구과제</div>
 							</header>
 
-							<div className="mt-8 mx-[3rem] min-h-[600px]">123</div>
+							<div className="mt-8 mx-[3rem] min-h-[600px]">
+								<SimpleGrid spacing={10} templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
+									{list.isSuccess
+										? projectList.map((item) => (
+												<Card key={item.projectNo} variant="outline" className="cursor-pointer" onClick={() => researchClick(item.projectNo)}>
+													<CardHeader>
+														<Heading size="md"> {item.projectName}</Heading>
+													</CardHeader>
+													<CardBody>
+														<Text>고객사 : {item.client}</Text>
+														<Text>파트너 : {item.partner}</Text>
+														<Text>상태 : {item.status}</Text>
+														<Text>단계 : {item.step}</Text>
+														<Text>시작일 : {item.startDate}</Text>
+														<Text>종료일 : {item.endDate}</Text>
+													</CardBody>
+												</Card>
+											))
+										: ''}
+								</SimpleGrid>
+							</div>
 						</>
 					)}
 				</Card>
