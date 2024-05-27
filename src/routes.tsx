@@ -88,13 +88,13 @@ const routes = [
 			{
 				name: '자유게시판',
 				layout: '/topic',
-				path: 'board',
+				path: 'free',
 				icon: <MdOutlineComment className="h-7 w-7" />,
 			},
 			{
-				name: '건의사항',
+				name: '공지사항',
 				layout: '/topic',
-				path: 'suggestions',
+				path: 'notice',
 				icon: <MdEmojiPeople className="h-7 w-7" />,
 			},
 		],
