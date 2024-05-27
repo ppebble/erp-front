@@ -1,7 +1,15 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import { SortingState, createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
+import {
+	AccessorKeyColumnDef,
+	SortingState,
+	createColumnHelper,
+	flexRender,
+	getCoreRowModel,
+	getSortedRowModel,
+	useReactTable,
+} from '@tanstack/react-table';
 import { Flex, Input, InputGroup, InputRightElement, Select, Spacer } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import { ProfileService } from '../../services/profileService';
@@ -12,16 +20,18 @@ type searchType = {
 };
 
 type ColumnsTableProps = {
-	columns: any;
-	searchItem: any;
+	columns: AccessorKeyColumnDef<any, string>[];
 	list: any;
 	show: number;
-	search: searchType;
-	setSearch: (state: searchType) => void;
-	filter: any;
+	isClick: boolean;
+	isSearch: boolean;
+	searchItem?: any;
+	search?: searchType;
+	setSearch?: (state: searchType) => void;
+	filter?: any;
 };
 
-const ColumnsTable = ({ columns, searchItem, list, show, search, setSearch, filter }: ColumnsTableProps) => {
+const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, search, setSearch, filter }: ColumnsTableProps) => {
 	useQuery('getProfileList', ProfileService().getProfileList);
 	const [row] = useState(show);
 
@@ -39,7 +49,6 @@ const ColumnsTable = ({ columns, searchItem, list, show, search, setSearch, filt
 	const [searchSplit, setSearchSplit] = useState<any>(); // 검색 결과 리스트
 
 	const [data, setData] = useState(profileListSplit[0]);
-
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [currentPage, setCurrentPage] = useState(0);
 
@@ -53,6 +62,10 @@ const ColumnsTable = ({ columns, searchItem, list, show, search, setSearch, filt
 
 	const changePage = (page: number) => {
 		setCurrentPage(page);
+	};
+
+	const itemClick = (index: any) => {
+		alert(index);
 	};
 
 	const [customPagination, setCustomPagination] = useState<any[]>();
@@ -78,13 +91,17 @@ const ColumnsTable = ({ columns, searchItem, list, show, search, setSearch, filt
 	});
 
 	const onSearch = (e: any) => {
-		const { id, value } = e.target;
-		setSearch({ ...search, [id]: value });
+		if (search && setSearch) {
+			const { id, value } = e.target;
+			setSearch({ ...search, [id]: value });
+		}
 	};
 
 	useEffect(() => {
-		if (search.input) {
-			setData(searchSplit[currentPage]);
+		if (search?.input) {
+			if (searchSplit) {
+				setData(searchSplit[currentPage]);
+			}
 		} else {
 			setData(profileListSplit[currentPage]);
 		}
@@ -151,7 +168,11 @@ const ColumnsTable = ({ columns, searchItem, list, show, search, setSearch, filt
 					<tbody>
 						{table.getRowModel().rows.map((rows) => {
 							return (
-								<tr key={rows.id}>
+								<tr
+									key={rows.id}
+									className={`${isClick ? 'cursor-pointer' : ''}`}
+									onClick={isClick ? () => itemClick(rows.original.newsNo) : undefined}
+								>
 									{rows.getVisibleCells().map((cell) => {
 										return (
 											<td key={cell.id} className="border-white/0 py-3 pr-4">
@@ -168,21 +189,23 @@ const ColumnsTable = ({ columns, searchItem, list, show, search, setSearch, filt
 
 			<Flex className="mt-[2rem] mx-[2rem]">
 				{/* 검색 */}
-				<InputGroup className="mb-2">
-					<div className="!w-[8rem]">
-						<Select id="option" defaultValue="name" onChange={(e) => onSearch(e)}>
-							{searchItem.map((item: any) => (
-								<option key={item.option} value={item.option}>
-									{item.value}
-								</option>
-							))}
-						</Select>
-					</div>
-					<Input id="input" className="ml-[2rem]" onChange={(e) => onSearch(e)} />
-					<InputRightElement>
-						<SearchIcon />
-					</InputRightElement>
-				</InputGroup>
+				{isSearch && (
+					<InputGroup className="mb-2">
+						<div className="!w-[8rem]">
+							<Select id="option" defaultValue={search?.option} onChange={(e) => onSearch(e)}>
+								{searchItem.map((item: any) => (
+									<option key={item.option} value={item.option}>
+										{item.value}
+									</option>
+								))}
+							</Select>
+						</div>
+						<Input id="input" className="ml-[2rem]" defaultValue={search?.input} onChange={(e) => onSearch(e)} />
+						<InputRightElement>
+							<SearchIcon />
+						</InputRightElement>
+					</InputGroup>
+				)}
 				<Spacer />
 
 				{/* 페이지 */}

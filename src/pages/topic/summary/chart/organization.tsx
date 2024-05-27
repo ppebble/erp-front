@@ -1,8 +1,13 @@
-import { Card } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import OrgChart from 'react-orgchart';
+import { Card } from '@chakra-ui/react';
+import useProfile from '../../../../store/useProfile';
 import 'react-orgchart/index.css';
 
 const Organization = () => {
+	const navigate = useNavigate();
+	const { setSearch } = useProfile();
+
 	const initechOrg1 = {
 		name: '대표이사',
 		background: 'darkblue',
@@ -35,7 +40,7 @@ const Organization = () => {
 								],
 							},
 							{
-								name: 'S&F신사업본부',
+								name: 'SF&신사업부',
 								background: 'aliceblue',
 								children: [
 									{
@@ -69,7 +74,7 @@ const Organization = () => {
 								],
 							},
 							{
-								name: 'SC사업본부',
+								name: 'SC사업부',
 								background: 'aqua',
 								children: [
 									{
@@ -103,13 +108,18 @@ const Organization = () => {
 		],
 	};
 
+	const nodeClick = (nodeName: string) => {
+		setSearch({ option: 'task', input: nodeName });
+		navigate('/topic/workforce');
+	};
+
 	const MyNodeComponent = ({ node }: any) => {
 		let tag: any = '';
 		if (node.name !== ' ') {
 			tag = (
 				<div
 					className="initechNode"
-					onClick={() => console.log(node.name.replace('\n', ' '))}
+					onClick={() => nodeClick(node.name.replace('\n', ' '))}
 					style={{ backgroundColor: `${node.background}`, color: `${node.color}`, cursor: 'pointer' }}
 				>
 					<pre>{node.name}</pre>

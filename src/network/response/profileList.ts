@@ -11,3 +11,8 @@ export interface profileList {
 	place: string;
 	employmentDate: string;
 }
+
+export interface profileSearch {
+	option: string;
+	input: string;
+}
