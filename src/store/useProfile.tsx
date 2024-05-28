@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { profile, detail, dept, education, army, career, license, coursework, skill } from '../network/response/profileParams';
-import { profileList, profileSearch } from '../network/response/profileList';
+import { profieRank, profileList, profileSearch } from '../network/response/profileList';
 
 interface ProfileStore {
 	// 기본정보
@@ -40,7 +40,10 @@ interface ProfileStore {
 	setProfileList: (state: profileList[]) => void;
 	search: profileSearch;
 	setSearch: (state: profileSearch) => void;
-	setClear: () => void;
+	setClearProfile: () => void;
+	setClearSearch: () => void;
+	rank: profieRank[];
+	setRank: (state: profieRank[]) => void;
 }
 
 const useProfile = create(
@@ -78,15 +81,21 @@ const useProfile = create(
 			setProfileList: (select) => set((state) => ({ ...state, profileList: select })),
 			search: { option: '', input: '' },
 			setSearch: (select) => set((state) => ({ ...state, search: select })),
-			setClear: () =>
+			rank: [],
+			setRank: (select) => set((state) => ({ ...state, rank: select })),
+			setClearProfile: () =>
 				set(() => ({
-					basic: {
-						profile: { profileNo: 0, empNo: '', userId: '', userEmail: '', pw: '', rePw: '', authority: 0, isDel: false },
-						detail: { detailNo: 0, name: '', ename: '', tel: '', address: '', residentNumber: '', birthday: '', family: '' },
-						dept: { deptNo: 0, task: '', team: '', position: '', rank: '', sciTechCertify: '', place: '', employmentDate: '' },
-						education: { pEduNo: 0, highSchool: '', collage: '', graduateSchool: '' },
-						army: { armyNo: 0, armyStart: '', armyEnd: '', armyBranch: '' },
-					},
+					profile: { profileNo: 0, empNo: '', userId: '', userEmail: '', pw: '', rePw: '', authority: 0, isDel: false },
+					detail: { detailNo: 0, name: '', ename: '', tel: '', address: '', residentNumber: '', birthday: '', family: '' },
+					dept: { deptNo: 0, task: '', team: '', position: '', rank: '', sciTechCertify: '', place: '', employmentDate: '' },
+					education: { pEduNo: 0, highSchool: '', collage: '', graduateSchool: '' },
+					coursework: [{ eduName: '', eduStartDate: '', eduEndDate: '', institution: '' }],
+					skill: [{ skillName: '', skillGrade: '', criteria: '' }],
+					license: [{ licenseName: '', licenseDate: '' }],
+					highSchool: [],
+					collage: [],
+					graduateSchool: [],
+					army: { armyNo: 0, armyStart: '', armyEnd: '', armyBranch: '' },
 					career: [
 						{
 							companyName: '',
@@ -97,10 +106,8 @@ const useProfile = create(
 						},
 					],
 					careerIndex: 0,
-					license: [{ licenseName: '', licenseDate: '' }],
-					coursework: [{ eduName: '', eduStartDate: '', eduEndDate: '', institution: '' }],
-					skill: [{ skillName: '', skillGrade: '', criteria: '' }],
 				})),
+			setClearSearch: () => set(() => ({ search: { option: 'name', input: '' } })),
 		}),
 		{
 			name: 'ProfileStorage',

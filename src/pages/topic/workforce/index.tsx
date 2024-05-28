@@ -9,7 +9,7 @@ import Card from '../../../components/card';
 
 const Workforce = () => {
 	const { isSuccess } = useQuery('getProfileList', ProfileService().getProfileList);
-	const { profileList, search, setSearch } = useProfile();
+	const { profileList, search, setSearch, setClearSearch } = useProfile();
 	const columnHelper = createColumnHelper<profileListType>();
 	const [filter, setFilter] = useState<any>();
 	const [show, setShow] = useState(10);
@@ -62,6 +62,7 @@ const Workforce = () => {
 		if (!search.input) {
 			setSearch({ option: 'name', input: '' });
 		}
+		return () => setClearSearch();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

@@ -118,9 +118,9 @@ const Organization = () => {
 		if (node.name !== ' ') {
 			tag = (
 				<div
-					className="initechNode"
+					className="initechNode cursor-pointer"
 					onClick={() => nodeClick(node.name.replace('\n', ' '))}
-					style={{ backgroundColor: `${node.background}`, color: `${node.color}`, cursor: 'pointer' }}
+					style={{ backgroundColor: `${node.background}`, color: `${node.color}` }}
 				>
 					<pre>{node.name}</pre>
 				</div>

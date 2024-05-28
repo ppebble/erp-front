@@ -1,13 +1,14 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import { getQuery, postQuery } from './base/AxiosQueryService';
 import { commonResult } from '../network/commonResult';
 import { profileParams } from '../network/response/profileParams';
 import useModal from '../store/useModal';
 import useProfile from '../store/useProfile';
-import { profileList } from '../network/response/profileList';
+import { profieRank, profileList } from '../network/response/profileList';
 
 export const ProfileService = () => {
-	const { setProfile, setDetail, setDept, setEducation, setArmy, setCareer, setLicense, setCoursework, setSkill, setProfileList } = useProfile();
+	const { setProfile, setDetail, setDept, setEducation, setArmy, setCareer, setLicense, setCoursework, setSkill, setProfileList, setRank } =
+		useProfile();
 	const { openModal } = useModal();
 
 	const idCheckMutation = useMutation({
@@ -78,5 +79,19 @@ export const ProfileService = () => {
 		},
 	});
 
-	return { idCheckMutation, selProfile, updateProfileMutation, getProfileList, modifyPw };
+	const profileByRank = {
+		queryFn: () => getQuery('/api/profile/profileByRank'),
+		onSuccess: (result: { response: commonResult }) => {
+			const common: commonResult = result.response;
+			const data: profieRank[] = common.result;
+			if (common.isSuccessful) {
+				setRank(data);
+			}
+		},
+		onError: (error: any) => {
+			openModal({ type: 3, contents: error, color: 'red' });
+		},
+	};
+
+	return { idCheckMutation, selProfile, updateProfileMutation, getProfileList, modifyPw, profileByRank };
 };

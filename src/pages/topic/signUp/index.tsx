@@ -13,7 +13,8 @@ import useModal from '../../../store/useModal';
 const SignUp = () => {
 	const { isSuccess } = useQuery('selProfile', ProfileService().selProfile); // 조회
 	const updateProfile = ProfileService().updateProfileMutation; // 업데이트
-	const { profile, detail, dept, education, army, career, license, coursework, skill, highSchool, collage, graduateSchool } = useProfile();
+	const { profile, detail, dept, education, army, career, license, coursework, skill, highSchool, collage, graduateSchool, setClearProfile } =
+		useProfile();
 	const { openModal } = useModal();
 
 	const update = () => {
@@ -34,10 +35,14 @@ const SignUp = () => {
 				license,
 				skill,
 			};
-			console.log(param);
-			// updateProfile.mutate(param);
+			updateProfile.mutate(param);
 		}
 	};
+
+	useEffect(() => {
+		return () => setClearProfile();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (updateProfile.isSuccess) {

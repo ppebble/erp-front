@@ -16,3 +16,8 @@ export interface profileSearch {
 	option: string;
 	input: string;
 }
+
+export interface profieRank {
+	rank: string;
+	count: number;
+}
