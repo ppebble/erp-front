@@ -142,7 +142,7 @@ export const CustomCalendarModal = () => {
 		const result = [] as MemberTagInfo[];
 		selectedTags.forEach((item) => {
 			const tag = item.split(' | ') || [];
-			result.push({ name: tag[0], team: tag[1] });
+			result.push({ team: tag[0], name: tag[1] });
 		});
 		newEvent.members = result;
 		// calendarAction.setAddEventParam(eventParam);
@@ -456,21 +456,6 @@ export const CustomCalendarModal = () => {
 								/>
 							</div>
 						</div>
-						{/* <div className="mt-5 start justify-start">
-							<div className="flex justify-start">
-								<p className="text-base font-bold text-navy-700 dark:text-white">등록자 명 :</p>
-							</div>
-							<div className="flex justify-start">
-								<input
-									type="text"
-									id="eventName"
-									ref={refRegistUser}
-									defaultValue={selectedEvent?.extendedProps?.register}
-									disabled={false}
-									className="mt-2 read-only flex h-12 w-full items-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
-								/>
-							</div>
-						</div> */}
 						<div className="mt-5 start justify-start">
 							<div className="flex justify-start">
 								<p className="text-base font-bold text-navy-700 dark:text-white">일정 상세 :</p>
@@ -490,7 +475,7 @@ export const CustomCalendarModal = () => {
 							<div className="flex justify-start">
 								<p className="text-base font-bold text-navy-700 dark:text-white mb-5">인원 :</p>
 							</div>
-							<div className="flex justify-start mb-5">
+							<div className="flex justify-start mb-10">
 								<TagifyComponent
 									// initValue에 edit이면 extendedProps.연관인원리스트 를 넣도록, 아니면 로그인한 인원 profile
 									initialValue={workType === 'edit' && isDialogOpen ? selectedEvent?.extendedProps.members : ['']}

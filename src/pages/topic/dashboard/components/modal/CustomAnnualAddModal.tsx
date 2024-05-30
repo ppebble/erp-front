@@ -218,6 +218,15 @@ export const CustomAnnualAddModal = () => {
 							>
 								지우기
 							</Button>
+							<Button
+								colorScheme="blue"
+								className="ml-3"
+								onClick={() => {
+									console.log(refSignCanvas.current?.toDataURL());
+								}}
+							>
+								코드확인
+							</Button>
 						</div>
 					</div>
 				</div>

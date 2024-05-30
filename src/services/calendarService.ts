@@ -165,7 +165,8 @@ export const CalendarService = (date?: string) => {
 							id: getEventTask(data[i].team),
 							name: data[i].team,
 						};
-						param.value = `${data[i].name} | ${data[i].team}`;
+						param.profileNo = data[i].profileNo;
+						param.value = `${data[i].team} | ${data[i].name}`;
 						paramList.push(param);
 					}
 				}

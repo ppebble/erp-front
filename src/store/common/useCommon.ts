@@ -14,6 +14,7 @@ export type MemberTagProps = {
 		name: string;
 	};
 	value?: string;
+	profileNo: number;
 };
 export type AnnualProps = {
 	validDate: string;

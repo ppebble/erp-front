@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const DebouncedInput = ({
 	value: initialValue,
@@ -12,11 +12,11 @@ const DebouncedInput = ({
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) => {
 	const [value, setValue] = React.useState(initialValue);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		setValue(initialValue);
 	}, [initialValue]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const timeout = setTimeout(() => {
 			onChange(value);
 		}, debounce);
