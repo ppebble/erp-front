@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
 	ColumnFiltersState,
+	FilterFn,
 	flexRender,
 	getCoreRowModel,
 	getFacetedUniqueValues,
@@ -22,18 +23,19 @@ import DebouncedInput from './CustomTableFilterComponent';
 
 const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: string }) => {
 	const { tableData, columns, title } = props;
-	const [sorting, setSorting] = React.useState<SortingState>([]);
+	const [sorting, setSorting] = useState<SortingState>([]);
 	const defaultData = tableData;
 
-	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-	const [globalFilter, setGlobalFilter] = React.useState('');
+	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const [globalFilter, setGlobalFilter] = useState('');
 
 	const [pagination, setPagination] = useState<PaginationState>({
 		pageIndex: 0,
 		pageSize: 10,
 	});
 
-	const [data, setData] = React.useState(() => [...defaultData]);
+	const [data, setData] = useState(() => [...defaultData]);
+
 	useEffect(() => {
 		setData(tableData);
 	}, [tableData]);
@@ -41,24 +43,31 @@ const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: st
 	const table = useReactTable({
 		data,
 		columns,
-		filterFns: {},
+		globalFilterFn: 'includesString',
+		enableGlobalFilter: true,
+		enableFilters: true,
 		state: {
 			sorting,
 			pagination,
-			columnFilters,
+			globalFilter,
 		},
-		// sorting :: 정렬되는 객체, asc|desc   :: 첫 클릭 부터 desc =  false / true / sort 해제 순
-		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
+		getFilteredRowModel: getFilteredRowModel(),
 		onPaginationChange: setPagination,
-		onGlobalFilterChange: setColumnFilters,
+		onGlobalFilterChange: setGlobalFilter,
 		debugTable: true,
 	});
+	useEffect(() => {
+		if (table.getState().columnFilters[0]?.id === 'fullName') {
+			if (table.getState().sorting[0]?.id !== 'fullName') {
+				table.setSorting([{ id: 'fullName', desc: false }]);
+			}
+		}
+	}, [table.getState().columnFilters[0]?.id]);
 	// console.log(data);
 	return (
-		<Card extra="w-full pl-4 p-2 h-full min-h-[17.5rem]">
+		<Card extra="w-full pl-4 p-2 h-full min-h-[65vh]">
 			{title && (
 				<header className="relative flex items-center justify-between pt-5 pb-5">
 					<div className="text-xl font-bold text-navy-700 dark:text-white py-1.5">{title}</div>
@@ -75,7 +84,7 @@ const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: st
 											key={header.id}
 											colSpan={header.colSpan}
 											onClick={header.column.getToggleSortingHandler()}
-											className="cursor-pointer border-b-[1px] border-gray-200 pb-2 pr-4 text-start"
+											className="cursor-pointer border-b-[1px] border-gray-200 pb-2 pr-2 text-start"
 										>
 											<div className="items-center justify-between text-xs text-gray-200">
 												<p className="text-lg font-bold text-gray-700 dark:text-white">
@@ -98,7 +107,7 @@ const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: st
 								<tr key={row.id}>
 									{row.getVisibleCells().map((cell) => {
 										return (
-											<td key={cell.id} className="min-w-[150px] border-white/0 py-3  pr-4">
+											<td key={cell.id} className="max-w-[150px] h-[1vh] border-b-[1px] border-gray-400 py-3  pr-4">
 												<p className="text-sm font-bold text-navy-700 dark:text-white">{flexRender(cell.column.columnDef.cell, cell.getContext())}</p>
 											</td>
 										);
@@ -109,7 +118,6 @@ const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: st
 					</tbody>
 				</table>
 			</div>
-			<div className="h-[150px]" />
 			<div className="w-full  flex justify-center sm:justify-center flex-col sm:flex-row gap-5 mt-1.5 px-1 items-center">
 				<div className="flex">
 					<ul className="flex justify-center items-center gap-x-[10px] z-30" role="navigation" aria-label="Pagination">
@@ -144,7 +152,7 @@ const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: st
 					</ul>
 				</div>
 			</div>
-			<div className="w-full  flex justify-center sm:justify-center flex-col sm:flex-row gap-5 mt-1.5 px-1 items-center">
+			<div className="w-full  flex justify-center sm:justify-center flex-col sm:flex-row gap-5 mb-1.5 mt-1.5 px-1 items-center">
 				<div className="flex">
 					<ul className="flex justify-center items-center gap-x-[10px] z-30" role="navigation" aria-label="Pagination">
 						<li
@@ -153,8 +161,8 @@ const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: st
 							<DebouncedInput
 								value={globalFilter ?? ''}
 								onChange={(value) => setGlobalFilter(String(value))}
-								className="p-2 font-lg shadow border border-block"
-								placeholder="Search all columns..."
+								className="p-2 font-sm shadow border border-block"
+								placeholder="Search All . . ."
 							/>
 						</li>
 					</ul>

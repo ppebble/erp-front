@@ -58,7 +58,7 @@ export const TagifyComponent = ({ label, name, initialValue = [], suggestions = 
 			keepInvalid: true,
 		},
 		dropdown: {
-			classname: 'text-gray-700 min-w-[200px] max-h-[50px] pt-5',
+			classname: 'text-gray-700 min-w-[200px]  pt-5',
 			enabled: 0,
 			position: 'manual',
 			maxItems: Infinity,
@@ -79,19 +79,9 @@ export const TagifyComponent = ({ label, name, initialValue = [], suggestions = 
 	};
 
 	return (
-		<div className="form-group">
+		<div className="">
 			<label htmlFor={`field-${name}`}>{label}</label>
-			<Tags className="customLook" ref={refTags} settings={settings} initialValue={initialValue} />
-
-			{/* <button
-				type="button"
-				onClick={() => {
-					console.log(refTags);
-					refTags.current?.tagify.addEmptyTag();
-				}}
-			>
-				+
-			</button> */}
+			<Tags className="calendarTag" ref={refTags} settings={settings} initialValue={initialValue} />
 		</div>
 	);
 };

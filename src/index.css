@@ -66,8 +66,6 @@ input:checked.defaultCheckbox::before {
 	--tag-remove-btn-color: white;
 	--tag-remove-btn-bg--hover: black;
 
-	display: inline-block;
-	min-width: 0;
 	border: none;
 }
 
@@ -77,15 +75,6 @@ input:checked.defaultCheckbox::before {
 
 .customLook .tagify__tag > div {
 	border-radius: 25px;
-}
-
-.customLook .tagify__tag:not(:only-of-type):not(.tagify__tag--editable):hover .tagify__tag-text {
-	margin-inline-end: -1px;
-}
-
-/* Do not show the "remove tag" (x) button when only a single tag remains */
-.customLook .tagify__tag:only-of-type .tagify__tag__removeBtn {
-	display: none;
 }
 
 .customLook .tagify__tag__removeBtn {
@@ -122,24 +111,102 @@ input:checked.defaultCheckbox::before {
 }
 
 .customLook .tagify__input {
-	display: none;
+	/* display: none; */
 	border-color: gray;
-	border-radius: 1px;
+	border-radius: 2px;
 }
 .customLook .tagify__dropdown__wrapper {
 	display: inline-flexbox;
 	border-color: transparent;
 	max-height: 8vw;
-	min-width: 28vw;
 }
 .customLook .tagify__focus {
 	display: inline-flexbox;
 	border-color: transparent;
-	max-height: 8vw;
-	max-width: 32vw;
 }
 
 .customLook .tagify__dropdown__item {
+	display: inline-block;
+	border-radius: 3px;
+	padding: 0.3em 0.5em;
+	border: 1px solid #ccc;
+	margin: 0.2em;
+	font-size: 0.85em;
+	color: rgb(88, 88, 88);
+	transition: 0s;
+}
+.calendarTag {
+	--tag-bg: #0052bf;
+	--tag-hover: #ce0078;
+	--tag-text-color: #fff;
+	--tags-border-color: silver;
+	--tag-text-color--edit: #111;
+	--tag-remove-bg: var(--tag-hover);
+	--tag-pad: 0.6em 1em;
+	--tag-inset-shadow-size: 1.4em; /* compensate for the larger --tag-pad value */
+	--tag-remove-btn-color: white;
+	--tag-remove-btn-bg--hover: black;
+
+	border: none;
+}
+
+.calendarTag .tagify__tag {
+	margin-top: 0;
+}
+
+.calendarTag .tagify__tag > div {
+	border-radius: 25px;
+}
+
+.calendarTag .tagify__tag__removeBtn {
+	opacity: 0;
+	transform: translateX(-100%) scale(0.5);
+	margin-inline: -20px 6px; /* very specific on purpose  */
+	text-align: right;
+	transition: 0.12s;
+}
+
+.calendarTag .tagify__tag:not(.tagify__tag--editable):hover .tagify__tag__removeBtn {
+	transform: none;
+	opacity: 1;
+}
+
+.calendarTag + button {
+	color: #0052bf;
+	font: bold 1.4em/1.65 Arial;
+	border: 0;
+	background: none;
+	box-shadow: 0 0 0 2px inset currentColor;
+	border-radius: 50%;
+	width: 1.65em;
+	height: 1.65em;
+	cursor: pointer;
+	outline: none;
+	transition: 0.1s ease-out;
+	margin: 0 0 0 5px;
+	vertical-align: top;
+}
+
+.calendarTag + button:hover {
+	box-shadow: 0 0 0 5px inset currentColor;
+}
+
+.calendarTag .tagify__input {
+	display: none;
+	border-color: gray;
+	border-radius: 2px;
+}
+.calendarTag .tagify__dropdown__wrapper {
+	display: inline-flexbox;
+	border-color: transparent;
+	max-height: 8vw;
+}
+.calendarTag .tagify__focus {
+	display: inline-flexbox;
+	border-color: transparent;
+}
+
+.calendarTag .tagify__dropdown__item {
 	display: inline-block;
 	border-radius: 3px;
 	padding: 0.3em 0.5em;
