@@ -22,7 +22,7 @@ type searchType = {
 };
 
 type ColumnsTableProps = {
-	columns: AccessorKeyColumnDef<any, any>[];
+	columns: AccessorKeyColumnDef<any, string>[];
 	list: any;
 	show: number;
 	isClick: boolean;

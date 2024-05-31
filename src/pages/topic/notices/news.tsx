@@ -7,13 +7,14 @@ import { BoardService } from '../../../services/boardService';
 import useBoard from '../../../store/useBoard';
 import Card from '../../../components/card';
 import useModal from '../../../store/useModal';
+import { boardTable } from '../../../network/response/boardParams';
 
 const News = () => {
 	const { isSuccess } = useQuery('boardList', BoardService().boardList);
 	const { insertBoard } = BoardService();
 	const { setType, news } = useBoard();
 	const { openModal } = useModal();
-	const columnHelper = createColumnHelper<any>();
+	const columnHelper = createColumnHelper<boardTable>();
 	const [show] = useState(10);
 
 	const addTag = (value: any) => {

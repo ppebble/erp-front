@@ -12,13 +12,13 @@ import {
 	Input,
 	Textarea,
 	Text,
+	Container,
+	Card,
 } from '@chakra-ui/react';
 import useModal from '../../store/useModal';
 import ToastEditor from '../textEditor/toastEditor';
 import { CustomAnnualAddModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualAddModal';
 import { CustomAnnualDetailModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualDetailModal';
-import { CustomEquipAddModal } from '../../pages/topic/equipment/modal/CustomEquipAddModal';
-import { CustomEquipBookAddModal } from '../../pages/topic/equipment/modal/CustomEquipBookAddModal';
 
 type ModalProps = {
 	change: () => void;
@@ -177,12 +177,6 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 			break;
 		case 6:
 			dialog = <CustomAnnualDetailModal />;
-			break;
-		case 7:
-			dialog = <CustomEquipAddModal title={contents.title} onClose={change} row={contents.row} setOpen={contents.setOpen} />;
-			break;
-		case 8:
-			dialog = <CustomEquipBookAddModal title={contents.title} row={contents.row} onClose={change} setOpen={contents.setOpen} />;
 			break;
 		case 10:
 			dialog = (
