@@ -56,10 +56,10 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 						<div className="relative mb-3 flex hover:cursor-pointer" onClick={() => setCurrentPath(route)}>
 							<li className="my-[3px] flex cursor-pointer items-center px-8" key={route.path + 'li'}>
 								<span className={`${currentPath?.path === route.path ? 'font-bold text-brand-500 dark:text-white' : 'font-medium text-gray-600'}`}>
-									{route.icon ? route.icon : <DashIcon />}{' '}
+									{route.icon ? route.icon : <DashIcon />}
 								</span>
 								<p
-									className={`leading-1 ml-4 flex ${currentPath?.path === route.path ? 'font-bold text-navy-700 dark:text-white' : 'font-medium text-gray-600'}`}
+									className={`leading-1 ml-4 flex ${currentPath?.path === route.path ? 'font-bold text-xl text-navy-700 dark:text-white' : 'text-xl font-medium text-gray-600'}`}
 								>
 									{route.name}
 								</p>
@@ -79,7 +79,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 										</span>
 										<p
 											className={`leading-1 ml-4 flex ${
-												activeRoute(child.path) ? 'font-bold text-navy-700 dark:text-white' : 'font-medium text-gray-600'
+												activeRoute(child.path) ? 'font-bold text-lg text-navy-700 dark:text-white' : 'text-lg font-medium text-gray-600'
 											}`}
 										>
 											{child.name}

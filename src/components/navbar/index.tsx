@@ -7,14 +7,6 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
 	const { onOpenSidenav } = props;
 	const navigate = useNavigate();
 
-	const myProfile = () => {
-		navigate('signUp');
-	};
-
-	const logOut = () => {
-		navigate('/');
-	};
-
 	return (
 		<nav
 			className="sticky top-0 z-40 flex flex-row flex-wrap ml-[-14px] items-center justify-between bg-white p-2 backdrop-blur-xl dark:bg-[#0b14374d]"
@@ -40,8 +32,9 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
 						UserName
 					</MenuButton>
 					<MenuList>
-						<MenuItem onClick={() => myProfile()}>프로필 수정</MenuItem>
-						<MenuItem onClick={() => logOut()} style={{ color: 'red' }}>
+						<MenuItem onClick={() => navigate('signUp')}>프로필 수정</MenuItem>
+						<MenuItem onClick={() => navigate('password')}>비밀번호 변경</MenuItem>
+						<MenuItem onClick={() => navigate('/')} style={{ color: 'red' }}>
 							로그아웃
 						</MenuItem>
 					</MenuList>

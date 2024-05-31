@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import InputComponent from './inputComponent';
 import useProfile from '../../store/useProfile';
+import useProject from '../../store/useProject';
 
 type InputProps = {
 	props: any;
@@ -14,6 +15,7 @@ type InputProps = {
 
 const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type }: InputProps) => {
 	const { career, license, coursework, skill, careerIndex, setCareer } = useProfile();
+	const { projectMember } = useProject();
 	const [state, setState] = useState<any>([props]);
 
 	useEffect(() => {
@@ -43,6 +45,11 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 			case 'skill':
 				if (skill && skill.length !== 0) {
 					setState(skill);
+				}
+				break;
+			case 'member':
+				if (projectMember && projectMember.length !== 0) {
+					setState(projectMember);
 				}
 				break;
 			default:
@@ -81,7 +88,13 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 	}, [detailCount]);
 
 	const AddInput = () => {
-		setCount(count + 1);
+		if (type === 'project') {
+			if (count < 9) {
+				setCount(count + 1);
+			}
+		} else {
+			setCount(count + 1);
+		}
 	};
 
 	const AddDetail = () => {

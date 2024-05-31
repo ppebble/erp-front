@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { profile, detail, dept, education, army, career, license, coursework, skill } from '../network/response/profileParams';
+import { profieRank, profileList, profileSearch } from '../network/response/profileList';
 
 interface ProfileStore {
 	// 기본정보
@@ -12,6 +13,12 @@ interface ProfileStore {
 	setDept: (state: dept) => void;
 	education: education;
 	setEducation: (state: education) => void;
+	highSchool: string[];
+	setHighSchool: (state: string[]) => void;
+	collage: string[];
+	setCollage: (state: string[]) => void;
+	graduateSchool: string[];
+	setGraduateSchool: (state: string[]) => void;
 	army: army;
 	setArmy: (state: army) => void;
 	// 경력사항
@@ -28,7 +35,15 @@ interface ProfileStore {
 	// 보유기술 및 외국어능력
 	skill: skill[];
 	setSkill: (state: skill[]) => void;
-	setClear: () => void;
+	// 회원 목록
+	profileList: profileList[];
+	setProfileList: (state: profileList[]) => void;
+	search: profileSearch;
+	setSearch: (state: profileSearch) => void;
+	setClearProfile: () => void;
+	setClearSearch: () => void;
+	rank: profieRank[];
+	setRank: (state: profieRank[]) => void;
 }
 
 const useProfile = create(
@@ -42,6 +57,12 @@ const useProfile = create(
 			setDept: (select) => set((state) => ({ ...state, dept: select })),
 			education: { pEduNo: 0, highSchool: '', collage: '', graduateSchool: '' },
 			setEducation: (select) => set((state) => ({ ...state, education: select })),
+			highSchool: [],
+			setHighSchool: (select) => set((state) => ({ ...state, highSchool: select })),
+			collage: [],
+			setCollage: (select) => set((state) => ({ ...state, collage: select })),
+			graduateSchool: [],
+			setGraduateSchool: (select) => set((state) => ({ ...state, graduateSchool: select })),
 			army: { armyNo: 0, armyStart: '', armyEnd: '', armyBranch: '' },
 			setArmy: (select) => set((state) => ({ ...state, army: select })),
 			career: [
@@ -56,15 +77,25 @@ const useProfile = create(
 			setCoursework: (select) => set((state) => ({ ...state, coursework: select })),
 			skill: [{ skillName: '', skillGrade: '', criteria: '' }],
 			setSkill: (select) => set((state) => ({ ...state, skill: select })),
-			setClear: () =>
+			profileList: [],
+			setProfileList: (select) => set((state) => ({ ...state, profileList: select })),
+			search: { option: '', input: '' },
+			setSearch: (select) => set((state) => ({ ...state, search: select })),
+			rank: [],
+			setRank: (select) => set((state) => ({ ...state, rank: select })),
+			setClearProfile: () =>
 				set(() => ({
-					basic: {
-						profile: { profileNo: 0, empNo: '', userId: '', userEmail: '', pw: '', rePw: '', authority: 0, isDel: false },
-						detail: { detailNo: 0, name: '', ename: '', tel: '', address: '', residentNumber: '', birthday: '', family: '' },
-						dept: { deptNo: 0, task: '', team: '', position: '', rank: '', sciTechCertify: '', place: '', employmentDate: '' },
-						education: { pEduNo: 0, highSchool: '', collage: '', graduateSchool: '' },
-						army: { armyNo: 0, armyStart: '', armyEnd: '', armyBranch: '' },
-					},
+					profile: { profileNo: 0, empNo: '', userId: '', userEmail: '', pw: '', rePw: '', authority: 0, isDel: false },
+					detail: { detailNo: 0, name: '', ename: '', tel: '', address: '', residentNumber: '', birthday: '', family: '' },
+					dept: { deptNo: 0, task: '', team: '', position: '', rank: '', sciTechCertify: '', place: '', employmentDate: '' },
+					education: { pEduNo: 0, highSchool: '', collage: '', graduateSchool: '' },
+					coursework: [{ eduName: '', eduStartDate: '', eduEndDate: '', institution: '' }],
+					skill: [{ skillName: '', skillGrade: '', criteria: '' }],
+					license: [{ licenseName: '', licenseDate: '' }],
+					highSchool: [],
+					collage: [],
+					graduateSchool: [],
+					army: { armyNo: 0, armyStart: '', armyEnd: '', armyBranch: '' },
 					career: [
 						{
 							companyName: '',
@@ -75,13 +106,11 @@ const useProfile = create(
 						},
 					],
 					careerIndex: 0,
-					license: [{ licenseName: '', licenseDate: '' }],
-					coursework: [{ eduName: '', eduStartDate: '', eduEndDate: '', institution: '' }],
-					skill: [{ skillName: '', skillGrade: '', criteria: '' }],
 				})),
+			setClearSearch: () => set(() => ({ search: { option: 'name', input: '' } })),
 		}),
 		{
-			name: 'SideBarStorage',
+			name: 'ProfileStorage',
 		},
 	),
 );

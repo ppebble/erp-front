@@ -1,24 +1,31 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
-import AuthLayout from './pages/auth';
 
 // auth
+import AuthLayout from './pages/auth';
 import Login from './pages/auth/login/Login';
 
-// admin
+// topic
+import Topic from './pages/topic';
 import Dashboard from './pages/topic/dashboard';
-import NFTMarketplace from './pages/topic/marketplace';
-import Profile from './pages/topic/profile';
+// import NFTMarketplace from './pages/topic/marketplace';
+import AnnualRequest from './pages/topic/dashboard/components/modal/AnnualRequest';
 import Summary from './pages/topic/summary';
 import Workforce from './pages/topic/workforce';
 import CompanyCalendar from './pages/topic/calendar';
-import SignUp from './pages/topic/signUp';
-
-import NotFound from './pages/error/NotFound';
-import Topic from './pages/topic';
+import Project from './pages/topic/project';
+import ProjectDetail from './pages/topic/project/projectDetail';
 import Equipment from './pages/topic/equipment';
-import AnnualRequest from './pages/topic/dashboard/components/modal/AnnualRequest';
+import News from './pages/topic/notices/news';
+import Seminar from './pages/topic/notices/seminar';
+import Free from './pages/topic/notices/free';
+import Notice from './pages/topic/notices/notice';
+import SignUp from './pages/topic/signUp';
+import Password from './pages/topic/password';
+
+// error
+import NotFound from './pages/error/NotFound';
 
 const App = () => {
 	return (
@@ -33,17 +40,15 @@ const App = () => {
 					<Route path="summary" element={<Summary />} />
 					<Route path="workforce" element={<Workforce />} />
 					<Route path="calendar" element={<CompanyCalendar />} />
-					<Route path="project" element={<Profile />} />
-					{/* 추후 인력사항 추가 시 아래 주석 해제 */}
-					{/* <Route path="project" element={<Project />} /> */}
+					<Route path="project" element={<Project />} />
+					<Route path="projectDetail" element={<ProjectDetail />} />
 					<Route path="equipment" element={<Equipment />} />
-					<Route path="nft" element={<NFTMarketplace />} />
-					<Route path="profile" element={<Profile />} />
-					<Route path="news" element={<NFTMarketplace />} />
-					<Route path="seminar" element={<Profile />} />
-					<Route path="board" element={<Summary />} />
-					<Route path="suggestions" element={<Equipment />} />
+					<Route path="news" element={<News />} />
+					<Route path="seminar" element={<Seminar />} />
+					<Route path="free" element={<Free />} />
+					<Route path="notice" element={<Notice />} />
 					<Route path="signup" element={<SignUp />} />
+					<Route path="password" element={<Password />} />
 				</Route>
 				<Route path="/" element={<Navigate to="/auth/login" replace />} />
 				<Route path="*" element={<NotFound />} />
