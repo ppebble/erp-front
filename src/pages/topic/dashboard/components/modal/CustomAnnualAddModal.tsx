@@ -112,8 +112,10 @@ export const CustomAnnualAddModal = () => {
 		}
 		// 연차 일정 신청
 		// createEvent.mutate(eventParam);
+		console.log(eventParam);
 
 		// 연차 신청서 작성
+		console.log(annualParam);
 
 		onClose();
 	};

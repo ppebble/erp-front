@@ -19,6 +19,8 @@ import NotFound from './pages/error/NotFound';
 import Topic from './pages/topic';
 import Equipment from './pages/topic/equipment';
 import AnnualRequest from './pages/topic/dashboard/components/modal/AnnualRequest';
+import AnnualMailAccept from './pages/topic/dashboard/components/modal/AnnualMailAccept';
+import AdminPopup from './pages/admin';
 
 const App = () => {
 	return (
@@ -44,6 +46,9 @@ const App = () => {
 					<Route path="board" element={<Summary />} />
 					<Route path="suggestions" element={<Equipment />} />
 					<Route path="signup" element={<SignUp />} />
+				</Route>
+				<Route path="external" element={<AdminPopup />}>
+					<Route path="mailAccept/*" element={<AnnualMailAccept />} />
 				</Route>
 				<Route path="/" element={<Navigate to="/auth/login" replace />} />
 				<Route path="*" element={<NotFound />} />
