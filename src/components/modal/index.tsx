@@ -185,6 +185,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 			break;
 		case 8:
 			dialog = <CustomEquipBookAddModal title={contents.title} row={contents.row} onClose={change} setOpen={contents.setOpen} />;
+			break;
 		case 10:
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
