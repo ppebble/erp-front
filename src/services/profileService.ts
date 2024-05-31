@@ -12,7 +12,7 @@ export const ProfileService = () => {
 	const { openModal } = useModal();
 
 	const idCheckMutation = useMutation({
-		mutationFn: (params: string) => postQuery('/api/profile/iddup', params),
+		mutationFn: (params: string) => postQuery(`/api/profile/duplicate?userId=${params}`, params),
 		onSuccess: (result) => {
 			return result.response;
 		},

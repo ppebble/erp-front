@@ -42,7 +42,7 @@ const Basic = () => {
 
 	const isAvailable = () => {
 		if (profile) {
-			idCheck.mutate({ userId: profile.userId });
+			idCheck.mutate(profile.userId);
 		}
 	};
 
