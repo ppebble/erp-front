@@ -5,16 +5,18 @@ import ColumnsTable from '../../../components/columnsTable';
 import { BoardService } from '../../../services/boardService';
 import useBoard from '../../../store/useBoard';
 import Card from '../../../components/card';
+import { boardTable } from '../../../network/response/boardParams';
 
 const Board = () => {
 	const { isSuccess } = useQuery('boardList', BoardService().boardList);
 	const { news } = useBoard();
 	const { setType } = useBoard();
-	const columnHelper = createColumnHelper<any>();
+	const columnHelper = createColumnHelper<boardTable>();
 	const [show, setShow] = useState(10);
 
 	useEffect(() => {
 		setType('free');
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const addTag = (value: any) => {
