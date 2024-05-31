@@ -49,7 +49,7 @@ const Topic = (props: { [x: string]: any }) => {
 			<Sidebar open={isSideBar} onClose={() => setSideBar(false)} />
 			<div className={`h-full transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`} style={isScroll ? {} : { minHeight: '100vh' }}>
 				<Navbar onOpenSidenav={() => setSideBar(!isSideBar)} {...rest} />
-				<div ref={divRef}>
+				<div ref={divRef} className="h-full">
 					<Outlet />
 				</div>
 			</div>
