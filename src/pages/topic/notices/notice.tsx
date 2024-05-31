@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import ColumnsTable from '../../../components/columnsTable';
-import { BoarderService } from '../../../services/borderService';
+import { BoardService } from '../../../services/boardService';
 import useBoard from '../../../store/useBoard';
 import Card from '../../../components/card';
 
 const Suggestions = () => {
-	const { isSuccess } = useQuery('boardList', BoarderService().boardList);
+	const { isSuccess } = useQuery('boardList', BoardService().boardList);
 	const { news } = useBoard();
 	const { setType } = useBoard();
 	const columnHelper = createColumnHelper<any>();

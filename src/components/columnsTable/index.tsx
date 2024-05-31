@@ -13,6 +13,8 @@ import {
 import { Flex, Input, InputGroup, InputRightElement, Select, Spacer } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import { ProfileService } from '../../services/profileService';
+import useModal from '../../store/useModal';
+import BoardService from '../../services/boardService';
 
 type searchType = {
 	option: string;
@@ -33,8 +35,9 @@ type ColumnsTableProps = {
 
 const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, search, setSearch, filter }: ColumnsTableProps) => {
 	useQuery('getProfileList', ProfileService().getProfileList);
+	const { updateBoard } = BoardService();
 	const [row] = useState(show);
-
+	const { openModal } = useModal();
 	const [totalPage, setTotalPage] = useState(Math.ceil(list.length / row));
 
 	const splitList = () => {
@@ -64,8 +67,13 @@ const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, sear
 		setCurrentPage(page);
 	};
 
+	const update = () => {
+		openModal({ type: 10, title: '글수정', closeOnOverlay: false });
+	};
+
 	const itemClick = (index: any) => {
-		alert(index);
+		const contents = { title: '제목', body: '<p>내용1</p><br/><p>내용2</p>' };
+		openModal({ type: 11, contents, updataClick: update });
 	};
 
 	const [customPagination, setCustomPagination] = useState<any[]>();
