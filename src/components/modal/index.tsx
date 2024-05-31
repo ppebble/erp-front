@@ -12,8 +12,6 @@ import {
 	Input,
 	Textarea,
 	Text,
-	Container,
-	Card,
 } from '@chakra-ui/react';
 import useModal from '../../store/useModal';
 import ToastEditor from '../textEditor/toastEditor';
@@ -185,6 +183,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 			break;
 		case 8:
 			dialog = <CustomEquipBookAddModal title={contents.title} row={contents.row} onClose={change} setOpen={contents.setOpen} />;
+			break;
 		case 10:
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
