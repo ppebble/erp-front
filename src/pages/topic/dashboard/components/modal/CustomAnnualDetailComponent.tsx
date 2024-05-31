@@ -23,45 +23,14 @@ import {
 import { getEventColor } from '../../../../../components/calendar/utils/event-utils';
 import { tableAnnualRow } from '../../../equipment/variables/tableHeapDataColumns';
 import Card from '../../../../../components/card';
+import { AnnualInfo, usePersonalAnnual } from '../../../../../store/useAnnual';
 
 export const CustomAnnualDetailComponent = () => {
-	const refAllDaySwitch = useRef<HTMLInputElement>(null);
-
 	const refEventStartDate = useRef<HTMLInputElement>(null);
-	const refEventEndDate = useRef<HTMLInputElement>(null);
-	const refEventStartDateTime = useRef<HTMLInputElement>(null);
-	const refEventEndDateTime = useRef<HTMLInputElement>(null);
 
 	const [open, setOpen] = useState(false);
-	const currentEventParam = useCalendarParam();
-	type AnnualRow = {
-		name: string;
-		enterDate: string;
-		restAnn: number;
-		january: number;
-		febuary: number;
-		march: number;
-		april: number;
-		may: number;
-		june: number;
-		july: number;
-		august: number;
-		september: number;
-		october: number;
-		november: number;
-		december: number;
-	};
-	const data = tableAnnualRow;
-	const annList = [
-		{ id: 'sc', name: 'SC사업부' },
-		{ id: 'sf', name: 'SF&신사업부' },
-		{ id: 'manage', name: '경영팀' },
-		{ id: 'dev', name: '기술개발본부' },
-		{ id: 'sb', name: '전략사업본부' },
-		{ id: 'personal', name: '개인일정' },
-		// { id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
-	] as const;
-	const columnHelper = createColumnHelper<AnnualRow>();
+	const data = usePersonalAnnual();
+	const columnHelper = createColumnHelper<AnnualInfo>();
 	const columns = [
 		columnHelper.accessor('name', {
 			id: 'name',
@@ -72,13 +41,8 @@ export const CustomAnnualDetailComponent = () => {
 				</div>
 			),
 		}),
-		columnHelper.accessor('enterDate', {
-			id: 'enterDate',
-			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">입사일</p>,
-			cell: (info) => <p className="text-md font-medium text-gray-900 dark:text-white">{info.getValue()}</p>,
-		}),
-		columnHelper.accessor('restAnn', {
-			id: 'restAnn',
+		columnHelper.accessor('remainDay', {
+			id: 'remainDay',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">남은 연차 갯수</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -87,7 +51,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('january', {
-			id: 'jan',
+			id: 'january',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">1월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -96,7 +60,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('febuary', {
-			id: 'feb',
+			id: 'febuary',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">2월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -105,7 +69,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('march', {
-			id: 'mar',
+			id: 'march',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">3월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -114,7 +78,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('april', {
-			id: 'apr',
+			id: 'april',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">4월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -132,7 +96,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('june', {
-			id: 'jun',
+			id: 'june',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">6월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -141,7 +105,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('july', {
-			id: 'jul',
+			id: 'july',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">7월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -150,7 +114,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('august', {
-			id: 'aug',
+			id: 'august',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">8월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -159,7 +123,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('september', {
-			id: 'sep',
+			id: 'september',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">9월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -168,7 +132,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('october', {
-			id: 'oct',
+			id: 'october',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">10월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -177,7 +141,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('november', {
-			id: 'nom',
+			id: 'november',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">11월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">
@@ -186,7 +150,7 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 		columnHelper.accessor('december', {
-			id: 'dec',
+			id: 'december',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">12월</p>,
 			cell: (info) => (
 				<div className="mx-2 flex font-bold">

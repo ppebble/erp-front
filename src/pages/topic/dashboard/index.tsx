@@ -16,6 +16,8 @@ import MonthAttendanceComponent from './components/MonthAttendanceComponent';
 import 'swiper/swiper.min.css';
 import Card from '../../../components/card';
 import DashboardAttendComponent from './components/DashboardAttendComponent';
+import AnnualService from '../../../services/annualService';
+import { usePersonalAnnual } from '../../../store/useAnnual';
 
 type ScheduleRow = {
 	date: string;
@@ -33,6 +35,8 @@ const Dashboard = () => {
 	const [deptParams, setDeptParams] = useState<ScheduleRow[]>([]);
 	const { isSuccess, refetch } = useQuery(['getDailyEvents'], CalendarService().getDeptEvent);
 	const [positionX, setPositionX] = useState<number>(0);
+
+	useQuery(['getPersonalAnnual'], AnnualService().getPersonalAnnual);
 
 	const columns = [
 		scheduleColumnHelper.accessor('date', {
@@ -85,7 +89,7 @@ const Dashboard = () => {
 			<div className="mt-1 grid grid-cols-12 gap-2 md:grid-cols-12">
 				<div className="mt-1 grid grid-cols-8 gap-2 col-span-12 md:grid-cols-12 col-span-12">
 					<div className="grid grid-cols-1 gap-2 md:grid-cols-1 col-span-12">
-						<AnnualComponent tableData={tableAnnualRow} />
+						<AnnualComponent />
 					</div>
 					<div className="col-span-5">
 						<CustomViewTable tableData={personalParams} columns={columns} title="나의 일정" />

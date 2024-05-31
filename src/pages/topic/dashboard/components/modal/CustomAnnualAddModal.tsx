@@ -20,7 +20,7 @@ import {
 	useWorkType,
 } from '../../../../../store/useCalendar';
 import { getEventColor } from '../../../../../components/calendar/utils/event-utils';
-import { scheduleResult } from '../../../../../network/response/scheduleResult';
+import { annualProps, scheduleResult } from '../../../../../network/response/scheduleResult';
 import CalendarService from '../../../../../services/calendarService';
 
 export const CustomAnnualAddModal = () => {
@@ -32,7 +32,9 @@ export const CustomAnnualAddModal = () => {
 	const [annType, setAnnType] = useState<string>('연차');
 	const selectedEvent = useCalendarEvnetParam();
 	// const isAdd = useAddEventFlag();
-	const [eventParam, setEventParam] = useState<scheduleResult>({} as scheduleResult);
+	// const [eventParam, setEventParam] = useState<scheduleResult>({} as scheduleResult);
+	// const [annualParam, setAnnualParam] = useState<annualProps>({} as annualProps);
+	const [manager, setManager] = useState<string>('');
 
 	const [defStart, setDefStart] = useState<string | undefined>('');
 	const [defEnd, setDefEnd] = useState<string | undefined>('');
@@ -58,7 +60,8 @@ export const CustomAnnualAddModal = () => {
 	const createEvent = CalendarService().createEventMutation;
 
 	const setEvnet = async () => {
-		setEventParam({} as scheduleResult);
+		const eventParam = {} as scheduleResult;
+		const annualParam = {} as annualProps;
 		eventParam.eventDesc = refEventDesc.current?.value || '';
 		eventParam.title = `[${annType}]`;
 
@@ -84,6 +87,13 @@ export const CustomAnnualAddModal = () => {
 		eventParam.members = [];
 		eventParam.register;
 
+		annualParam.sign = refSignCanvas.current?.toDataURL();
+		annualParam.start = refEventStartDate.current?.value || '';
+		annualParam.end = refEventEndDate.current?.value || '';
+		annualParam.annType = annType.includes('반차') ? 0 : 1;
+		annualParam.manager = manager;
+		annualParam.signType = 0;
+
 		if (!eventParam.title) {
 			alert('일정 타이틀 입력 누락');
 			return;
@@ -101,7 +111,7 @@ export const CustomAnnualAddModal = () => {
 			return;
 		}
 		// 연차 일정 신청
-		createEvent.mutate(eventParam);
+		// createEvent.mutate(eventParam);
 
 		// 연차 신청서 작성
 
@@ -196,10 +206,16 @@ export const CustomAnnualAddModal = () => {
 							<p className="text-base font-bold text-navy-700 dark:text-white">승인 :</p>
 						</div>
 						<div className="flex justify-start mb-5">
-							<Select id="task" className="!min-w-[120px]">
-								<option value="ann">김용걸대표</option>
-								<option value="annHalf">김상순상무</option>
-								<option value="경영팀">박지용이사</option>
+							<Select
+								id="task"
+								className="!min-w-[120px]"
+								onChange={(e) => {
+									setManager(e.target.value);
+								}}
+							>
+								<option value="김용걸대표">김용걸대표</option>
+								<option value="김상순상무">김상순상무</option>
+								<option value="박지용이사">박지용이사</option>
 							</Select>
 						</div>
 					</div>
@@ -217,15 +233,6 @@ export const CustomAnnualAddModal = () => {
 								}}
 							>
 								지우기
-							</Button>
-							<Button
-								colorScheme="blue"
-								className="ml-3"
-								onClick={() => {
-									console.log(refSignCanvas.current?.toDataURL());
-								}}
-							>
-								코드확인
 							</Button>
 						</div>
 					</div>

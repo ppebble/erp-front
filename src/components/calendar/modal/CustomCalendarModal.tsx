@@ -142,7 +142,8 @@ export const CustomCalendarModal = () => {
 		const result = [] as MemberTagInfo[];
 		selectedTags.forEach((item) => {
 			const tag = item.split(' | ') || [];
-			result.push({ team: tag[0], name: tag[1] });
+			const name = tag[1].split(' ') || [];
+			result.push({ team: tag[0], name: name[0] });
 		});
 		newEvent.members = result;
 		// calendarAction.setAddEventParam(eventParam);

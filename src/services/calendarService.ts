@@ -41,7 +41,7 @@ export const CalendarService = (date?: string) => {
 							},
 							// 연관 인원 리스트 추가
 							members: data[i].members.map((e: any) => {
-								return `${e.name} | ${e.team}`;
+								return `${e.team} | ${e.name}`;
 							}),
 						};
 						param.color = getEventColor(taskId);
