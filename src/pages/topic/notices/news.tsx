@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Button } from '@chakra-ui/react';
-import { AccessorKeyColumnDef, createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 import ColumnsTable from '../../../components/columnsTable';
 import { BoardService } from '../../../services/boardService';
 import useBoard from '../../../store/useBoard';
@@ -20,7 +20,7 @@ const News = () => {
 		return <p className="text-md font-bold">{value}</p>;
 	};
 
-	const columns: AccessorKeyColumnDef<any, string>[] = [
+	const columns = [
 		columnHelper.accessor('title', {
 			id: '제목',
 			cell: (info) => addTag(info.getValue()),
