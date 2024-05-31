@@ -79,21 +79,6 @@ const useProject = create(
 			setClear: () =>
 				set(() => ({
 					projectNo: 0,
-					projectList: [
-						{
-							projectNo: 0,
-							field: '',
-							projectName: '',
-							managerNo: 0,
-							status: '',
-							step: '',
-							client: '',
-							partner: '',
-							startDate: '',
-							endDate: '',
-							isDel: 0,
-						},
-					],
 					project: {
 						projectNo: 0,
 						field: '',

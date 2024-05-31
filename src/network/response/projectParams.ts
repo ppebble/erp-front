@@ -51,3 +51,10 @@ export interface projectDetailParams {
 	projectMember: projectMember[];
 	projectOutput: projectOutput[];
 }
+
+export interface partnerType {
+	company: string;
+	name: string;
+	phone: string;
+	email: string;
+}

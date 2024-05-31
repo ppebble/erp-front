@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Heading, SimpleGrid, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import { Button, Card, CardBody, CardHeader, Heading, SimpleGrid, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { MdLaptopChromebook } from 'react-icons/md';
 import { HiOutlineDesktopComputer } from 'react-icons/hi';
 import { ProjectService } from '../../../services/projectService';
 import useProject from '../../../store/useProject';
-import useModal from '../../../store/useModal';
 import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLineWidget';
 
 const Project = () => {
@@ -15,6 +14,10 @@ const Project = () => {
 	const navigate = useNavigate();
 	const { projectList, setProjectNo, setClear } = useProject();
 	const [title, setTitle] = useState('프로젝트');
+
+	const newProject = () => {
+		navigate('/topic/projectDetail', { state: { isNew: 1 } });
+	};
 
 	const projectClick = (index: number) => {
 		setProjectNo(index);
@@ -56,6 +59,15 @@ const Project = () => {
 							<header className="relative flex items-center justify-between">
 								<div className="text-xl font-bold text-navy-700 dark:text-white">프로젝트</div>
 							</header>
+
+							<Button
+								className="!w-[10rem]"
+								onClick={() => {
+									newProject();
+								}}
+							>
+								등록
+							</Button>
 
 							<div className="mt-8 mx-[3rem] min-h-[600px]">
 								<SimpleGrid spacing={10} templateColumns="repeat(auto-fill, minmax(500px, 1fr))">

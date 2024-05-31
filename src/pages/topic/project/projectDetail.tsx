@@ -1,35 +1,70 @@
 import { useEffect, useState } from 'react';
-import { Button, Input, InputGroup, InputLeftAddon, Textarea, Divider, Table, Card } from '@chakra-ui/react';
+import { useLocation } from 'react-router-dom';
+import { Button, Input, InputGroup, InputLeftAddon, Textarea, Divider, Table, Card, useQuery } from '@chakra-ui/react';
+import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from 'react-icons/io';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { GoDot, GoDotFill } from 'react-icons/go';
 import { MdOutlineBusiness, MdOutlinePerson, MdOutlinePhoneIphone, MdMailOutline } from 'react-icons/md';
 import InputContainer from '../../../components/inputContainer';
 import useProject from '../../../store/useProject';
+import useModal from '../../../store/useModal';
+import { partnerType } from '../../../network/response/projectParams';
+import { ProjectService } from '../../../services/projectService';
 
 const ProjectDetail = () => {
-	const { project, projectDetail, setProject, setProjectDetail, setProjectMember, setProjectOutput } = useProject();
+	const { state } = useLocation();
+	const { isNew } = state;
+	const { insertProject } = ProjectService();
+	const { project, projectDetail, projectMember, projectOutput, setProject, setProjectDetail, setProjectMember, setProjectOutput, setClear } =
+		useProject();
 	const [fileCount, setFileCount] = useState(0);
 	const [fileValue, setFileValue] = useState<any>();
 	const [memberCount, setMemberCount] = useState(0);
 	const [memberValue, setMemberValue] = useState<any>();
-
 	const [slides, setSlides] = useState<any>(null);
 	const [swiperSetting, setSwiperSetting] = useState<Swiper | null>(null);
 	const [curPage, setCurpage] = useState<number>(0);
-
-	const partnerTest: string[] =
-		'ADT캡스:김성우차장:02-3485-9118:sw.kim80@adt.co.kr, ADT캡스:원혁상대리:02-3485-9605:hsweon@adt.co.kr, ADT캡스:장희진차장:02-3485-9174:hjjang@adt.co.kr'.split(
-			', ',
-		);
+	const [partner, setPartner] = useState<string[]>([]);
+	const { openModal, closeModal } = useModal();
 
 	const changeProject = (e: any) => {
-		const { targetId, targetValue } = e.target;
-		setProject({ ...project, [targetId]: targetValue });
+		const { id, value } = e.target;
+		setProject({ ...project, [id]: value });
 	};
 
 	const changeProjectDetail = (e: any) => {
-		const { targetId, targetValue } = e.target;
-		setProjectDetail({ ...projectDetail, [targetId]: targetValue });
+		const { id, value } = e.target;
+		setProjectDetail({ ...projectDetail, [id]: value });
+	};
+
+	const add = (type: partnerType) => {
+		if (project.partner === '') {
+			partner[0] = `${type.company}:${type.name}:${type.phone}:${type.email}`;
+		} else {
+			partner?.push(`${type.company}:${type.name}:${type.phone}:${type.email}`);
+			slides.push('swiper-slide px-8 swiper-slide');
+		}
+		const id: string = 'partner';
+		setProject({ ...project, [id]: partner });
+		closeModal();
+	};
+
+	const addPartner = () => {
+		openModal({ type: 0, closeOnOverlay: false, updataClick: add });
+	};
+
+	const deletePartner = () => {
+		setPartner(partner?.filter((item: any, index: any) => index !== curPage));
+		if (partner?.length === curPage + 1) {
+			slides.shift();
+		} else {
+			slides.pop();
+		}
+	};
+
+	const newProject = () => {
+		const param = { project, projectDetail, projectMember, projectOutput };
+		insertProject.mutateAsync({ param });
 	};
 
 	const updateProject = () => {
@@ -42,6 +77,17 @@ const ProjectDetail = () => {
 		// ProjectService().delProject.mutateAsync(projectNo);
 		console.log('deleteProject');
 	};
+
+	useEffect(() => {
+		const splitPartner = project?.partner.split(', ');
+		setPartner(splitPartner);
+		return () => setClear();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		console.log(slides);
+	}, [slides]);
 
 	useEffect(() => {
 		if (!swiperSetting) {
@@ -86,9 +132,9 @@ const ProjectDetail = () => {
 					</InputGroup>
 					<InputGroup className="mb-3">
 						<InputLeftAddon className="!min-w-[120px]">시작일</InputLeftAddon>
-						<Input id="startDate" onChange={(e) => changeProject(e)} defaultValue={project.startDate || ''} />
+						<Input id="startDate" type="date" onChange={(e) => changeProject(e)} defaultValue={project.startDate || ''} />
 						<InputLeftAddon className="!min-w-[120px] ml-[20px]">종료일</InputLeftAddon>
-						<Input id="endDate" onChange={(e) => changeProject(e)} defaultValue={project.endDate || ''} />
+						<Input id="endDate" type="date" onChange={(e) => changeProject(e)} defaultValue={project.endDate || ''} />
 					</InputGroup>
 					<Table className="table-fixed">
 						<tbody>
@@ -106,44 +152,47 @@ const ProjectDetail = () => {
 												{slides &&
 													slides.map((item: any, index: any) => {
 														if (index === curPage) {
-															return <GoDotFill className="text-brand-300 h-6 w-6" key={item.className} />;
+															return <GoDotFill className="text-brand-300 h-6 w-6" key={`${item.className}_${index}`} />;
 														}
-														return <GoDot className="text-gray-500 h-6 w-6" key={item.className} />;
+														return <GoDot className="text-gray-500 h-6 w-6" key={`${item.className}_${index}`} />;
 													})}
+												<IoIosAddCircleOutline className="cursor-pointer w-[20px] h-[20px] mt-[1px]" onClick={() => addPartner()} />
+												<IoIosRemoveCircleOutline className="cursor-pointer w-[20px] h-[20px] mt-[1px]" onClick={() => deletePartner()} />
 											</div>
 											<div className="relative mb-1 flex">
 												{swiperSetting && (
-													<Swiper {...swiperSetting}>
-														{partnerTest.map((item: any, index: any) => {
-															return (
-																<SwiperSlide className="px-8" key={index}>
-																	<li className="my-[3px] flex items-center">
-																		<span>
-																			<MdOutlineBusiness className="w-[20px] h-[20px]" />
-																		</span>
-																		<p className="ml-2">{item.split(':')[0]}</p>
-																	</li>
-																	<li className="my-[3px] flex items-center">
-																		<span>
-																			<MdOutlinePerson />
-																		</span>
-																		<p className="ml-2">{item.split(':')[1]}</p>
-																	</li>
-																	<li className="my-[3px] flex items-center">
-																		<span>
-																			<MdOutlinePhoneIphone />
-																		</span>
-																		<p className="ml-2">{item.split(':')[2]}</p>
-																	</li>
-																	<li className="my-[3px] flex items-center">
-																		<span>
-																			<MdMailOutline />
-																		</span>
-																		<p className="ml-2">{item.split(':')[3]}</p>
-																	</li>
-																</SwiperSlide>
-															);
-														})}
+													<Swiper {...swiperSetting} className="!ml-0 !mr-0">
+														{partner &&
+															partner.map((item: any, index: any) => {
+																return (
+																	<SwiperSlide className="px-8" key={index}>
+																		<li className="my-[5px] flex">
+																			<span>
+																				<MdOutlineBusiness />
+																			</span>
+																			<p className="ml-2">{item.split(':')[0]}</p>
+																		</li>
+																		<li className="my-[5px] flex">
+																			<span>
+																				<MdOutlinePerson />
+																			</span>
+																			<p className="ml-2">{item.split(':')[1]}</p>
+																		</li>
+																		<li className="my-[5px] flex">
+																			<span>
+																				<MdOutlinePhoneIphone />
+																			</span>
+																			<p className="ml-2">{item.split(':')[2]}</p>
+																		</li>
+																		<li className="my-[5px] flex">
+																			<span>
+																				<MdMailOutline />
+																			</span>
+																			<p className="ml-2">{item.split(':')[3]}</p>
+																		</li>
+																	</SwiperSlide>
+																);
+															})}
 													</Swiper>
 												)}
 											</div>
@@ -226,14 +275,22 @@ const ProjectDetail = () => {
 						setValue={setMemberValue}
 						type="member"
 					/>
-					<div className="text-end !mt-[30px]">
-						<Button className="w-[150px]" colorScheme="green" onClick={() => updateProject()}>
-							수정
-						</Button>
-						<Button className="w-[150px]" colorScheme="red" ml={3} onClick={() => deleteProject(project.projectNo)}>
-							삭제
-						</Button>
-					</div>
+					{isNew === 0 ? (
+						<div className="text-end !mt-[30px]">
+							<Button className="w-[150px]" colorScheme="green" onClick={() => updateProject()}>
+								수정
+							</Button>
+							<Button className="w-[150px]" colorScheme="red" ml={3} onClick={() => deleteProject(project.projectNo)}>
+								삭제
+							</Button>
+						</div>
+					) : (
+						<div className="text-end !mt-[30px]">
+							<Button className="w-[150px]" colorScheme="green" onClick={() => newProject()}>
+								등록
+							</Button>
+						</div>
+					)}
 				</div>
 			</Card>
 		</div>

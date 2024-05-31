@@ -34,7 +34,7 @@ export const ProjectService = () => {
 				setProject(data.project);
 				setProjectDetail(data.projectDetail);
 				setProjectMember(data.projectMember);
-				navigate('/topic/projectDetail');
+				navigate('/topic/projectDetail', { state: { isNew: 0 } });
 			}
 		},
 		onError: (error: any) => {
@@ -63,5 +63,15 @@ export const ProjectService = () => {
 		},
 	});
 
-	return { projectList, projectDetail, modifyProject, delProject };
+	const insertProject = useMutation({
+		mutationFn: (params: any) => postQuery('/api/project/project', params),
+		onSuccess: (result) => {
+			return result.response;
+		},
+		onError: (error) => {
+			openModal({ type: 3, contents: error, color: 'red' });
+		},
+	});
+
+	return { projectList, projectDetail, modifyProject, delProject, insertProject };
 };
