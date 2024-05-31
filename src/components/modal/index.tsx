@@ -12,8 +12,6 @@ import {
 	Input,
 	Textarea,
 	Text,
-	Container,
-	Card,
 } from '@chakra-ui/react';
 import useModal from '../../store/useModal';
 import ToastEditor from '../textEditor/toastEditor';
