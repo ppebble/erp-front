@@ -5,19 +5,17 @@ import ColumnsTable from '../../../components/columnsTable';
 import { BoardService } from '../../../services/boardService';
 import useBoard from '../../../store/useBoard';
 import Card from '../../../components/card';
-import { boardTable } from '../../../network/response/boardParams';
 
 const Seminar = () => {
 	const { isSuccess } = useQuery('boardList', BoardService().boardList);
 	const { news } = useBoard();
 	const { setType } = useBoard();
-	const columnHelper = createColumnHelper<boardTable>();
+	const columnHelper = createColumnHelper<any>();
 	const [show, setShow] = useState(10);
 
 	useEffect(() => {
 		setType('seminar');
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [setType]);
 
 	const addTag = (value: any) => {
 		return <p className="text-md font-bold">{value}</p>;

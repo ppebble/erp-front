@@ -10,7 +10,7 @@ import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLi
 
 const Project = () => {
 	const list = useQuery('projectList', ProjectService().projectList); // 조회
-	useQuery('projectDetail', ProjectService().projectDetail);
+	useQuery('projectDetail', ProjectService().projectDetail); // 상세조회
 	const navigate = useNavigate();
 	const { projectList, setProjectNo, setClear } = useProject();
 	const [title, setTitle] = useState('프로젝트');
@@ -29,8 +29,7 @@ const Project = () => {
 
 	useEffect(() => {
 		return () => setClear();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [setClear]);
 
 	return (
 		<div className="flex grid grid-cols-12 min-h-[45rem]">

@@ -22,8 +22,7 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 		if (state) {
 			setValue(state);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [state]);
+	}, [setValue, state]);
 
 	useEffect(() => {
 		switch (type) {

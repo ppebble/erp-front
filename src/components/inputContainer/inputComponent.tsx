@@ -102,7 +102,7 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 															<Input
 																id="projectName"
 																className="!min-w-[100px]"
-																name={`projectName_${detailItem.id}`}
+																name={`projectName_${detailIndex}_${detailItem.id}`}
 																defaultValue={detailItem.projectName}
 																onChange={(e) => onDetailChange && onDetailChange(e, detailIndex)}
 															/>
@@ -110,7 +110,7 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 															<Input
 																id="task"
 																className="!min-w-[100px]"
-																name={`task_${detailItem.id}`}
+																name={`task_${detailIndex}_${detailItem.id}`}
 																defaultValue={detailItem.task}
 																onChange={(e) => onDetailChange && onDetailChange(e, detailIndex)}
 															/>
@@ -118,7 +118,7 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 															<Input
 																id="term"
 																className="!min-w-[100px]"
-																name={`term_${detailItem.id}`}
+																name={`term_${detailIndex}_${detailItem.id}`}
 																defaultValue={detailItem.term}
 																onChange={(e) => onDetailChange && onDetailChange(e, detailIndex)}
 															/>
@@ -252,14 +252,14 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 						</div>
 						{inputItems.map((item: any, index: any) => {
 							return (
-								<div key={`member_${item.id}`}>
+								<div key={`member_${item.id ? item.id : item.memberNo}`}>
 									<InputGroup className="mb-2">
 										<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
-										<Input id="licenseName" defaultValue={item.member} onChange={(e) => onChange(e, index)} />
+										<Input id="member" defaultValue={item.member} onChange={(e) => onChange(e, index)} />
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">직책</InputLeftAddon>
-										<Input id="licenseDate" defaultValue={item.role} onChange={(e) => onChange(e, index)} />
+										<Input id="role" defaultValue={item.role} onChange={(e) => onChange(e, index)} />
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">업무</InputLeftAddon>
-										<Input id="licenseDate" defaultValue={item.task} onChange={(e) => onChange(e, index)} />
+										<Input id="task" defaultValue={item.task} onChange={(e) => onChange(e, index)} />
 										<CloseButton onClick={() => InputDelete(index)} />
 									</InputGroup>
 								</div>

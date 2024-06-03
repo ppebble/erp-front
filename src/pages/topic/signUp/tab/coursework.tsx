@@ -9,8 +9,7 @@ const Coursework = () => {
 
 	useEffect(() => {
 		setCoursework(value);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value]);
+	}, [setCoursework, value]);
 
 	return (
 		<InputContainer

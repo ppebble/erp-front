@@ -7,7 +7,7 @@ import InputContainer from '../../../components/inputContainer';
 import useProject from '../../../store/useProject';
 
 const ResearchDetail = () => {
-	const { project, projectDetail, setProject, setProjectDetail, setProjectMember, setProjectOutput } = useProject();
+	const { project, projectDetail, setProject, setProjectDetail, setProjectMember, setProjectOutput, projectMember } = useProject();
 	const [fileCount, setFileCount] = useState(0);
 	const [fileValue, setFileValue] = useState<any>();
 	const [memberCount, setMemberCount] = useState(0);
@@ -60,13 +60,11 @@ const ResearchDetail = () => {
 
 	useEffect(() => {
 		setProjectOutput(fileValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fileValue]);
+	}, [fileValue, setProjectOutput]);
 
 	useEffect(() => {
 		setProjectMember(memberValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [memberValue]);
+	}, [memberValue, setProjectMember]);
 
 	return (
 		<div className="mt-5 grid">
@@ -170,6 +168,7 @@ const ResearchDetail = () => {
 						</tbody>
 					</Table>
 					<Divider className="my-3" />
+
 					{/* projectDetail */}
 					<InputGroup className="mb-2">
 						<InputLeftAddon className="!min-w-[120px]">경로</InputLeftAddon>
@@ -210,7 +209,8 @@ const ResearchDetail = () => {
 						<Textarea id="note" className="!h-[200px]" onChange={(e) => changeProjectDetail(e)} defaultValue={projectDetail.note || ''} />
 					</InputGroup>
 					<Divider className="my-3" />
-					{/* 산출물, 팀원 */}
+
+					{/* 산출물 */}
 					<InputContainer
 						props={{ id: fileCount, eduName: '', eduStartDate: '', eduEndDate: '', institution: '' }}
 						count={fileCount}
@@ -218,7 +218,10 @@ const ResearchDetail = () => {
 						setValue={setFileValue}
 						type="project"
 					/>
+
 					<Divider className="my-3" />
+
+					{/* 팀원 */}
 					<InputContainer
 						props={{ id: memberCount, member: '', role: '', task: '' }}
 						count={memberCount}

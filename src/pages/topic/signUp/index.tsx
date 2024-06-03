@@ -41,8 +41,7 @@ const SignUp = () => {
 
 	useEffect(() => {
 		return () => setClearProfile();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [setClearProfile]);
 
 	useEffect(() => {
 		if (updateProfile.isSuccess) {
@@ -50,8 +49,7 @@ const SignUp = () => {
 		} else if (updateProfile.isError) {
 			openModal({ type: 3, contents: '업데이트 실패', color: 'red' });
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [updateProfile.isSuccess, updateProfile.isError]);
+	}, [openModal, updateProfile.isError, updateProfile.isSuccess]);
 
 	return (
 		<div className="mt-5 grid">

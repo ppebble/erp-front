@@ -68,9 +68,8 @@ const ProjectDetail = () => {
 	};
 
 	const updateProject = () => {
-		const param = { project, projectDetail };
-		console.log(param);
-		// ProjectService().modifyProject.mutateAsync(param);
+		const param = { project, projectDetail, projectMember, projectOutput };
+		ProjectService().modifyProject.mutateAsync(param);
 	};
 
 	const deleteProject = (projectNo: number) => {
@@ -82,12 +81,7 @@ const ProjectDetail = () => {
 		const splitPartner = project?.partner.split(', ');
 		setPartner(splitPartner);
 		return () => setClear();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		console.log(slides);
-	}, [slides]);
+	}, [project?.partner, setClear]);
 
 	useEffect(() => {
 		if (!swiperSetting) {
@@ -106,13 +100,11 @@ const ProjectDetail = () => {
 
 	useEffect(() => {
 		setProjectOutput(fileValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fileValue]);
+	}, [fileValue, setProjectOutput]);
 
 	useEffect(() => {
 		setProjectMember(memberValue);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [memberValue]);
+	}, [memberValue, setProjectMember]);
 
 	return (
 		<div className="mt-5 grid">
@@ -152,9 +144,9 @@ const ProjectDetail = () => {
 												{slides &&
 													slides.map((item: any, index: any) => {
 														if (index === curPage) {
-															return <GoDotFill className="text-brand-300 h-6 w-6" key={`${item.className}_${index}`} />;
+															return <GoDotFill className="text-brand-300 h-6 w-6" key={item.className} />;
 														}
-														return <GoDot className="text-gray-500 h-6 w-6" key={`${item.className}_${index}`} />;
+														return <GoDot className="text-gray-500 h-6 w-6" key={item.className} />;
 													})}
 												<IoIosAddCircleOutline className="cursor-pointer w-[20px] h-[20px] mt-[1px]" onClick={() => addPartner()} />
 												<IoIosRemoveCircleOutline className="cursor-pointer w-[20px] h-[20px] mt-[1px]" onClick={() => deletePartner()} />
@@ -219,6 +211,7 @@ const ProjectDetail = () => {
 						</tbody>
 					</Table>
 					<Divider className="my-3" />
+
 					{/* projectDetail */}
 					<InputGroup className="mb-2">
 						<InputLeftAddon className="!min-w-[120px]">경로</InputLeftAddon>
@@ -259,15 +252,13 @@ const ProjectDetail = () => {
 						<Textarea id="note" className="!h-[200px]" onChange={(e) => changeProjectDetail(e)} defaultValue={projectDetail.note || ''} />
 					</InputGroup>
 					<Divider className="my-3" />
-					{/* 산출물, 팀원 */}
-					<InputContainer
-						props={{ id: fileCount, eduName: '', eduStartDate: '', eduEndDate: '', institution: '' }}
-						count={fileCount}
-						setCount={setFileCount}
-						setValue={setFileValue}
-						type="project"
-					/>
+
+					{/* 산출물 */}
+					<InputContainer props={{ id: fileCount, file: '' }} count={fileCount} setCount={setFileCount} setValue={setFileValue} type="project" />
+
 					<Divider className="my-3" />
+
+					{/* 팀원 */}
 					<InputContainer
 						props={{ id: memberCount, member: '', role: '', task: '' }}
 						count={memberCount}

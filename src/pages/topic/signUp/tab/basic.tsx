@@ -34,7 +34,6 @@ const Basic = () => {
 		setArmy,
 		highSchool,
 		setHighSchool,
-		setEducation,
 	} = useProfile();
 	const { openModal } = useModal();
 
@@ -52,8 +51,7 @@ const Basic = () => {
 			setCollage(education.collage.split('/'));
 			setGraduateSchool(education.graduateSchool.split('/'));
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [education, setCollage, setGraduateSchool, setHighSchool]);
 
 	const changeProfile = (e: any) => {
 		const { id, value } = e.target;
@@ -100,8 +98,7 @@ const Basic = () => {
 				openModal({ type: 3, contents: '사용할수 없는 아이디 입니다.', color: 'red' });
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [idCheck.isSuccess, idCheck.isError]);
+	}, [idCheck?.data?.response.isSuccessful, idCheck.isSuccess, openModal]);
 
 	// profile, profileDept, profileDetail, profileArmy, profileEducation
 	return (
@@ -126,7 +123,6 @@ const Basic = () => {
 					) : (
 						<Input id="userId" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userId || ''} />
 					)}
-
 					<InputLeftAddon className="!min-w-[100px] ml-[20px]">이메일</InputLeftAddon>
 					<Input id="userEmail" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userEmail || ''} />
 					<InputRightAddon>@nexmore.co.kr</InputRightAddon>
