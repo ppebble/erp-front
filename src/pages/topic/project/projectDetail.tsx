@@ -99,6 +99,7 @@ const ProjectDetail = () => {
 	}, [swiperSetting]);
 
 	useEffect(() => {
+		console.log(fileValue);
 		setProjectOutput(fileValue);
 	}, [fileValue, setProjectOutput]);
 
@@ -254,7 +255,7 @@ const ProjectDetail = () => {
 					<Divider className="my-3" />
 
 					{/* 산출물 */}
-					<InputContainer props={{ id: fileCount, file: '' }} count={fileCount} setCount={setFileCount} setValue={setFileValue} type="project" />
+					<InputContainer props={{ id: fileCount, file: '' }} count={fileCount} setCount={setFileCount} setValue={setFileValue} type="attachment" />
 
 					<Divider className="my-3" />
 

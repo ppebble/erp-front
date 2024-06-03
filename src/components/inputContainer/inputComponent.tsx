@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import {
 	InputGroup,
 	InputLeftAddon,
@@ -10,12 +11,8 @@ import {
 	AccordionPanel,
 	Flex,
 	Spacer,
-	FormLabel,
-	Badge,
 	Tag,
-	TagLabel,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import useProfile from '../../store/useProfile';
 
 type InputComponentprops = {
@@ -25,12 +22,26 @@ type InputComponentprops = {
 	InputDelete: (id: number) => void;
 	detailDelete?: (id: number) => void;
 	onChange: (e: any, id: any) => void;
+	onFileChange?: (e: any, id: any) => void;
 	onDetailChange?: (e: any, id: any) => void;
 	type: string;
+	style?: string;
 };
 
-const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDelete, onChange, onDetailChange, type }: InputComponentprops) => {
+const InputComponent = ({
+	inputItems,
+	addInput,
+	addDetail,
+	InputDelete,
+	detailDelete,
+	onChange,
+	onFileChange,
+	onDetailChange,
+	type,
+	style,
+}: InputComponentprops) => {
 	const { careerIndex, setCareerIndex } = useProfile();
+	const inputRef = useRef<HTMLInputElement | null>(null);
 
 	const changeSelect = (index: number) => {
 		setCareerIndex(index);
@@ -213,14 +224,19 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 					</>
 				);
 				break;
-			case 'project':
+			case 'attachment':
 				component = (
 					<>
 						<div>
-							<Flex className="mb-[10px]">
-								<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px]">
-									산출물
-								</Tag>
+							<Flex className="mb-[10px] flex">
+								{style === 'board' ? (
+									<p className="self-end">첨부파일</p>
+								) : (
+									<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px]">
+										산출물
+									</Tag>
+								)}
+
 								<Spacer />
 								<Button onClick={() => addInput()}>추가</Button>
 							</Flex>
@@ -229,7 +245,15 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 							return (
 								<div key={`project_${item.id}`} className="my-[2px]">
 									<InputGroup className="mb-2">
-										<Input id={`file_${item.id}`} type="file" onChange={(e) => onChange(e, index)} />
+										<Input
+											id="file"
+											name={`file_${item.id}`}
+											type="file"
+											ref={(e) => {
+												inputRef.current = e;
+											}}
+											onChange={() => onFileChange && onFileChange(inputRef.current?.files, index)}
+										/>
 										<CloseButton onClick={() => InputDelete(index)} />
 									</InputGroup>
 								</div>

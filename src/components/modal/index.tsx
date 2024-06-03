@@ -10,15 +10,15 @@ import {
 	AlertDialogOverlay,
 	Button,
 	Input,
-	Textarea,
 	Text,
-	Container,
-	Card,
+	InputGroup,
+	InputLeftAddon,
 } from '@chakra-ui/react';
 import useModal from '../../store/useModal';
 import ToastEditor from '../textEditor/toastEditor';
 import { CustomAnnualAddModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualAddModal';
 import { CustomAnnualDetailModal } from '../../pages/topic/dashboard/components/modal/CustomAnnualDetailModal';
+import InputContainer from '../inputContainer';
 
 type ModalProps = {
 	change: () => void;
@@ -39,6 +39,13 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 		const { id, value } = e.target;
 		setPartner({ ...partner, [id]: value });
 	};
+
+	const [fileCount, setFileCount] = useState(0);
+	const [fileValue, setFileValue] = useState<any>();
+
+	useEffect(() => {
+		console.log(fileValue);
+	}, [fileValue]);
 
 	useEffect(() => {
 		const changeSize = () => {
@@ -77,22 +84,29 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 			break;
 		case 1: // 게시판 글 상세보기
 			dialog = (
-				<AlertDialogContent minW={detailsSize[0]} minH={detailsSize[1]}>
+				<AlertDialogContent minW="50%" minH="50%">
 					<AlertDialogHeader>상세보기</AlertDialogHeader>
 					<AlertDialogCloseButton size="lg" />
+
 					<AlertDialogBody>
 						<div>
-							<p>이름 : {contents?.name}</p>
-							<p>직책 : {contents?.position}</p>
-							<p>직급 : {contents?.rank}</p>
-							<p>부서 : {contents?.team}</p>
+							<InputGroup className="mb-2">
+								<InputLeftAddon>제목</InputLeftAddon>
+								<Text className="border border-[#E2E8F0] border-solid rounded-md px-[10px] py-[5px] mb-[10px]">{contents.title}</Text>
+							</InputGroup>
+							<p>내용</p>
+							<Text
+								className="border border-[#E2E8F0] border-solid rounded-md px-[10px] py-[5px] !h-[600px]"
+								dangerouslySetInnerHTML={{ __html: contents.body }}
+							/>
 						</div>
 					</AlertDialogBody>
+
 					<AlertDialogFooter>
-						<Button colorScheme={color || 'green'} ref={cancelRef} onClick={updataClick}>
+						<Button colorScheme="green" onClick={updataClick}>
 							수정
 						</Button>
-						<Button colorScheme={color || 'red'} ml={3} onClick={deleteClick}>
+						<Button colorScheme="red" ml={3} onClick={change}>
 							삭제
 						</Button>
 					</AlertDialogFooter>
@@ -102,30 +116,32 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 		case 2: // 게시판 글 쓰기
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
-					<AlertDialogHeader>글쓰기</AlertDialogHeader>
+					<AlertDialogHeader>{title}</AlertDialogHeader>
 					<AlertDialogCloseButton size="lg" />
 
 					<AlertDialogBody>
 						<div>
-							<p>이름</p>
-							<Input />
-							<p>직책</p>
-							<Input />
-							<p>직급</p>
-							<Input />
-							<p>부서</p>
-							<Input />
+							<p>제목</p>
+							<Input defaultValue={contents?.title || ''} className="mb-[10px]" />
+							<InputContainer
+								props={{ id: fileCount, file: '' }}
+								count={fileCount}
+								setCount={setFileCount}
+								setValue={setFileValue}
+								type="attachment"
+								style={'board' || ''}
+							/>
 							<p>내용</p>
-							<Textarea />
+							<ToastEditor />
 						</div>
 					</AlertDialogBody>
 
 					<AlertDialogFooter>
-						<Button ref={cancelRef} onClick={change}>
-							취소
+						<Button colorScheme="blue" onClick={updataClick}>
+							{title === '글쓰기' ? '등록' : '수정'}
 						</Button>
-						<Button colorScheme={color || 'blue'} ml={3} onClick={okClick}>
-							확인
+						<Button colorScheme="red" ml={3} onClick={change}>
+							취소
 						</Button>
 					</AlertDialogFooter>
 				</AlertDialogContent>
@@ -177,61 +193,6 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 			break;
 		case 6:
 			dialog = <CustomAnnualDetailModal />;
-			break;
-		case 10:
-			dialog = (
-				<AlertDialogContent minW="50%" minH="50%">
-					<AlertDialogHeader>{title}</AlertDialogHeader>
-					<AlertDialogCloseButton size="lg" />
-
-					<AlertDialogBody>
-						<div>
-							<p>제목</p>
-							<Input defaultValue={contents?.title || ''} className="mb-[10px]" />
-							<p>내용</p>
-							<ToastEditor />
-						</div>
-					</AlertDialogBody>
-
-					<AlertDialogFooter>
-						<Button colorScheme="blue" onClick={updataClick}>
-							{title === '글쓰기' ? '등록' : '수정'}
-						</Button>
-						<Button colorScheme="red" ml={3} onClick={change}>
-							취소
-						</Button>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			);
-			break;
-		case 11:
-			dialog = (
-				<AlertDialogContent minW="50%" minH="50%">
-					<AlertDialogHeader>상세보기</AlertDialogHeader>
-					<AlertDialogCloseButton size="lg" />
-
-					<AlertDialogBody>
-						<div>
-							<p>제목</p>
-							<Text className="border border-[#E2E8F0] border-solid rounded-md px-[10px] py-[5px] mb-[10px]">{contents.title}</Text>
-							<p>내용</p>
-							<Text
-								className="border border-[#E2E8F0] border-solid rounded-md px-[10px] py-[5px] !h-[600px]"
-								dangerouslySetInnerHTML={{ __html: contents.body }}
-							/>
-						</div>
-					</AlertDialogBody>
-
-					<AlertDialogFooter>
-						<Button colorScheme="green" onClick={updataClick}>
-							수정
-						</Button>
-						<Button colorScheme="red" ml={3} onClick={change}>
-							삭제
-						</Button>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			);
 			break;
 		default:
 			break;

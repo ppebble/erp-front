@@ -216,7 +216,7 @@ const ResearchDetail = () => {
 						count={fileCount}
 						setCount={setFileCount}
 						setValue={setFileValue}
-						type="project"
+						type="attachment"
 					/>
 
 					<Divider className="my-3" />

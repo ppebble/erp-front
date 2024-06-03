@@ -23,6 +23,7 @@ import Free from './pages/topic/notices/free';
 import Notice from './pages/topic/notices/notice';
 import SignUp from './pages/topic/signUp';
 import Password from './pages/topic/password';
+import Upload from './pages/topic/notices/upload'; // 업로드 테스트
 
 // error
 import NotFound from './pages/error/NotFound';
@@ -49,6 +50,7 @@ const App = () => {
 					<Route path="notice" element={<Notice />} />
 					<Route path="signup" element={<SignUp />} />
 					<Route path="password" element={<Password />} />
+					<Route path="upload" element={<Upload />} />
 				</Route>
 				<Route path="/" element={<Navigate to="/auth/login" replace />} />
 				<Route path="*" element={<NotFound />} />

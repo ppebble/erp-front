@@ -11,9 +11,10 @@ type InputProps = {
 	setDetailCount?: (detailCount: number) => void;
 	setValue: (state: any) => void;
 	type: string;
+	style?: string;
 };
 
-const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type }: InputProps) => {
+const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type, style }: InputProps) => {
 	const { career, license, coursework, skill, careerIndex, setCareer } = useProfile();
 	const { projectMember } = useProject();
 	const [state, setState] = useState<any>([props]);
@@ -127,6 +128,10 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 	};
 
+	const onFileChange = (e: any, idx: any) => {
+		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...e } : item)));
+	};
+
 	const onDetailChange = (e: any, idx: any) => {
 		if (type === 'career') {
 			const detailData = {
@@ -154,8 +159,10 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 			InputDelete={InputDelete}
 			detailDelete={DetailDelete}
 			onChange={onChange}
+			onFileChange={onFileChange}
 			onDetailChange={onDetailChange}
 			type={type}
+			style={style}
 		/>
 	);
 };
