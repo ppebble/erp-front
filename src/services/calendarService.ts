@@ -194,7 +194,7 @@ export const CalendarService = (date?: string) => {
 		},
 	});
 	const updateEventMutation = useMutation({
-		mutationFn: (params: any) => postQuery(`/api/schedule/modifySchedule?scheduleNo=${params.scheduleNo}`, params),
+		mutationFn: (params: any) => postQuery(`/api/schedule/modifySchedule`, params),
 		onSuccess: (result) => {
 			queryClient.invalidateQueries('getEvents');
 			return result.response;
@@ -204,7 +204,7 @@ export const CalendarService = (date?: string) => {
 		},
 	});
 	const deleteEventMutation = useMutation({
-		mutationFn: (params: any) => postQuery(`/api/schedule/deleteSchedule?scheduleNo=${params.scheduleNo}`, params),
+		mutationFn: (params: any) => postQuery(`/api/schedule/deleteSchedule`, params),
 		onSuccess: (result) => {
 			queryClient.invalidateQueries('getEvents');
 			return result.response;

@@ -181,8 +181,8 @@ export const CustomCalendarModal = () => {
 	};
 	const deleteEvent = async () => {
 		if (workType === 'edit') {
-			const params = {} as { scheduleNo: number };
-			params.scheduleNo = Number.parseInt(selectedEvent?.id || '0', 10);
+			const params = {} as { seqNo: number };
+			params.seqNo = Number.parseInt(selectedEvent?.id || '0', 10);
 			deleteEventMutation.mutate(params);
 		}
 		calendarAction.setCalendarDialogFlag(false);

@@ -125,7 +125,7 @@ const SetModal = ({ change, type, contents, color, okClick, updataClick, deleteC
 
 					<AlertDialogBody>
 						<div>
-							<div>수정 하시겠습니까?</div>
+							<div>{contents.title}</div>
 						</div>
 					</AlertDialogBody>
 
@@ -141,7 +141,7 @@ const SetModal = ({ change, type, contents, color, okClick, updataClick, deleteC
 			);
 			break;
 		case 5:
-			dialog = <CustomAnnualAddModal />;
+			dialog = <CustomAnnualAddModal onClose={change} />;
 			break;
 		case 6:
 			dialog = <CustomAnnualDetailModal />;
