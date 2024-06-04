@@ -23,14 +23,22 @@ import {
 import { getEventColor } from '../../../../../components/calendar/utils/event-utils';
 import { tableAnnualRow } from '../../../equipment/variables/tableHeapDataColumns';
 import Card from '../../../../../components/card';
-import { AnnualInfo, usePersonalAnnual } from '../../../../../store/useAnnual';
+import { AnnReqProps, AnnualInfo, useAnnRequest, usePersonalAnnual } from '../../../../../store/useAnnual';
+import AnnualService from '../../../../../services/annualService';
+import useModal from '../../../../../store/useModal';
+
+//     historyNo start end note deny
 
 export const CustomAnnualDetailComponent = () => {
 	const refEventStartDate = useRef<HTMLInputElement>(null);
 
 	const [open, setOpen] = useState(false);
 	const data = usePersonalAnnual();
+	const reqData = useAnnRequest();
 	const columnHelper = createColumnHelper<AnnualInfo>();
+	const annReqColHelper = createColumnHelper<AnnReqProps>();
+	const { openModal } = useModal();
+	const annualService = AnnualService();
 	const columns = [
 		columnHelper.accessor('name', {
 			id: 'name',
@@ -159,11 +167,74 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 	]; // eslint-disable-next-line
+	const annReqColumns = [
+		annReqColHelper.accessor('historyNo', {
+			id: 'febuary',
+			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">연차 신청 번호</p>,
+			cell: (info) => (
+				<div className="mx-2 flex font-bold">
+					<p className="text-md font-medium text-gray-900 dark:text-white">{info.getValue()}</p>
+				</div>
+			),
+		}),
+		annReqColHelper.accessor('start', {
+			id: 'start',
+			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">연차 시작일</p>,
+			cell: (info: any) => (
+				<div className="flex items-center gap-1">
+					<p className="text-md font-medium text-gray-900 dark:text-white">{info.getValue()}</p>
+				</div>
+			),
+		}),
+		annReqColHelper.accessor('end', {
+			id: 'end',
+			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">연차 종료일</p>,
+			cell: (info) => (
+				<div className="mx-2 flex font-bold">
+					<p className="text-md font-medium text-gray-900 dark:text-white">{info.getValue()}</p>
+				</div>
+			),
+		}),
+		annReqColHelper.accessor('note', {
+			id: 'january',
+			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">사유</p>,
+			cell: (info) => (
+				<div className="mx-2 flex font-bold">
+					<p className="text-md font-medium text-gray-900 dark:text-white">{info.getValue()}</p>
+				</div>
+			),
+		}),
+
+		annReqColHelper.accessor('deny', {
+			id: 'deny',
+			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">신청 취소</p>,
+			cell: (info) => (
+				<div className="mx-2 flex font-bold">
+					<Button
+						onClick={() => {
+							// openModal({ type: 4, closeOnOverlay: true, contents: { title: '삭제하시겠습니까?' } });
+							if (window.confirm('연차 신청을 취소하시겠습니까?')) {
+								annualService.calcleAnnual.mutate({ historyNo: info.row.original.historyNo });
+							}
+							console.log(info.row.original.historyNo);
+						}}
+					>
+						d
+					</Button>
+				</div>
+			),
+		}),
+	]; // eslint-disable-next-line
 	const table = useReactTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		debugTable: true,
+	});
+	const annReqTable = useReactTable({
+		data: reqData,
+		columns: annReqColumns,
+		getCoreRowModel: getCoreRowModel(),
 	});
 
 	return (
@@ -187,6 +258,45 @@ export const CustomAnnualDetailComponent = () => {
 					</thead>
 					<tbody>
 						{table
+							.getRowModel()
+							.rows.slice(0, 5)
+							.map((row) => {
+								return (
+									<tr key={row.id}>
+										{row.getVisibleCells().map((cell) => {
+											return (
+												<td key={cell.id} className="min-w-[60px] border-white/0 py-3  pr-2">
+													{flexRender(cell.column.columnDef.cell, cell.getContext())}
+												</td>
+											);
+										})}
+									</tr>
+								);
+							})}
+					</tbody>
+				</table>
+			</div>
+			<div className="h-px w-full bg-gray-300 dark:bg-white/20 " />
+			<div className="text-xl mt-2 font-bold text-navy-700 dark:text-white col-span-3"> 연차 신청 목록</div>
+			<div className="overflow-x-scroll xl:overflow-x-hidden">
+				<table className="w-full">
+					<thead>
+						{annReqTable.getHeaderGroups().map((headerGroup) => (
+							<tr key={headerGroup.id} className="!border-px !border-gray-400">
+								{headerGroup.headers.map((header) => {
+									return (
+										<th key={header.id} colSpan={header.colSpan} className="cursor-pointer border-b border-gray-200 pb-2 pr-2 pt-4 text-start">
+											<div className="items-center justify-between text-xs text-gray-200">
+												{flexRender(header.column.columnDef.header, header.getContext())}
+											</div>
+										</th>
+									);
+								})}
+							</tr>
+						))}
+					</thead>
+					<tbody>
+						{annReqTable
 							.getRowModel()
 							.rows.slice(0, 5)
 							.map((row) => {

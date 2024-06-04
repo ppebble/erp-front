@@ -15,7 +15,7 @@ export interface annualProps {
 	sign: string;
 	requestDate: string;
 	note?: string;
-	manager: string;
+	managerNo: number;
 	start: string;
 	end: string;
 	annType: number;

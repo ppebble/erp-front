@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getQuery, postQuery } from './base/AxiosQueryService';
 import { useEquipAction } from '../store/useEquip';
-import { AnnualInfo, useAnnualAction } from '../store/useAnnual';
+import { AnnReqProps, AnnualInfo, ManagerProps, useAnnualAction } from '../store/useAnnual';
 
 export const AnnualService = (param?: any) => {
 	const annualAction = useAnnualAction();
@@ -26,15 +26,15 @@ export const AnnualService = (param?: any) => {
 			console.log(error);
 		},
 	};
-	const getEquipDetail = {
+	const getAnnualRequest = {
 		// queryFn: (date: string) => getEvents(date),
-		queryFn: () => getQuery(`/api/equipment/equipmentDetail/${param.equipType}/${param.equipmentNo}`),
+		queryFn: () => getQuery(`/api/annual/annual`),
 		onSuccess: (result: any) => {
 			if (result.response && result.response.resultCode === '7000') {
 				const data = result.response.result; // arrayList
-
 				if (data) {
-					// equipAction.setEquip(data);
+					annualAction.setAnnualRequest(data);
+					console.log(data);
 				}
 			}
 			return false;
@@ -42,15 +42,44 @@ export const AnnualService = (param?: any) => {
 		onError: (error: any) => {
 			console.log(error);
 		},
-		enabled: !!param && !!param.equipmentNo,
 	};
-
-	const createEquipMutation = useMutation({
-		mutationFn: (params: any) => postQuery(`/api/equipment/equipment/${params.equipType}`, params),
+	const getManagerList = {
+		queryFn: () => getQuery(`/api/annual/managerTag`),
+		onSuccess: (result: any) => {
+			if (result.response && result.response.resultCode === '7000') {
+				const data = result.response.result; // arrayList
+				if (data) {
+					annualAction.setManagerList(data);
+					console.log(data);
+				}
+			}
+			return false;
+		},
+		onError: (error: any) => {
+			console.log(error);
+		},
+	};
+	const calcleAnnual = useMutation({
+		mutationFn: (params: any) => postQuery(`/api/annual/delAnnual`, params),
 		onSuccess: (result) => {
 			if (result.response.resultCode === '7000') {
 				alert('작업이 완료되었습니다.');
-				queryClient.invalidateQueries('getEquips');
+				queryClient.invalidateQueries('getAnnReqList');
+			} else if (result.error) {
+				alert(result.error);
+			}
+			return result.response;
+		},
+		onError: (error) => {
+			alert(error);
+		},
+	});
+	const createAnnualMutation = useMutation({
+		mutationFn: (params: any) => postQuery(`/api/annual/annual`, params),
+		onSuccess: (result) => {
+			if (result.response.resultCode === '7000') {
+				alert('작업이 완료되었습니다.');
+				// queryClient.invalidateQueries('g');
 			} else if (result.error) {
 				alert(result.error);
 			}
@@ -95,8 +124,10 @@ export const AnnualService = (param?: any) => {
 
 	return {
 		getPersonalAnnual,
-		getEquipDetail,
-		createEquipMutation,
+		getAnnualRequest,
+		getManagerList,
+		calcleAnnual,
+		createAnnualMutation,
 		updateEquipMutation,
 		deleteEquipMutation,
 	};

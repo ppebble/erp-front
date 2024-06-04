@@ -141,7 +141,7 @@ const SetModal = ({ change, type, contents, color, okClick, updataClick, deleteC
 			);
 			break;
 		case 5:
-			dialog = <CustomAnnualAddModal />;
+			dialog = <CustomAnnualAddModal onClose={change} />;
 			break;
 		case 6:
 			dialog = <CustomAnnualDetailModal />;

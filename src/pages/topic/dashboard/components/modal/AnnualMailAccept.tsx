@@ -12,7 +12,7 @@ type MailAcceptProps = {
 
 const AnnualMailAccept = () => {
 	const location = useLocation();
-	console.log(location);
+	console.log(location.pathname.split('/'));
 	const extractData = location.pathname.substring(21);
 	console.log(extractData);
 

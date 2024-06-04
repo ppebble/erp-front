@@ -37,6 +37,8 @@ const Dashboard = () => {
 	const [positionX, setPositionX] = useState<number>(0);
 
 	useQuery(['getPersonalAnnual'], AnnualService().getPersonalAnnual);
+	useQuery(['getAnnReqList'], AnnualService().getAnnualRequest);
+	useQuery(['getManagerList'], AnnualService().getManagerList);
 
 	const columns = [
 		scheduleColumnHelper.accessor('date', {
