@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { getQuery, postQuery } from './base/AxiosQueryService';
+import { getQuery, postQuery, postUploadQuery } from './base/AxiosQueryService';
 import { commonResult } from '../network/commonResult';
 import { projectDetailParams, project } from '../network/response/projectParams';
 import useModal from '../store/useModal';
@@ -64,7 +64,7 @@ export const ProjectService = () => {
 	});
 
 	const insertProject = useMutation({
-		mutationFn: (params: any) => postQuery('/api/project/project', params),
+		mutationFn: (params: any) => postUploadQuery('/api/project/project', params),
 		onSuccess: (result) => {
 			return result.response;
 		},

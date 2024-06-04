@@ -68,12 +68,12 @@ const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, sear
 	};
 
 	const update = () => {
-		openModal({ type: 10, title: '글수정', closeOnOverlay: false });
+		openModal({ type: 2, title: '글수정', closeOnOverlay: false });
 	};
 
 	const itemClick = (index: any) => {
-		const contents = { title: '제목', body: '<p>내용1</p><br/><p>내용2</p>' };
-		openModal({ type: 11, contents, updataClick: update });
+		const contents = { title: '제목', name: '유저1', createDate: '2024-03-01', body: '<p>내용1</p><br/><p>내용2</p>' };
+		openModal({ type: 1, contents, updataClick: update });
 	};
 
 	const [customPagination, setCustomPagination] = useState<any[]>();

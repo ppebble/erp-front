@@ -4,7 +4,7 @@ import useProfile from '../../store/useProfile';
 import useProject from '../../store/useProject';
 
 type InputProps = {
-	props: any;
+	props?: any;
 	count: number;
 	setCount: (count: number) => void;
 	detailCount?: number;
@@ -12,9 +12,10 @@ type InputProps = {
 	setValue: (state: any) => void;
 	type: string;
 	style?: string;
+	readOnly?: boolean;
 };
 
-const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type, style }: InputProps) => {
+const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type, style, readOnly }: InputProps) => {
 	const { career, license, coursework, skill, careerIndex, setCareer } = useProfile();
 	const { projectMember } = useProject();
 	const [state, setState] = useState<any>([props]);
@@ -88,7 +89,7 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 	}, [detailCount]);
 
 	const AddInput = () => {
-		if (type === 'project') {
+		if (type === 'attachment') {
 			if (count < 9) {
 				setCount(count + 1);
 			}
@@ -129,7 +130,8 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 	};
 
 	const onFileChange = (e: any, idx: any) => {
-		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...e } : item)));
+		const data = e[0];
+		setState(state.map((item: any, index: number) => (index === idx ? { ...item, data } : item)));
 	};
 
 	const onDetailChange = (e: any, idx: any) => {
@@ -163,6 +165,7 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 			onDetailChange={onDetailChange}
 			type={type}
 			style={style}
+			readOnly={readOnly}
 		/>
 	);
 };

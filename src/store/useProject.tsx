@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { project, projectDetail, projectMember, projectOutput } from '../network/response/projectParams';
+import { memberList, project, projectDetail, projectFile, projectMember, projectOutput } from '../network/response/projectParams';
 
 interface ProjectStore {
 	projectNo: number;
@@ -15,6 +15,8 @@ interface ProjectStore {
 	setProjectMember: (state: projectMember[]) => void;
 	projectOutput: projectOutput[];
 	setProjectOutput: (state: projectOutput[]) => void;
+	memberList: memberList[];
+	setMemberList: (state: memberList[]) => void;
 	setClear: () => void;
 }
 
@@ -35,7 +37,6 @@ const useProject = create(
 					partner: '',
 					startDate: '',
 					endDate: '',
-					isDel: 0,
 				},
 			],
 			setProjectList: (select) => set((state) => ({ ...state, projectList: select })),
@@ -50,7 +51,6 @@ const useProject = create(
 				partner: '',
 				startDate: '',
 				endDate: '',
-				isDel: 0,
 			},
 			setProject: (select) => set((state) => ({ ...state, project: select })),
 			projectDetail: {
@@ -68,14 +68,14 @@ const useProject = create(
 				tech: '',
 				tool: '',
 				note: '',
-				projectMember: [],
-				projectOutput: [],
 			},
 			setProjectDetail: (select) => set((state) => ({ ...state, projectDetail: select })),
 			projectMember: [{ memberNo: 0, projectNo: 0, profileNo: 0, member: '', role: '', task: '' }],
 			setProjectMember: (select) => set((state) => ({ ...state, projectMember: select })),
 			projectOutput: [{ outputNo: 0, projectNo: 0, fileNo: 0, fileName: '' }],
 			setProjectOutput: (select) => set((state) => ({ ...state, projectOutput: select })),
+			memberList: [{ profileNo: 0, name: '', team: '', empNo: '' }],
+			setMemberList: (select) => set((state) => ({ ...state, memberList: select })),
 			setClear: () =>
 				set(() => ({
 					projectNo: 0,
@@ -90,7 +90,6 @@ const useProject = create(
 						partner: '',
 						startDate: '',
 						endDate: '',
-						isDel: 0,
 					},
 					projectDetail: {
 						detailNo: 0,
@@ -107,8 +106,6 @@ const useProject = create(
 						tech: '',
 						tool: '',
 						note: '',
-						projectMember: [],
-						projectOutput: [],
 					},
 					projectMember: [{ memberNo: 0, projectNo: 0, profileNo: 0, member: '', role: '', task: '' }],
 					projectOutput: [{ outputNo: 0, projectNo: 0, fileNo: 0, fileName: '' }],

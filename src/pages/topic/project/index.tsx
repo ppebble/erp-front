@@ -16,7 +16,7 @@ const Project = () => {
 	const [title, setTitle] = useState('프로젝트');
 
 	const newProject = () => {
-		navigate('/topic/projectDetail', { state: { isNew: 1 } });
+		navigate('/topic/projectModify', { state: { isNew: true } });
 	};
 
 	const projectClick = (index: number) => {

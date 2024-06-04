@@ -16,6 +16,7 @@ import Workforce from './pages/topic/workforce';
 import CompanyCalendar from './pages/topic/calendar';
 import Project from './pages/topic/project';
 import ProjectDetail from './pages/topic/project/projectDetail';
+import ProjectModify from './pages/topic/project/projectModify';
 import Equipment from './pages/topic/equipment';
 import News from './pages/topic/notices/news';
 import Seminar from './pages/topic/notices/seminar';
@@ -43,6 +44,7 @@ const App = () => {
 					<Route path="calendar" element={<CompanyCalendar />} />
 					<Route path="project" element={<Project />} />
 					<Route path="projectDetail" element={<ProjectDetail />} />
+					<Route path="projectModify" element={<ProjectModify />} />
 					<Route path="equipment" element={<Equipment />} />
 					<Route path="news" element={<News />} />
 					<Route path="seminar" element={<Seminar />} />

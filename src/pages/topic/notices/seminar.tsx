@@ -8,7 +8,7 @@ import Card from '../../../components/card';
 
 const Seminar = () => {
 	const { isSuccess } = useQuery('boardList', BoardService().boardList);
-	const { news } = useBoard();
+	const { board: news } = useBoard();
 	const { setType } = useBoard();
 	const columnHelper = createColumnHelper<any>();
 	const [show, setShow] = useState(10);

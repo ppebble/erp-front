@@ -13,27 +13,29 @@ const Upload = () => {
 		const formData = new FormData();
 
 		console.log(fileValue);
-		fileValue.forEach((v: any) => {
-			console.log(v);
-			formData.append('uploadFiles', v[0]);
-		});
-		formData.append('data', JSON.stringify(test));
+
+		// fileValue.forEach((v: any) => {
+		// 	console.log(v);
+		// 	formData.append('uploadFiles', v[0]);
+		// });
+		// formData.append('data', JSON.stringify(test));
+
 		// // eslint-disable-next-line no-restricted-syntax
 		// for (const key of formData.keys()) {
 		// 	console.log(key);
 		// }
-		//
+		
 		// // eslint-disable-next-line no-restricted-syntax
 		// for (const value of formData.values()) {
 		// 	console.log(value);
 		// }
 
-		service.mutate(formData);
+		// service.mutate(formData);
 	};
 	return (
 		<div>
 			<button onClick={upload}>업로드</button>
-			<InputContainer props={{ id: fileCount, file: '' }} count={fileCount} setCount={setFileCount} setValue={setFileValue} type="attachment" />
+			<InputContainer props={{ id: fileCount }} count={fileCount} setCount={setFileCount} setValue={setFileValue} type="attachment" />
 		</div>
 	);
 };

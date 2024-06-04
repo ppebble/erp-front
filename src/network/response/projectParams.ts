@@ -9,7 +9,6 @@ export interface project {
 	partner: string;
 	startDate: string;
 	endDate: string;
-	isDel: number;
 }
 
 export interface projectDetail {
@@ -45,6 +44,11 @@ export interface projectOutput {
 	fileName: string;
 }
 
+export interface projectFile {
+	data: File;
+	id: number;
+}
+
 export interface projectDetailParams {
 	project: project;
 	projectDetail: projectDetail;
@@ -57,4 +61,11 @@ export interface partnerType {
 	name: string;
 	phone: string;
 	email: string;
+}
+
+export interface memberList {
+	profileNo: number;
+	name: string;
+	team: string;
+	empNo: string;
 }

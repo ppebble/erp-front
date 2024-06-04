@@ -26,6 +26,7 @@ type InputComponentprops = {
 	onDetailChange?: (e: any, id: any) => void;
 	type: string;
 	style?: string;
+	readOnly?: boolean;
 };
 
 const InputComponent = ({
@@ -39,6 +40,7 @@ const InputComponent = ({
 	onDetailChange,
 	type,
 	style,
+	readOnly,
 }: InputComponentprops) => {
 	const { careerIndex, setCareerIndex } = useProfile();
 	const inputRef = useRef<HTMLInputElement | null>(null);
@@ -238,23 +240,16 @@ const InputComponent = ({
 								)}
 
 								<Spacer />
-								<Button onClick={() => addInput()}>추가</Button>
+								{!readOnly && <Button onClick={() => addInput()}>추가</Button>}
 							</Flex>
 						</div>
 						{inputItems.map((item: any, index: any) => {
 							return (
-								<div key={`project_${item.id}`} className="my-[2px]">
+								<div key={`attachment_${item.id}`} className="my-[2px]">
 									<InputGroup className="mb-2">
-										<Input
-											id="file"
-											name={`file_${item.id}`}
-											type="file"
-											ref={(e) => {
-												inputRef.current = e;
-											}}
-											onChange={() => onFileChange && onFileChange(inputRef.current?.files, index)}
-										/>
-										<CloseButton onClick={() => InputDelete(index)} />
+										{/* TODO: readOnly 일때 파일명만 나오게 수정해야함 - jhs */}
+										<Input name={`file_${item.id}`} type="file" onChange={(e) => onFileChange && onFileChange(e.target.files, index)} />
+										{!readOnly && <CloseButton onClick={() => InputDelete(index)} />}
 									</InputGroup>
 								</div>
 							);
@@ -271,20 +266,35 @@ const InputComponent = ({
 									팀원
 								</Tag>
 								<Spacer />
-								<Button onClick={() => addInput()}>추가</Button>
+								{!readOnly && <Button onClick={() => addInput()}>추가</Button>}
 							</Flex>
 						</div>
 						{inputItems.map((item: any, index: any) => {
 							return (
-								<div key={`member_${item.id ? item.id : item.memberNo}`}>
+								<div key={`member_${item?.id ? item?.id : item?.memberNo}`}>
 									<InputGroup className="mb-2">
 										<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
-										<Input id="member" defaultValue={item.member} onChange={(e) => onChange(e, index)} />
+										<Input
+											id="member"
+											className={`${readOnly && 'pointer-events-none'}`}
+											defaultValue={item?.member || ''}
+											onChange={(e) => onChange(e, index)}
+										/>
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">직책</InputLeftAddon>
-										<Input id="role" defaultValue={item.role} onChange={(e) => onChange(e, index)} />
+										<Input
+											id="role"
+											className={`${readOnly && 'pointer-events-none'}`}
+											defaultValue={item?.role || ''}
+											onChange={(e) => onChange(e, index)}
+										/>
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">업무</InputLeftAddon>
-										<Input id="task" defaultValue={item.task} onChange={(e) => onChange(e, index)} />
-										<CloseButton onClick={() => InputDelete(index)} />
+										<Input
+											id="task"
+											className={`${readOnly && 'pointer-events-none'}`}
+											defaultValue={item?.task || ''}
+											onChange={(e) => onChange(e, index)}
+										/>
+										{!readOnly && <CloseButton onClick={() => InputDelete(index)} />}
 									</InputGroup>
 								</div>
 							);

@@ -3,18 +3,18 @@ import { commonResult } from '../network/commonResult';
 import useModal from '../store/useModal';
 import { getQuery, postQuery } from './base/AxiosQueryService';
 import useBoard from '../store/useBoard';
-import { newsType, newsArray } from '../network/response/boardParams';
+import { boardType, newsArray } from '../network/response/boardParams';
 
 export const BoardService = () => {
-	const { type, setNews } = useBoard();
+	const { type, setBoard: setNews } = useBoard();
 	const { openModal } = useModal();
-	const array: newsType[] = newsArray;
+	const array: boardType[] = newsArray;
 
 	const boardList = {
 		queryFn: () => getQuery(`/api/board/boardList/${type}`),
 		onSuccess: (result: { response: commonResult }) => {
 			const common: commonResult = result.response;
-			const data: newsType = common.result;
+			const data: boardType = common.result;
 			if (common.isSuccessful) {
 				setNews(array);
 			}
