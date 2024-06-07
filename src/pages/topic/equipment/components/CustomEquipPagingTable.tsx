@@ -101,7 +101,7 @@ const CustomEquipPagingTable = (props: { tableData: any; columns: any; title?: s
 					</tbody>
 				</table>
 			</div>
-			<div className="flex mt-10">
+			<div className="flex mt-5">
 				<div className="w-full" />
 				<div className="w-[50%] flex justify-center mr-5 sm:justify-center flex-col sm:flex-row mb-1.5 mt-1.5 px-1 items-center">
 					<div className="flex">

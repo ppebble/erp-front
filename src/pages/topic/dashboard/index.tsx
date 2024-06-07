@@ -1,10 +1,11 @@
-import { createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import SwiperCore, { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { GoDot, GoDotFill } from 'react-icons/go';
 
+import { Button } from '@chakra-ui/react';
 import DashboardCalendarComponent from './components/DashboardCalendarComponent';
 import CustomViewTable from '../../../components/table/CustomViewTable';
 import { tableAnnualRow } from '../equipment/variables/tableHeapDataColumns';
@@ -17,7 +18,8 @@ import 'swiper/swiper.min.css';
 import Card from '../../../components/card';
 import DashboardAttendComponent from './components/DashboardAttendComponent';
 import AnnualService from '../../../services/annualService';
-import { usePersonalAnnual } from '../../../store/useAnnual';
+import { AnnReqProps, useAnnRequest, usePersonalAnnual } from '../../../store/useAnnual';
+import { CustomAnnualDetailExternalComponent } from './components/modal/CustomAnnualDetailExternalComponent';
 
 type ScheduleRow = {
 	date: string;
@@ -57,7 +59,7 @@ const Dashboard = () => {
 		}),
 		scheduleColumnHelper.accessor('members', {
 			id: 'members',
-			header: '이름',
+			header: '참여인원',
 		}),
 		scheduleColumnHelper.accessor('title', {
 			id: 'title',
@@ -89,28 +91,29 @@ const Dashboard = () => {
 	return (
 		<div>
 			<div className="mt-1 grid grid-cols-12 gap-2 md:grid-cols-12">
-				<div className="mt-1 grid grid-cols-8 gap-2 col-span-12 md:grid-cols-12 col-span-12">
+				<div className="mt-1 grid grid-cols-12 gap-2 col-span-12 md:grid-cols-12 col-span-12">
 					<div className="grid grid-cols-1 gap-2 md:grid-cols-1 col-span-12">
 						<AnnualComponent />
 					</div>
-					<div className="col-span-5">
+					<div className="col-span-3">
 						<CustomViewTable tableData={personalParams} columns={columns} title="나의 일정" />
 					</div>
 
-					<div className="col-span-7">
+					<div className="col-span-4">
 						<CustomViewTable tableData={deptParams} columns={taskColumns} title="부서 일정" />
 					</div>
+					<div className="col-span-5">
+						<CustomAnnualDetailExternalComponent />
+					</div>
 				</div>
-			</div>
-
-			{/* Tables & Charts */}
-
-			<div className="mt-2 grid grid-cols-12 gap-2 ">
-				<div className="col-span-7">
-					<DashboardCalendarComponent />
-				</div>
-				<div className="col-span-5">
-					<DashboardAttendComponent />
+				{/* Tables & Charts */}
+				<div className="mt-2 grid grid-cols-12 gap-2 col-span-12 ">
+					<div className="col-span-7">
+						<DashboardCalendarComponent />
+					</div>
+					<div className="col-span-5">
+						<DashboardAttendComponent />
+					</div>
 				</div>
 			</div>
 		</div>

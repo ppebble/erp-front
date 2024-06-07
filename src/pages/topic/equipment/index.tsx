@@ -171,7 +171,7 @@ const Equipment = () => {
 		setData(allList.notebook);
 	}, []);
 	return (
-		<div className="flex grid grid-cols-12 min-h-[45rem]">
+		<div className="flex grid grid-cols-12">
 			<div className="mt-3 mr-5 col-span-2">
 				<CustomClickableOneLineWidget
 					icon={<MdLaptopChromebook className="h-7 w-7" />}

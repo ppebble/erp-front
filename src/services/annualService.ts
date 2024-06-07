@@ -43,6 +43,23 @@ export const AnnualService = (param?: any) => {
 			console.log(error);
 		},
 	};
+	const getAdminAnnualRequest = {
+		// queryFn: (date: string) => getEvents(date),
+		queryFn: () => getQuery(`/api/annual/annualApproveList?managerNo=${param.managerNo}`),
+		onSuccess: (result: any) => {
+			if (result.response && result.response.resultCode === '7000') {
+				const data = result.response.result; // arrayList
+				if (data) {
+					annualAction.setAdminAnnualRequest(data);
+					console.log(data);
+				}
+			}
+			return false;
+		},
+		onError: (error: any) => {
+			console.log(error);
+		},
+	};
 	const getManagerList = {
 		queryFn: () => getQuery(`/api/annual/managerTag`),
 		onSuccess: (result: any) => {
@@ -59,6 +76,36 @@ export const AnnualService = (param?: any) => {
 			console.log(error);
 		},
 	};
+	const approveAnnual = useMutation({
+		mutationFn: (params: any) => postQuery(`/api/annual/admission`, params),
+		onSuccess: (result) => {
+			if (result.response.resultCode === '7000') {
+				alert('작업이 완료되었습니다.');
+				queryClient.invalidateQueries('getAnnApproveList');
+			} else if (result.error) {
+				alert(result.error);
+			}
+			return result.response;
+		},
+		onError: (error) => {
+			alert(error);
+		},
+	});
+	const rejectAnnual = useMutation({
+		mutationFn: (params: any) => postQuery(`/api/annual/rejectAnnual`, params),
+		onSuccess: (result) => {
+			if (result.response.resultCode === '7000') {
+				alert('작업이 완료되었습니다.');
+				queryClient.invalidateQueries('getAnnApproveList');
+			} else if (result.error) {
+				alert(result.error);
+			}
+			return result.response;
+		},
+		onError: (error) => {
+			alert(error);
+		},
+	});
 	const calcleAnnual = useMutation({
 		mutationFn: (params: any) => postQuery(`/api/annual/delAnnual`, params),
 		onSuccess: (result) => {
@@ -126,6 +173,9 @@ export const AnnualService = (param?: any) => {
 		getPersonalAnnual,
 		getAnnualRequest,
 		getManagerList,
+		getAdminAnnualRequest,
+		approveAnnual,
+		rejectAnnual,
 		calcleAnnual,
 		createAnnualMutation,
 		updateEquipMutation,

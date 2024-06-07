@@ -21,6 +21,7 @@ import Equipment from './pages/topic/equipment';
 import AnnualRequest from './pages/topic/dashboard/components/modal/AnnualRequest';
 import AnnualMailAccept from './pages/topic/dashboard/components/modal/AnnualMailAccept';
 import AdminPopup from './pages/admin';
+import AnnualManageComponent from './pages/admin/annualManage';
 
 const App = () => {
 	return (
@@ -49,6 +50,9 @@ const App = () => {
 				</Route>
 				<Route path="external" element={<AdminPopup />}>
 					<Route path="mailAccept/*" element={<AnnualMailAccept />} />
+				</Route>
+				<Route path="admin" element={<Topic />}>
+					<Route path="annualManage" element={<AnnualManageComponent />} />
 				</Route>
 				<Route path="/" element={<Navigate to="/auth/login" replace />} />
 				<Route path="*" element={<NotFound />} />

@@ -27,16 +27,21 @@ export type AnnualInfo = {
 };
 export type AnnReqProps = {
 	historyNo: number;
+	register: string;
 	start: string;
 	end: string;
 	note: string;
-	deny: any;
+	reject?: any;
+	approval?: any;
+	manageNote?: string;
 };
 type ActionItem = {
 	setPersonalAnnual: (annual: AnnualInfo[]) => void | null;
 	setPersonalAnnualClear: () => void | null;
 	setAnnualRequest: (req: AnnReqProps[]) => void | null;
 	setClearAnnReq: () => void | null;
+	setAdminAnnualRequest: (req: AnnReqProps[]) => void | null;
+	setClearAdminAnnReq: () => void | null;
 	setManagerList: (manager: ManagerProps[]) => void | null;
 	setManagerListClear: () => void | null;
 };
@@ -44,6 +49,7 @@ type ActionItem = {
 interface AnnualStore {
 	personalAnnual: AnnualInfo[];
 	annualRequest: AnnReqProps[];
+	adminAnnualRequest: AnnReqProps[];
 	managerList: ManagerProps[];
 	action: ActionItem;
 }
@@ -52,6 +58,7 @@ const useAnnual = create<AnnualStore>()(
 	devtools((set, get) => ({
 		personalAnnual: [] as AnnualInfo[],
 		annualRequest: [] as AnnReqProps[],
+		adminAnnualRequest: [] as AnnReqProps[],
 		managerList: [] as ManagerProps[],
 		action: {
 			setPersonalAnnual: (annual: AnnualInfo[]) =>
@@ -86,6 +93,22 @@ const useAnnual = create<AnnualStore>()(
 					false,
 					'CLEAR_PERSONAL_ANNUAL_REQUEST',
 				),
+			setAdminAnnualRequest: (req: AnnReqProps[]) =>
+				set(
+					{
+						adminAnnualRequest: req,
+					},
+					false,
+					'ADMIN_ANNUAL_REQUEST',
+				),
+			setClearAdminAnnReq: () =>
+				set(
+					{
+						adminAnnualRequest: [] as AnnReqProps[],
+					},
+					false,
+					'CLEAR_ADMINL_ANNUAL_REQUEST',
+				),
 			setManagerList: (manager: ManagerProps[]) =>
 				set(
 					{
@@ -108,5 +131,6 @@ const useAnnual = create<AnnualStore>()(
 export const usePersonalAnnual = () => useAnnual((state) => state.personalAnnual);
 export const useAnnualAction = () => useAnnual((state) => state.action);
 export const useAnnRequest = () => useAnnual((state) => state.annualRequest);
+export const useAdminAnnRequest = () => useAnnual((state) => state.adminAnnualRequest);
 export const useManagerList = () => useAnnual((state) => state.managerList);
 export default useAnnual;

@@ -172,7 +172,7 @@ export const CustomAnnualDetailComponent = () => {
 			id: 'febuary',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">연차 신청 번호</p>,
 			cell: (info) => (
-				<div className="mx-2 flex font-bold">
+				<div className="flex font-bold">
 					<p className="text-md font-medium text-gray-900 dark:text-white">{info.getValue()}</p>
 				</div>
 			),
@@ -190,7 +190,7 @@ export const CustomAnnualDetailComponent = () => {
 			id: 'end',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">연차 종료일</p>,
 			cell: (info) => (
-				<div className="mx-2 flex font-bold">
+				<div className="flex font-bold">
 					<p className="text-md font-medium text-gray-900 dark:text-white">{info.getValue()}</p>
 				</div>
 			),
@@ -199,7 +199,7 @@ export const CustomAnnualDetailComponent = () => {
 			id: 'january',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">사유</p>,
 			cell: (info) => (
-				<div className="mx-2 flex font-bold">
+				<div className="flex font-bold">
 					<p className="text-md font-medium text-gray-900 dark:text-white">{info.getValue()}</p>
 				</div>
 			),
@@ -209,17 +209,17 @@ export const CustomAnnualDetailComponent = () => {
 			id: 'deny',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">신청 취소</p>,
 			cell: (info) => (
-				<div className="mx-2 flex font-bold">
+				<div className="flex font-bold">
 					<Button
 						onClick={() => {
-							// openModal({ type: 4, closeOnOverlay: true, contents: { title: '삭제하시겠습니까?' } });
 							if (window.confirm('연차 신청을 취소하시겠습니까?')) {
-								annualService.calcleAnnual.mutate({ historyNo: info.row.original.historyNo });
+								annualService.calcleAnnual.mutate({ historyNo: info.row.original.historyNo, content: '' });
 							}
 							console.log(info.row.original.historyNo);
 						}}
+						colorScheme="red"
 					>
-						d
+						취소
 					</Button>
 				</div>
 			),
@@ -239,7 +239,7 @@ export const CustomAnnualDetailComponent = () => {
 
 	return (
 		<Card extra="w-full p-1 h-full">
-			<div className="mt-1 overflow-x-scroll xl:overflow-x-hidden">
+			<div className="mt-1 overflow-x-scroll xl:overflow-x-hidden mb-2 ml-2">
 				<table className="w-full">
 					<thead>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -276,9 +276,9 @@ export const CustomAnnualDetailComponent = () => {
 					</tbody>
 				</table>
 			</div>
-			<div className="h-px w-full bg-gray-300 dark:bg-white/20 " />
-			<div className="text-xl mt-2 font-bold text-navy-700 dark:text-white col-span-3"> 연차 신청 목록</div>
-			<div className="overflow-x-scroll xl:overflow-x-hidden">
+			{/* <div className="h-px w-full bg-gray-300 dark:bg-white/20 " /> */}
+			{/* <div className="text-xl mt-3 font-bold text-navy-700 dark:text-white col-span-3 ml-1"> 연차 신청 목록</div> */}
+			{/* <div className="overflow-x-scroll xl:overflow-x-hidden ml-2">
 				<table className="w-full">
 					<thead>
 						{annReqTable.getHeaderGroups().map((headerGroup) => (
@@ -304,7 +304,7 @@ export const CustomAnnualDetailComponent = () => {
 									<tr key={row.id}>
 										{row.getVisibleCells().map((cell) => {
 											return (
-												<td key={cell.id} className="min-w-[60px] border-white/0 py-3  pr-2">
+												<td key={cell.id} className="min-w-[60px] border-white/0 py-3 pr-2">
 													{flexRender(cell.column.columnDef.cell, cell.getContext())}
 												</td>
 											);
@@ -314,7 +314,7 @@ export const CustomAnnualDetailComponent = () => {
 							})}
 					</tbody>
 				</table>
-			</div>
+			</div> */}
 		</Card>
 	);
 };
