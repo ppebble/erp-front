@@ -79,8 +79,8 @@ export const AnnualService = (param?: any) => {
 	const approveAnnual = useMutation({
 		mutationFn: (params: any) => postQuery(`/api/annual/admission`, params),
 		onSuccess: (result) => {
-			if (result.response.resultCode === '7000') {
-				alert('작업이 완료되었습니다.');
+			if (result.response && result.response.resultCode === '7000') {
+				alert(result.response.result || '작업이 완료되었습니다.');
 				queryClient.invalidateQueries('getAnnApproveList');
 			} else if (result.error) {
 				alert(result.error);
@@ -94,8 +94,8 @@ export const AnnualService = (param?: any) => {
 	const rejectAnnual = useMutation({
 		mutationFn: (params: any) => postQuery(`/api/annual/rejectAnnual`, params),
 		onSuccess: (result) => {
-			if (result.response.resultCode === '7000') {
-				alert('작업이 완료되었습니다.');
+			if (result.response && result.response.resultCode === '7000') {
+				alert(result.response.result || '작업이 완료되었습니다.');
 				queryClient.invalidateQueries('getAnnApproveList');
 			} else if (result.error) {
 				alert(result.error);
@@ -110,7 +110,7 @@ export const AnnualService = (param?: any) => {
 		mutationFn: (params: any) => postQuery(`/api/annual/delAnnual`, params),
 		onSuccess: (result) => {
 			if (result.response.resultCode === '7000') {
-				alert('작업이 완료되었습니다.');
+				alert(result.response.result || '작업이 완료되었습니다.');
 				queryClient.invalidateQueries('getAnnReqList');
 			} else if (result.error) {
 				alert(result.error);
@@ -125,7 +125,7 @@ export const AnnualService = (param?: any) => {
 		mutationFn: (params: any) => postQuery(`/api/annual/annual`, params),
 		onSuccess: (result) => {
 			if (result.response.resultCode === '7000') {
-				alert('작업이 완료되었습니다.');
+				alert(result.response.result || '작업이 완료되었습니다.');
 				// queryClient.invalidateQueries('g');
 			} else if (result.error) {
 				alert(result.error);
@@ -140,7 +140,7 @@ export const AnnualService = (param?: any) => {
 		mutationFn: (params: any) => postQuery(`/api/equipment/modifyEquipment/${params.equipType}`, params),
 		onSuccess: (result) => {
 			if (result.response && result.response.resultCode === '7000') {
-				alert('작업이 완료되었습니다.');
+				alert(result.response.result || '작업이 완료되었습니다.');
 				queryClient.invalidateQueries('getEquips');
 			} else if (result.error) {
 				alert(result.error);
@@ -155,7 +155,7 @@ export const AnnualService = (param?: any) => {
 		mutationFn: (params: any) => postQuery(`/api/equipment/delEquipment`, params),
 		onSuccess: (result) => {
 			if (result.response.resultCode === '7000') {
-				alert('작업이 완료되었습니다.');
+				alert(result.response.result || '작업이 완료되었습니다.');
 				queryClient.invalidateQueries('getEquips');
 			} else if (result.error) {
 				alert(result.error);

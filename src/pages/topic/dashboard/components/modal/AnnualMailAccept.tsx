@@ -22,7 +22,10 @@ const AnnualMailAccept = () => {
 	const secretKey = 'NexmoreUrlTokenParam!!!'; // key
 	const decryptedData = decryptData(encryptedData, secretKey);
 	const data: MailAcceptProps = JSON.parse(decryptedData);
-	console.log(data);
+	if (decryptedData) {
+		console.log(data);
+	}
+
 	return (
 		<div>
 			<div className="m-0 m-auto items-center justify-center w-464px text-center text-base font-base"> </div>
@@ -80,7 +83,7 @@ const AnnualMailAccept = () => {
 																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>소속부서</span>
 															</td>
 															<td style={{ border: 'solid 1.0pt', width: '25%', padding: '0cm 5.4pt 0cm 5.4pt', textAlign: 'center' }}>
-																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.team}</span>
+																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.team || ''}</span>
 															</td>
 															<td style={{ border: 'solid 1.0pt', width: '25%', padding: '0cm 5.4pt 0cm 5.4pt', textAlign: 'center' }}>
 																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>직&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;급</span>
@@ -102,7 +105,7 @@ const AnnualMailAccept = () => {
 																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>사&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;번</span>
 															</td>
 															<td style={{ border: 'solid 1.0pt', width: '25%', padding: '0cm 5.4pt 0cm 5.4pt', textAlign: 'center' }}>
-																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.empNo}</span>
+																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.empNo || ''}</span>
 															</td>
 															<td style={{ border: 'solid 1.0pt', width: '25%', padding: '0cm 5.4pt 0cm 5.4pt', textAlign: 'center' }}>
 																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;명</span>
@@ -116,7 +119,7 @@ const AnnualMailAccept = () => {
 																	textAlign: 'center',
 																}}
 															>
-																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.name}</span>
+																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.name || ''}</span>
 															</td>
 														</tr>
 														<tr>
@@ -377,7 +380,7 @@ const AnnualMailAccept = () => {
 									</tr>
 									<tr>
 										<td rowSpan={2} style={{ borderRight: 'solid 1.0pt', width: '17%', fontWeight: 'bolder', textAlign: 'center' }}>
-											{data.name}
+											{data.name || ''}
 										</td>
 										<td rowSpan={2} style={{ borderRight: 'solid 1.0pt', width: '25%', fontWeight: 'bolder', textAlign: 'center' }}>
 											XXX

@@ -11,6 +11,7 @@ import ReactSignatureCanvas from 'react-signature-canvas';
 import Card from '../../../components/card';
 import { AnnReqProps, useAdminAnnRequest, useAnnRequest } from '../../../store/useAnnual';
 import AnnualService from '../../../services/annualService';
+import Dropdown from '../../../components/dropdown';
 
 const AnnualManageComponent = () => {
 	useQuery(['getAnnApproveList'], AnnualService({ managerNo: 49 }).getAdminAnnualRequest);
@@ -68,8 +69,16 @@ const AnnualManageComponent = () => {
 					<Button
 						onClick={() => {
 							if (window.confirm('연차 신청을 승인하시겠습니까?')) {
-								// annualService.calcleAnnual.mutate({ historyNo: info.row.original.historyNo, content: '' });
-								console.log({ historyNo: info.row.original.historyNo, expires: info.row.original.start });
+								annualService.approveAnnual.mutate({
+									historyNo: info.row.original.historyNo,
+									expires: info.row.original.start,
+									managerSign: refSignCanvas.current?.isEmpty() ? '' : refSignCanvas.current?.toDataURL(),
+								});
+								// console.log({
+								// 	historyNo: info.row.original.historyNo,
+								// 	expires: info.row.original.start,
+								// 	sign: refSignCanvas.current?.isEmpty() ? '' : refSignCanvas.current?.toDataURL(),
+								// });
 							}
 						}}
 						colorScheme="blue"
@@ -87,8 +96,10 @@ const AnnualManageComponent = () => {
 					<Button
 						onClick={() => {
 							if (window.confirm('연차 신청을 반려하시겠습니까?')) {
-								// annualService.rejectAnnual.mutate({ historyNo: info.row.original.historyNo, content: info.row.original.manageNote });
-								console.log({ historyNo: info.row.original.historyNo, content: refMngNote.current?.value ? refMngNote.current?.value : '' });
+								annualService.rejectAnnual.mutate({
+									historyNo: info.row.original.historyNo,
+									content: refMngNote.current?.value ? refMngNote.current?.value : '',
+								});
 							}
 						}}
 						colorScheme="red"
@@ -117,18 +128,48 @@ const AnnualManageComponent = () => {
 
 	return (
 		<div className="grid grid-cols-12 gap-2">
-			<Card extra={`${openSign ? 'col-span-12' : 'col-span-9'} w-full pl-4 p-2 h-full min-h-[65vh] mt-5 `}>
+			<Card extra={`col-span-12 w-full pl-4 p-2 h-full min-h-[65vh] mt-5 `}>
 				<div className="flex justify-between">
 					<div className="text-xl mt-3 font-bold text-navy-700 dark:text-white col-span-3 ml-1"> 연차 신청 목록</div>
-
-					<button
-						onClick={() => {
-							setOpenSign(!openSign);
-						}}
-						className="dark:active-bg-white-20 linear col-span-4 rounded-md bg-lightPrimary px-4 py-2 text-base font-medium text-brand-500 transition duration-200 hover:bg-gray-100 active:bg-gray-200 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
+					<Dropdown
+						button={
+							<Button
+								colorScheme="blue"
+								onClick={() => {
+									setOpenSign(!openSign);
+								}}
+							>
+								서명 수정
+							</Button>
+						}
+						animation="origin-top-right transition-all duration-300 ease-in-out"
+						classNames="top-8 right-0 w-max"
 					>
-						{openSign ? '서명 수정' : '닫기'}
-					</button>
+						<div className="z-50 w-max rounded-xl bg-white py-3 px-4 text-sm shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+							<div className="mt-2 ml-4">
+								<ReactSignatureCanvas ref={refSignCanvas} canvasProps={{ className: 'border bg-gray-100' }} />
+								<div className="mt-2 h-px w-full bg-gray-200 dark:bg-white/20 " />
+								<Button
+									colorScheme="red"
+									className="mt-2"
+									onClick={() => {
+										refSignCanvas.current?.clear();
+									}}
+								>
+									지우기
+								</Button>
+								<Button
+									colorScheme="red"
+									className="mt-2"
+									onClick={() => {
+										console.log(refSignCanvas.current.isEmpty());
+									}}
+								>
+									코드확인
+								</Button>
+							</div>
+						</div>
+					</Dropdown>
 				</div>
 				<div className="overflow-x-scroll xl:overflow-x-hidden ml-2">
 					<table className="w-full">
@@ -168,7 +209,7 @@ const AnnualManageComponent = () => {
 					</table>
 				</div>
 			</Card>
-			<Card extra={`${openSign ? 'w-0 h-0 hidden' : ''} w-full pl-4 p-2 h-full min-h-[65vh] mt-5 col-span-3`}>
+			{/* <Card extra={`${openSign ? 'w-0 h-0 hidden' : ''} w-full pl-4 p-2 h-full min-h-[65vh] mt-5 col-span-3`}>
 				<div className="text-xl mt-3 font-bold text-navy-700 dark:text-white col-span-3 ml-1 mb-3"> 승인자 서명</div>
 				<div>
 					<ReactSignatureCanvas ref={refSignCanvas} canvasProps={{ className: 'border bg-gray-100' }} />
@@ -184,7 +225,7 @@ const AnnualManageComponent = () => {
 						</Button>
 					</div>
 				</div>
-			</Card>
+			</Card> */}
 		</div>
 	);
 };
