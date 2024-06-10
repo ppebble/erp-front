@@ -39,6 +39,7 @@ export const CalendarService = (date?: string) => {
 								id: taskId,
 								name: data[i].task,
 							},
+							isAnnual: !!(data[i].title.includes('[반휴]') || data[i].title.includes('[연차]')),
 							// 연관 인원 리스트 추가
 							members: data[i].members.map((e: any) => {
 								return `${e.team} | ${e.name}`;
