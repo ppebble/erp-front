@@ -37,11 +37,18 @@ const AnnualMailAccept = () => {
 		console.log(data);
 	}
 	useEffect(() => {
-		annualService.approveAnnual.mutate({
-			historyNo: data.historyNo,
-			expires: data.expires.slice(0, 16),
-			managerSign: '',
-		});
+		annualService.approveAnnual.mutate(
+			{
+				historyNo: data.historyNo,
+				expires: data.expires.slice(0, 16),
+				managerSign: '',
+			},
+			{
+				onSuccess: () => {
+					window.close();
+				},
+			},
+		);
 	}, []);
 
 	return (
