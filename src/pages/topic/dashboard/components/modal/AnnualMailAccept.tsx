@@ -1,13 +1,23 @@
 import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import logo from '../../../../../assets/img/logo/logo.png';
 import redCircle from '../../../../../assets/img/logo/redCircle.png';
 import { decryptData } from '../../../../../services/serialize/Deserialize';
+import AnnualService from '../../../../../services/annualService';
 
 type MailAcceptProps = {
-	empNo: string;
-	name: string;
-	profileNo: number;
-	team: string;
+	annType: string;
+	dayDiff: number;
+	endDate: string;
+	expires: string;
+	note: string;
+	register: string;
+	registerEmpNo: string;
+	registerRank: string;
+	registerTask: string;
+	sign: string;
+	startDate: string;
+	historyNo: string;
 };
 
 const AnnualMailAccept = () => {
@@ -22,9 +32,17 @@ const AnnualMailAccept = () => {
 	const secretKey = 'NexmoreUrlTokenParam!!!'; // key
 	const decryptedData = decryptData(encryptedData, secretKey);
 	const data: MailAcceptProps = JSON.parse(decryptedData);
+	const annualService = AnnualService();
 	if (decryptedData) {
 		console.log(data);
 	}
+	useEffect(() => {
+		annualService.approveAnnual.mutate({
+			historyNo: data.historyNo,
+			expires: data.expires.slice(0, 16),
+			managerSign: '',
+		});
+	}, []);
 
 	return (
 		<div>
@@ -40,7 +58,7 @@ const AnnualMailAccept = () => {
 					<tr>
 						<td className="font-bold">
 							<div className="text-center mt-4 mb-4 font-large text-lg">
-								<h1 className="p">(XX) 신 청 서 및 사 유 서</h1>
+								<h1 className="p">({data.annType}) 신 청 서 및 사 유 서</h1>
 							</div>
 						</td>
 					</tr>
@@ -57,7 +75,7 @@ const AnnualMailAccept = () => {
 									<div>
 										<span>&nbsp;</span>
 									</div>
-									<span style={{ fontSize: '12pt', fontWeight: 'bold' }}>아래와 같이 (XX)를 신청하오니 승인하여 주시기 바랍니다. </span>
+									<span style={{ fontSize: '12pt', fontWeight: 'bold' }}>아래와 같이 ({data.annType})를 신청하오니 승인하여 주시기 바랍니다. </span>
 								</div>
 								<div>
 									<span>&nbsp;</span>
@@ -83,7 +101,7 @@ const AnnualMailAccept = () => {
 																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>소속부서</span>
 															</td>
 															<td style={{ border: 'solid 1.0pt', width: '25%', padding: '0cm 5.4pt 0cm 5.4pt', textAlign: 'center' }}>
-																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.team || ''}</span>
+																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.registerTask || ''}</span>
 															</td>
 															<td style={{ border: 'solid 1.0pt', width: '25%', padding: '0cm 5.4pt 0cm 5.4pt', textAlign: 'center' }}>
 																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>직&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;급</span>
@@ -97,7 +115,7 @@ const AnnualMailAccept = () => {
 																	textAlign: 'center',
 																}}
 															>
-																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>XX</span>
+																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.registerRank}</span>
 															</td>
 														</tr>
 														<tr>
@@ -105,7 +123,7 @@ const AnnualMailAccept = () => {
 																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>사&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;번</span>
 															</td>
 															<td style={{ border: 'solid 1.0pt', width: '25%', padding: '0cm 5.4pt 0cm 5.4pt', textAlign: 'center' }}>
-																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.empNo || ''}</span>
+																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.registerEmpNo || ''}</span>
 															</td>
 															<td style={{ border: 'solid 1.0pt', width: '25%', padding: '0cm 5.4pt 0cm 5.4pt', textAlign: 'center' }}>
 																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;명</span>
@@ -119,7 +137,7 @@ const AnnualMailAccept = () => {
 																	textAlign: 'center',
 																}}
 															>
-																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.name || ''}</span>
+																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.register || ''}</span>
 															</td>
 														</tr>
 														<tr>
@@ -137,7 +155,7 @@ const AnnualMailAccept = () => {
 																}}
 															>
 																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>
-																	XXXX년 X 월 XX 일 (X 요일) X시 XX분 부터 ~ XXXX년 X 월 XX 일 (X 요일) XX시 XX분 까지 : ( X일간 )
+																	{data.startDate} ~ {data.endDate} : ( {data.dayDiff}일간 )
 																</span>
 															</td>
 														</tr>
@@ -155,7 +173,7 @@ const AnnualMailAccept = () => {
 																	textAlign: 'center',
 																}}
 															>
-																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>XXXX</span>
+																<span style={{ fontSize: '9.0pt', fontWeight: 'bold' }}>{data.note}</span>
 															</td>
 														</tr>
 													</tbody>
@@ -188,7 +206,7 @@ const AnnualMailAccept = () => {
 							<span>※</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '경조' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -199,7 +217,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '결근' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -210,7 +228,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '조퇴' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -221,7 +239,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '외출' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -232,7 +250,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '연차' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -243,7 +261,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '월차' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -254,7 +272,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '반차' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -265,7 +283,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === 'MR' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									paddingLeft: '3px',
@@ -278,7 +296,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '병가' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -289,7 +307,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '하기휴가' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -300,7 +318,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '대체휴무' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -311,7 +329,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '야간작업' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -322,7 +340,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `url(${redCircle})`,
+									backgroundImage: `${data.annType === '보건휴가' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -380,13 +398,13 @@ const AnnualMailAccept = () => {
 									</tr>
 									<tr>
 										<td rowSpan={2} style={{ borderRight: 'solid 1.0pt', width: '17%', fontWeight: 'bolder', textAlign: 'center' }}>
-											{data.name || ''}
+											<img alt="self" src={data.sign} />
 										</td>
 										<td rowSpan={2} style={{ borderRight: 'solid 1.0pt', width: '25%', fontWeight: 'bolder', textAlign: 'center' }}>
-											XXX
+											{' '}
 										</td>
 										<td rowSpan={2} style={{ borderRight: 'solid 1.0pt', width: '25%', fontWeight: 'bolder', textAlign: 'center' }}>
-											XXX
+											{' '}
 										</td>
 										<td rowSpan={2} style={{ width: '33%', fontWeight: 'bolder' }} />
 									</tr>

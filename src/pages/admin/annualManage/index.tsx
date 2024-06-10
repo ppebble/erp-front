@@ -162,10 +162,10 @@ const AnnualManageComponent = () => {
 									colorScheme="red"
 									className="mt-2"
 									onClick={() => {
-										console.log(refSignCanvas.current.isEmpty());
+										console.log(refSignCanvas.current?.toDataURL());
 									}}
 								>
-									코드확인
+									code
 								</Button>
 							</div>
 						</div>

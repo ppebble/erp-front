@@ -93,8 +93,8 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 				annualParam.end = `${refAnnHalfDate.current?.value.slice(0, 10)}T18:00`;
 			}
 		} else {
-			annualParam.start = refEventStartDate.current?.value || '';
-			annualParam.end = refEventEndDate.current?.value || '';
+			annualParam.start = `${refEventStartDate.current?.value}T09:00` || '';
+			annualParam.end = `${refEventEndDate.current?.value}T18:00` || '';
 		}
 
 		annualParam.sign = refSignCanvas.current?.toDataURL();

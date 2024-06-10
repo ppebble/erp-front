@@ -125,7 +125,7 @@ const SetModal = ({ change, type, contents, color, okClick, updataClick, deleteC
 
 					<AlertDialogBody>
 						<div>
-							<div>{contents.title}</div>
+							<div>수정 하시겠습니까?</div>
 						</div>
 					</AlertDialogBody>
 
