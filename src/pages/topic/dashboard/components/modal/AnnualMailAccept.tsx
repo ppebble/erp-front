@@ -45,7 +45,8 @@ const AnnualMailAccept = () => {
 			},
 			{
 				onSuccess: () => {
-					window.close();
+					window.open('about:blank', '_self')?.self.close();
+					// window.close();
 				},
 			},
 		);
