@@ -205,7 +205,9 @@ export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) =
 				<div className="grid h-full grid-cols-3">
 					<div className="grid col-span-1">
 						<div className="grid grid-rows-8">
-							<div className="row-span-6">{bookCover && <img className="h-[320px] w-[240px]" src={bookCover} alt="bookCover" />}</div>
+							<div className="row-span-6 m-4 w-min-[300px] border border-gray-600">
+								{bookCover && <img className="h-min-[320px] w-min-[240px]" src={bookCover} alt="bookCover" />}
+							</div>
 							<div className="row-span-2">
 								<input
 									type="file"
@@ -222,6 +224,7 @@ export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) =
 							</div>
 						</div>
 					</div>
+
 					<div className="grid col-span-1">
 						<div className="flex mt-2 mb-2 start justify-start">
 							<div className="flex items-start">

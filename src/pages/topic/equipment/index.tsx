@@ -34,12 +34,19 @@ const Equipment = () => {
 
 	const { openModal } = useModal();
 	const columns = [
-		columnHelper.accessor('equipmentNo', {
-			id: 'equipmentNo',
-			header: title.type === 'book' ? '도서 번호' : '장비 번호',
-			filterFn: 'includesString',
+		columnHelper.accessor('equipmentName', {
+			id: 'equipmentName',
+			header: title.type === 'book' ? '도서 명' : '장비 모델 명',
+			enableColumnFilter: true,
 			enableGlobalFilter: true,
+			filterFn: 'includesString',
 		}),
+		// columnHelper.accessor('equipmentNo', {
+		// 	id: 'equipmentNo',
+		// 	header: title.type === 'book' ? '도서 번호' : '장비 번호',
+		// 	filterFn: 'includesString',
+		// 	enableGlobalFilter: true,
+		// }),
 		columnHelper.accessor('user', {
 			id: 'user',
 			header: '사용자',
@@ -52,13 +59,7 @@ const Equipment = () => {
 			filterFn: 'includesString',
 			enableGlobalFilter: true,
 		}),
-		columnHelper.accessor('equipmentName', {
-			id: 'equipmentName',
-			header: title.type === 'book' ? '도서 명' : '장비 모델 명',
-			enableColumnFilter: true,
-			enableGlobalFilter: true,
-			filterFn: 'includesString',
-		}),
+
 		columnHelper.accessor('status', {
 			id: 'status',
 			header: '상태',
@@ -72,13 +73,20 @@ const Equipment = () => {
 		}),
 	];
 	const serverColumns = [
-		columnHelper.accessor('equipmentNo', {
-			id: 'equipmentNo',
-			header: title.type === 'book' ? '도서 번호' : '장비 번호',
-
-			filterFn: 'includesString',
+		columnHelper.accessor('equipmentName', {
+			id: 'equipmentName',
+			header: title.type === 'book' ? '도서 명' : '장비 모델 명',
+			enableColumnFilter: true,
 			enableGlobalFilter: true,
+			filterFn: 'includesString',
 		}),
+		// columnHelper.accessor('equipmentNo', {
+		// 	id: 'equipmentNo',
+		// 	header: title.type === 'book' ? '도서 번호' : '장비 번호',
+
+		// 	filterFn: 'includesString',
+		// 	enableGlobalFilter: true,
+		// }),
 		columnHelper.accessor('user', {
 			id: 'user',
 			header: '사용자',
@@ -91,13 +99,7 @@ const Equipment = () => {
 			filterFn: 'includesString',
 			enableGlobalFilter: true,
 		}),
-		columnHelper.accessor('equipmentName', {
-			id: 'equipmentName',
-			header: title.type === 'book' ? '도서 명' : '장비 모델 명',
-			enableColumnFilter: true,
-			enableGlobalFilter: true,
-			filterFn: 'includesString',
-		}),
+
 		columnHelper.accessor('status', {
 			id: 'status',
 			header: '상태',

@@ -158,7 +158,7 @@ const AnnualManageComponent = () => {
 								>
 									지우기
 								</Button>
-								<Button
+								{/* <Button
 									colorScheme="red"
 									className="mt-2"
 									onClick={() => {
@@ -166,7 +166,7 @@ const AnnualManageComponent = () => {
 									}}
 								>
 									code
-								</Button>
+								</Button> */}
 							</div>
 						</div>
 					</Dropdown>

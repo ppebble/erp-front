@@ -84,6 +84,8 @@ export const AnnualService = (param?: any) => {
 				queryClient.invalidateQueries('getAnnApproveList');
 			} else if (result.error) {
 				alert(result.error);
+			} else {
+				alert('연결에 실패하였습니다.');
 			}
 			return result.response;
 		},
@@ -136,36 +138,6 @@ export const AnnualService = (param?: any) => {
 			alert(error);
 		},
 	});
-	const updateEquipMutation = useMutation({
-		mutationFn: (params: any) => postQuery(`/api/equipment/modifyEquipment/${params.equipType}`, params),
-		onSuccess: (result) => {
-			if (result.response && result.response.resultCode === '7000') {
-				alert(result.response.result || '작업이 완료되었습니다.');
-				queryClient.invalidateQueries('getEquips');
-			} else if (result.error) {
-				alert(result.error);
-			}
-			return result.response;
-		},
-		onError: (error) => {
-			alert(error);
-		},
-	});
-	const deleteEquipMutation = useMutation({
-		mutationFn: (params: any) => postQuery(`/api/equipment/delEquipment`, params),
-		onSuccess: (result) => {
-			if (result.response.resultCode === '7000') {
-				alert(result.response.result || '작업이 완료되었습니다.');
-				queryClient.invalidateQueries('getEquips');
-			} else if (result.error) {
-				alert(result.error);
-			}
-			return result.response;
-		},
-		onError: (error) => {
-			alert(error);
-		},
-	});
 
 	// const commonQuery
 
@@ -178,8 +150,6 @@ export const AnnualService = (param?: any) => {
 		rejectAnnual,
 		calcleAnnual,
 		createAnnualMutation,
-		updateEquipMutation,
-		deleteEquipMutation,
 	};
 };
 
