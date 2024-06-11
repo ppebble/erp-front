@@ -235,7 +235,7 @@ export const CustomCalendarModal = () => {
 				setIsAllDay(refAllDaySwitch.current?.checked);
 			}
 			onOpen();
-			console.log(selectedEvent?.extendedProps.isAnnual);
+			// console.log(selectedEvent?.extendedProps.isAnnual);
 			// console.log(defStart);
 			// console.log(defEnd);
 		} else {
