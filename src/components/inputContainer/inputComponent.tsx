@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import {
 	InputGroup,
 	InputLeftAddon,
@@ -14,6 +15,7 @@ import {
 	Tag,
 } from '@chakra-ui/react';
 import useProfile from '../../store/useProfile';
+import useProject from '../../store/useProject';
 
 type InputComponentprops = {
 	inputItems: any;
@@ -22,7 +24,7 @@ type InputComponentprops = {
 	InputDelete: (id: number) => void;
 	detailDelete?: (id: number) => void;
 	onChange: (e: any, id: any) => void;
-	onFileChange?: (e: any, id: any) => void;
+	onFileChange?: (e: any) => void;
 	onDetailChange?: (e: any, id: any) => void;
 	type: string;
 	style?: string;
@@ -43,10 +45,18 @@ const InputComponent = ({
 	readOnly,
 }: InputComponentprops) => {
 	const { careerIndex, setCareerIndex } = useProfile();
-	const inputRef = useRef<HTMLInputElement | null>(null);
+	const { project, projectOutput } = useProject();
 
 	const changeSelect = (index: number) => {
 		setCareerIndex(index);
+	};
+
+	const downloadList = (index: number) => {
+		let attachmentText = '첨부 파일이 없습니다.';
+		if (projectOutput.length >= 1) {
+			attachmentText = projectOutput[index].fileName;
+		}
+		return attachmentText;
 	};
 
 	const inputComponent = () => {
@@ -247,9 +257,20 @@ const InputComponent = ({
 							return (
 								<div key={`attachment_${item.id}`} className="my-[2px]">
 									<InputGroup className="mb-2">
-										{/* TODO: readOnly 일때 파일명만 나오게 수정해야함 - jhs */}
-										<Input name={`file_${item.id}`} type="file" onChange={(e) => onFileChange && onFileChange(e.target.files, index)} />
-										{!readOnly && <CloseButton onClick={() => InputDelete(index)} />}
+										{readOnly ? (
+											<Link
+												to={`http://192.168.0.218:8092/api/file/downloadFile/project/${project?.projectNo}/${projectOutput[index]?.outputNo}`}
+												download
+												target="_self"
+											>
+												{downloadList(index)}
+											</Link>
+										) : (
+											<>
+												<Input name={`file_${item.id}`} type="file" onChange={(e) => onFileChange && onFileChange(e.target.files)} />
+												<CloseButton onClick={() => InputDelete(index)} />
+											</>
+										)}
 									</InputGroup>
 								</div>
 							);
@@ -277,6 +298,7 @@ const InputComponent = ({
 										<Input
 											id="member"
 											className={`${readOnly && 'pointer-events-none'}`}
+											placeholder="이름만 입력하세요."
 											defaultValue={item?.member || ''}
 											onChange={(e) => onChange(e, index)}
 										/>

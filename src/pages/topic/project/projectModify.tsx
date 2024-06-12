@@ -1,31 +1,41 @@
 import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { useLocation } from 'react-router-dom';
-import { Button, Input, InputGroup, InputLeftAddon, Textarea, Divider, Table, Card } from '@chakra-ui/react';
+import { Button, Input, InputGroup, InputLeftAddon, Textarea, Divider, Table, Card, Select } from '@chakra-ui/react';
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from 'react-icons/io';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { GoDot, GoDotFill } from 'react-icons/go';
 import { MdOutlineBusiness, MdOutlinePerson, MdOutlinePhoneIphone, MdMailOutline } from 'react-icons/md';
 import InputContainer from '../../../components/inputContainer';
 import useProject from '../../../store/useProject';
+import useProfile from '../../../store/useProfile';
 import useModal from '../../../store/useModal';
-import { partnerType, projectFile } from '../../../network/response/projectParams';
+import { partnerType, projectMember as projectMemberType } from '../../../network/response/projectParams';
 import { ProjectService } from '../../../services/projectService';
+import { ProfileService } from '../../../services/profileService';
 
+// 프로젝트 추가 / 수정
 const ProjectModify = () => {
 	const { state } = useLocation();
 	const { isNew } = state;
-	const { insertProject } = ProjectService();
+	const insert = ProjectService().insertProject;
+	const modify = ProjectService().modifyProject;
+	useQuery('getProfileList', ProfileService().getProfileList);
 	const { project, projectDetail, projectMember, projectOutput, setProject, setProjectDetail, setProjectMember, setProjectOutput, setClear } =
 		useProject();
+	const { openModal, closeModal } = useModal();
+	const { profileList } = useProfile();
 	const [fileCount, setFileCount] = useState(0);
-	const [fileValue, setFileValue] = useState<projectFile[]>([]);
+	const [fileValue, setFileValue] = useState<any>();
 	const [memberCount, setMemberCount] = useState(0);
-	const [memberValue, setMemberValue] = useState<any>();
+	const [memberValue, setMemberValue] = useState<projectMemberType[]>();
 	const [slides, setSlides] = useState<any>(null);
 	const [swiperSetting, setSwiperSetting] = useState<Swiper | null>(null);
 	const [curPage, setCurpage] = useState<number>(0);
-	const [partner, setPartner] = useState<string[]>([]);
-	const { openModal, closeModal } = useModal();
+	const [partnerSplit, setPartnerSplit] = useState<string[]>([]);
+	const [partner, setPartner] = useState<string>();
+	const [selectIndex, setSelectIndex] = useState(0);
+	const [search, setSearch] = useState<any>();
 
 	const changeProject = (e: any) => {
 		const { id, value } = e.target;
@@ -37,25 +47,36 @@ const ProjectModify = () => {
 		setProjectDetail({ ...projectDetail, [id]: value });
 	};
 
-	const add = (type: partnerType) => {
+	const addPartner = (type: partnerType) => {
 		if (project.partner === '') {
-			partner[0] = `${type.company}:${type.name}:${type.phone}:${type.email}`;
+			setPartner(`${type.company}:${type.name}:${type.phone}:${type.email}`);
 		} else {
-			partner?.push(`${type.company}:${type.name}:${type.phone}:${type.email}`);
+			setPartner(partner?.concat(`, ${type.company}:${type.name}:${type.phone}:${type.email}`));
 			slides.push('swiper-slide px-8 swiper-slide');
 		}
-		const id: string = 'partner';
-		setProject({ ...project, [id]: partner });
-		closeModal();
 	};
 
-	const addPartner = () => {
-		openModal({ type: 0, closeOnOverlay: false, updataClick: add });
+	useEffect(() => {
+		if (partner) {
+			console.log(partner);
+			const id: string = 'partner';
+			setProject({ ...project, [id]: partner });
+
+			const splitPartner = partner.split(', ');
+			setPartnerSplit(splitPartner);
+
+			closeModal();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [partner]);
+
+	const addClick = () => {
+		openModal({ type: 0, closeOnOverlay: false, updataClick: addPartner });
 	};
 
 	const deletePartner = () => {
-		setPartner(partner?.filter((index: any) => index !== curPage));
-		if (partner?.length === curPage + 1) {
+		setPartnerSplit(partnerSplit?.filter((index: any) => index !== curPage));
+		if (partnerSplit?.length === curPage + 1) {
 			slides.shift();
 		} else {
 			slides.pop();
@@ -63,20 +84,32 @@ const ProjectModify = () => {
 	};
 
 	const newProject = () => {
+		const formData = new FormData();
+		project.managerNo = 21;
 		const param = { project, projectDetail, projectMember, projectOutput };
 		console.log(param);
-		// insertProject.mutate(param);
+
+		fileValue.forEach((v: any) => {
+			formData.append('uploadFiles', v[0]);
+		});
+		formData.append('projectDataVo', JSON.stringify(param));
+
+		// insert.mutate(formData);
+	};
+
+	const updateOk = () => {
+		const param = { project, projectDetail, projectMember, projectOutput };
+		modify.mutate(param);
 	};
 
 	const updateProject = () => {
-		const param = { project, projectDetail, projectMember, projectOutput };
-		ProjectService().modifyProject.mutateAsync(param);
+		openModal({ type: 4, contents: `<p className='text-xl'>수정 하시겠습니까?</p>`, okClick: updateOk });
 	};
 
 	useEffect(() => {
 		const splitPartner = project?.partner.split(', ');
-		setPartner(splitPartner);
-		return () => setClear();
+		setPartnerSplit(splitPartner);
+		// return () => setClear();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -96,28 +129,42 @@ const ProjectModify = () => {
 	}, [swiperSetting]);
 
 	useEffect(() => {
-		setProjectOutput(fileValue.map((item: any) => item.data));
+		setProjectOutput([]);
 	}, [fileValue, setProjectOutput]);
 
 	useEffect(() => {
-		setProjectMember(memberValue);
-	}, [memberValue, setProjectMember]);
+		// setProjectMember([]);
+		if (memberValue) {
+			setSearch(profileList.filter((item) => item.name.includes(memberValue[selectIndex].member)));
+			setProjectMember(memberValue);
+		}
+		setProjectMember([]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [memberValue]);
+
+	useEffect(() => {
+		if (memberValue && search && search.length === 1) {
+			memberValue[selectIndex].profileNo = search[0].profileNo;
+			setProjectMember(memberValue);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [search]);
 
 	return (
 		<div className="mt-5 grid">
 			<Card className="w-full h-full pt-[20px] pb-10 sm:px-[20px]">
-				<div className="flex pl-[10%] pr-[20%]">
+				<div className="flex xl:pl-[20%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
 					<header className="flex mt-[auto] float-left">
 						<div className="text-xl font-bold text-navy-700">{isNew ? '프로젝트 추가' : '프로젝트 수정'}</div>
 					</header>
 				</div>
-				<div className="mt-5 overflow-x-scroll xl:overflow-x-hidden min-h-[800px] xl:pl-[10%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
+				<div className="mt-5 overflow-x-scroll xl:overflow-x-hidden xl:pl-[20%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
 					{/* project */}
 					<InputGroup className="mb-2">
 						<InputLeftAddon className="!min-w-[120px]">프로젝트명</InputLeftAddon>
 						<Input id="projectName" onChange={(e) => changeProject(e)} defaultValue={isNew ? '' : project.projectName} />
-						<InputLeftAddon className="!min-w-[120px] ml-[20px]">구분</InputLeftAddon>
-						<Input id="field" onChange={(e) => changeProject(e)} defaultValue={isNew ? '' : project.field} />
+						<InputLeftAddon className="!min-w-[120px] ml-[20px]">담당자</InputLeftAddon>
+						<Input id="managerNo" onChange={(e) => changeProject(e)} defaultValue={isNew ? '' : project.managerNo} />
 					</InputGroup>
 					<InputGroup className="mb-3">
 						<InputLeftAddon className="!min-w-[120px]">시작일</InputLeftAddon>
@@ -145,14 +192,14 @@ const ProjectModify = () => {
 														}
 														return <GoDot className="text-gray-500 h-6 w-6" key={item.className} />;
 													})}
-												<IoIosAddCircleOutline className="cursor-pointer w-[20px] h-[20px] mt-[1px]" onClick={() => addPartner()} />
+												<IoIosAddCircleOutline className="cursor-pointer w-[20px] h-[20px] mt-[1px]" onClick={() => addClick()} />
 												<IoIosRemoveCircleOutline className="cursor-pointer w-[20px] h-[20px] mt-[1px]" onClick={() => deletePartner()} />
 											</div>
 											<div className="relative mb-1 flex">
 												{swiperSetting && (
 													<Swiper {...swiperSetting} className="!ml-0 !mr-0">
-														{partner &&
-															partner.map((item: any, index: any) => {
+														{partnerSplit &&
+															partnerSplit.map((item: any, index: any) => {
 																return (
 																	<SwiperSlide className="px-8" key={index}>
 																		<li className="my-[5px] flex">
@@ -192,16 +239,34 @@ const ProjectModify = () => {
 							<tr>
 								<td>
 									<InputGroup className="mb-2">
-										<InputLeftAddon className="!min-w-[120px]">상태</InputLeftAddon>
-										<Input id="status" onChange={(e) => changeProject(e)} defaultValue={isNew ? '' : project.status} />
+										<InputLeftAddon className="!min-w-[120px]">구분</InputLeftAddon>
+										<Input id="field" onChange={(e) => changeProject(e)} defaultValue={isNew ? '' : project.field} />
 									</InputGroup>
 								</td>
 							</tr>
 							<tr>
 								<td>
 									<InputGroup>
-										<InputLeftAddon className="!min-w-[120px]">단계</InputLeftAddon>
-										<Input id="step" onChange={(e) => changeProject(e)} defaultValue={isNew ? '' : project.step} />
+										<InputLeftAddon className="!min-w-[120px]">상태</InputLeftAddon>
+										<Select id="status" className="!min-w-[150px]" onChange={(e) => changeProject(e)} defaultValue={isNew ? '-' : project.status}>
+											<option value="-">-</option>
+											<option value="완료">완료</option>
+											<option value="개발 진행">개발 진행</option>
+											<option value="운영 진행">운영 진행</option>
+											<option value="완료">완료</option>
+											<option value="유예">유예</option>
+											<option value="연구과제">연구과제</option>
+										</Select>
+										<InputLeftAddon className="!min-w-[120px] ml-[20px]">단계</InputLeftAddon>
+										<Select id="step" className="!min-w-[150px]" onChange={(e) => changeProject(e)} defaultValue={isNew ? '-' : project.step}>
+											<option value="-">-</option>
+											<option value="요구사항분석">요구사항분석</option>
+											<option value="설계">설계</option>
+											<option value="개발">개발</option>
+											<option value="단위테스트">단위테스트</option>
+											<option value="통합테스트">통합테스트</option>
+											<option value="인수">인수</option>
+										</Select>
 									</InputGroup>
 								</td>
 							</tr>
@@ -257,12 +322,14 @@ const ProjectModify = () => {
 
 					{/* 팀원 */}
 					<InputContainer
-						props={{ id: memberCount, member: '', role: '', task: '' }}
+						props={{ id: memberCount, profileNo: '', member: '', role: '', task: '' }}
 						count={memberCount}
 						setCount={setMemberCount}
 						setValue={setMemberValue}
+						setIndex={setSelectIndex}
 						type="member"
 					/>
+
 					{isNew ? (
 						<div className="text-end !mt-[30px]">
 							<Button className="w-[150px]" colorScheme="green" onClick={() => newProject()}>

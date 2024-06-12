@@ -91,12 +91,19 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 					<AlertDialogBody>
 						<div>
 							<InputGroup className="mb-2">
-								<InputLeftAddon>제목</InputLeftAddon>
-								<Text className="border border-[#E2E8F0] border-solid rounded-md px-[10px] py-[5px] mb-[10px]">{contents.title}</Text>
+								<InputLeftAddon className="!min-w-[120px]">제목</InputLeftAddon>
+								<Input id="title" className="pointer-events-none" defaultValue={contents.title || ''} />
+							</InputGroup>
+							<InputGroup className="mb-2">
+								<InputLeftAddon className="!min-w-[120px]">작성일</InputLeftAddon>
+								<Input id="createDate" className="pointer-events-none" defaultValue={contents.createDate || ''} />
+								<InputLeftAddon className="!min-w-[120px] ml-[20px]">작성자</InputLeftAddon>
+								<Input id="name" className="pointer-events-none" defaultValue={contents.name || ''} />
 							</InputGroup>
 							<p>내용</p>
 							<Text
-								className="border border-[#E2E8F0] border-solid rounded-md px-[10px] py-[5px] !h-[600px]"
+								id="body"
+								className="border border-[#E2E8F0] border-solid rounded-md px-[10px] py-[5px] !h-[20rem]"
 								dangerouslySetInnerHTML={{ __html: contents.body }}
 							/>
 						</div>
@@ -137,7 +144,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 					</AlertDialogBody>
 
 					<AlertDialogFooter>
-						<Button colorScheme="blue" onClick={updataClick}>
+						<Button colorScheme="blue" onClick={okClick}>
 							{title === '글쓰기' ? '등록' : '수정'}
 						</Button>
 						<Button colorScheme="red" ml={3} onClick={change}>
@@ -165,24 +172,22 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 				</AlertDialogContent>
 			);
 			break;
-		case 4: // 업데이트
+		case 4: // 수정/삭제
 			dialog = (
-				<AlertDialogContent minW="50%" minH="50%">
+				<AlertDialogContent minW="20%" minH="20%">
 					<AlertDialogHeader />
 					<AlertDialogCloseButton size="lg" />
 
-					<AlertDialogBody>
-						<div>
-							<div>수정 하시겠습니까?</div>
-						</div>
+					<AlertDialogBody className="content-center text-center text-xl">
+						<div dangerouslySetInnerHTML={{ __html: contents }} />
 					</AlertDialogBody>
 
 					<AlertDialogFooter>
-						<Button ref={cancelRef} onClick={change}>
-							취소
-						</Button>
-						<Button colorScheme="blue" ml={3} onClick={okClick}>
+						<Button colorScheme={color || 'blue'} onClick={okClick}>
 							확인
+						</Button>
+						<Button ref={cancelRef} ml={3} onClick={change}>
+							취소
 						</Button>
 					</AlertDialogFooter>
 				</AlertDialogContent>
@@ -193,6 +198,27 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 			break;
 		case 6:
 			dialog = <CustomAnnualDetailModal />;
+			break;
+		case 9:
+			dialog = (
+				<AlertDialogContent minW="30%" minH="30%">
+					<AlertDialogHeader />
+					<AlertDialogCloseButton size="lg" />
+
+					<AlertDialogBody className="content-center text-center text-xl">
+						<Input />
+					</AlertDialogBody>
+
+					<AlertDialogFooter>
+						<Button colorScheme="blue" onClick={okClick}>
+							확인
+						</Button>
+						<Button ref={cancelRef} ml={3} onClick={change}>
+							취소
+						</Button>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			);
 			break;
 		default:
 			break;

@@ -12,10 +12,11 @@ type InputProps = {
 	setValue: (state: any) => void;
 	type: string;
 	style?: string;
+	setIndex?: (idx: number) => void;
 	readOnly?: boolean;
 };
 
-const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type, style, readOnly }: InputProps) => {
+const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type, style, setIndex, readOnly }: InputProps) => {
 	const { career, license, coursework, skill, careerIndex, setCareer } = useProfile();
 	const { projectMember } = useProject();
 	const [state, setState] = useState<any>([props]);
@@ -123,15 +124,19 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 	};
 
 	const onChange = (e: any, idx: any) => {
+		if (setIndex) {
+			setIndex(idx);
+		}
+
 		const data = {
 			[e.target.id]: e.target.value,
 		};
+
 		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 	};
 
-	const onFileChange = (e: any, idx: any) => {
-		const data = e[0];
-		setState(state.map((item: any, index: number) => (index === idx ? { ...item, data } : item)));
+	const onFileChange = (e: any) => {
+		setState(state.map((item: any) => ({ ...item, ...e })));
 	};
 
 	const onDetailChange = (e: any, idx: any) => {

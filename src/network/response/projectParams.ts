@@ -29,8 +29,7 @@ export interface projectDetail {
 }
 
 export interface projectMember {
-	memberNo: number;
-	projectNo: number;
+	id: number;
 	profileNo: number;
 	member: string;
 	role: string;

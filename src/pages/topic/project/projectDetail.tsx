@@ -11,6 +11,7 @@ import useModal from '../../../store/useModal';
 import { partnerType } from '../../../network/response/projectParams';
 import { ProjectService } from '../../../services/projectService';
 
+// 프로젝트 상세보기
 const ProjectDetail = () => {
 	const { project, projectDetail, setProject, setProjectDetail, setProjectMember, setProjectOutput, setClear } = useProject();
 	const navigate = useNavigate();
@@ -22,15 +23,20 @@ const ProjectDetail = () => {
 	const [swiperSetting, setSwiperSetting] = useState<Swiper | null>(null);
 	const [curPage, setCurpage] = useState<number>(0);
 	const [partner, setPartner] = useState<string[]>([]);
+	const del = ProjectService().delProject;
 	const { openModal, closeModal } = useModal();
 
 	const updateProject = () => {
 		navigate('/topic/projectModify', { state: { isNew: false } });
 	};
 
-	const deleteProject = (projectNo: number) => {
-		// ProjectService().delProject.mutateAsync(projectNo);
-		console.log(projectNo);
+	const deleteOk = () => {
+		del.mutate({ seqNo: project.projectNo });
+		closeModal();
+	};
+
+	const deleteProject = () => {
+		openModal({ type: 4, contents: `<p className='text-xl'>삭제 하시겠습니까?</p>`, color: 'red', okClick: deleteOk });
 	};
 
 	useEffect(() => {
@@ -63,18 +69,18 @@ const ProjectDetail = () => {
 	return (
 		<div className="mt-5 grid">
 			<Card className="w-full h-full pt-[20px] pb-10 sm:px-[20px]">
-				<div className="flex pl-[10%] pr-[20%]">
+				<div className="flex xl:pl-[20%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
 					<header className="flex mt-[auto] float-left">
 						<div className="text-xl font-bold text-navy-700">프로젝트 상세보기</div>
 					</header>
 				</div>
-				<div className="mt-5 overflow-x-scroll xl:overflow-x-hidden min-h-[800px] xl:pl-[10%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
+				<div className="mt-5 overflow-x-scroll xl:overflow-x-hidden xl:pl-[20%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
 					{/* project */}
 					<InputGroup className="mb-2">
 						<InputLeftAddon className="!min-w-[120px]">프로젝트명</InputLeftAddon>
 						<Input id="projectName" className="pointer-events-none" defaultValue={project.projectName || ''} />
-						<InputLeftAddon className="!min-w-[120px] ml-[20px]">구분</InputLeftAddon>
-						<Input id="field" className="pointer-events-none" defaultValue={project.field || ''} />
+						<InputLeftAddon className="!min-w-[120px] ml-[20px]">담당자</InputLeftAddon>
+						<Input id="managerNo" className="pointer-events-none" defaultValue={project.managerNo || ''} />
 					</InputGroup>
 					<InputGroup className="mb-3">
 						<InputLeftAddon className="!min-w-[120px]">시작일</InputLeftAddon>
@@ -147,15 +153,17 @@ const ProjectDetail = () => {
 							<tr>
 								<td>
 									<InputGroup className="mb-2">
-										<InputLeftAddon className="!min-w-[120px]">상태</InputLeftAddon>
-										<Input id="status" className="pointer-events-none" defaultValue={project.status || ''} />
+										<InputLeftAddon className="!min-w-[120px]">구분</InputLeftAddon>
+										<Input id="field" className="pointer-events-none" defaultValue={project.field || ''} />
 									</InputGroup>
 								</td>
 							</tr>
 							<tr>
 								<td>
 									<InputGroup>
-										<InputLeftAddon className="!min-w-[120px]">단계</InputLeftAddon>
+										<InputLeftAddon className="!min-w-[120px]">상태</InputLeftAddon>
+										<Input id="status" className="pointer-events-none" defaultValue={project.status || ''} />
+										<InputLeftAddon className="!min-w-[120px] ml-[20px]">단계</InputLeftAddon>
 										<Input id="step" className="pointer-events-none" defaultValue={project.step || ''} />
 									</InputGroup>
 								</td>
@@ -217,7 +225,7 @@ const ProjectDetail = () => {
 						<Button className="w-[150px]" colorScheme="green" onClick={() => updateProject()}>
 							수정
 						</Button>
-						<Button className="w-[150px]" colorScheme="red" ml={3} onClick={() => deleteProject(project.projectNo)}>
+						<Button className="w-[150px]" colorScheme="red" ml={3} onClick={() => deleteProject()}>
 							삭제
 						</Button>
 					</div>
