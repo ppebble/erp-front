@@ -21,3 +21,10 @@ export interface profieRank {
 	rank: string;
 	count: number;
 }
+
+export interface userList {
+	profileNo: number;
+	name: string;
+	team: string;
+	empNo: string;
+}

@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Button } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import ColumnsTable from '../../../components/columnsTable';
 import { BoardService } from '../../../services/boardService';
 import useBoard from '../../../store/useBoard';
 import Card from '../../../components/card';
 import useModal from '../../../store/useModal';
-import { BsPlusCircle } from 'react-icons/bs';
 
 const News = () => {
 	const { isSuccess } = useQuery('boardList', BoardService().boardList);
@@ -49,12 +47,12 @@ const News = () => {
 		}),
 	];
 
-	const insertNews = () => {
+	const insert = () => {
 		console.log('???');
 	};
 
 	const write = () => {
-		openModal({ type: 2, title: '글쓰기', closeOnOverlay: false, updataClick: insertNews });
+		openModal({ type: 2, title: '글쓰기', closeOnOverlay: false, okClick: insert });
 	};
 
 	useEffect(() => {
@@ -66,14 +64,8 @@ const News = () => {
 			<Card extra="w-full pb-10 p-4 h-full">
 				<header className="relative flex items-center justify-between">
 					<div className="text-xl font-bold text-navy-700 dark:text-white">회사소식</div>
-					<button
-						onClick={() => write()}
-						className="dark:active-bg-white-20 linear col-span-2 rounded-md bg-lightPrimary px-4 py-2 text-base font-medium text-brand-500 transition duration-200 hover:bg-gray-100 active:bg-gray-200 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
-					>
-						<BsPlusCircle className="h-6 w-6 bold" />
-					</button>
 				</header>
-				{isSuccess && <ColumnsTable columns={columns} list={news} show={show} isClick isSearch={false} />}
+				{isSuccess && <ColumnsTable columns={columns} list={news} show={show} isClick isSearch={false} addButton={write} />}
 			</Card>
 		</div>
 	);

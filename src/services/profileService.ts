@@ -1,14 +1,27 @@
+import { Suspense } from 'react';
 import { useMutation } from 'react-query';
-import { getQuery, postQuery } from './base/AxiosQueryService';
+import { getQuery, postQuery, postUploadQuery } from './base/AxiosQueryService';
 import { commonResult } from '../network/commonResult';
 import { profileParams } from '../network/response/profileParams';
 import useModal from '../store/useModal';
 import useProfile from '../store/useProfile';
-import { profieRank, profileList } from '../network/response/profileList';
+import { profieRank, profileList, userList } from '../network/response/profileList';
 
 export const ProfileService = () => {
-	const { setProfile, setDetail, setDept, setEducation, setArmy, setCareer, setLicense, setCoursework, setSkill, setProfileList, setRank } =
-		useProfile();
+	const {
+		setProfile,
+		setDetail,
+		setDept,
+		setEducation,
+		setArmy,
+		setCareer,
+		setLicense,
+		setCoursework,
+		setSkill,
+		setProfileList,
+		setRank,
+		setUserList,
+	} = useProfile();
 	const { openModal } = useModal();
 
 	const idCheckMutation = useMutation({
@@ -46,7 +59,7 @@ export const ProfileService = () => {
 	};
 
 	const updateProfileMutation = useMutation({
-		mutationFn: (params: any) => postQuery('/api/profile/modifyProfile', params),
+		mutationFn: (params: any) => postUploadQuery('/api/profile/modifyProfile', params),
 		onSuccess: (result) => {
 			return result.response;
 		},
@@ -81,6 +94,7 @@ export const ProfileService = () => {
 
 	const profileByRank = {
 		queryFn: () => getQuery('/api/profile/profileByRank'),
+		Suspense: true,
 		onSuccess: (result: { response: commonResult }) => {
 			const common: commonResult = result.response;
 			const data: profieRank[] = common.result;
@@ -93,5 +107,19 @@ export const ProfileService = () => {
 		},
 	};
 
-	return { idCheckMutation, selProfile, updateProfileMutation, getProfileList, modifyPw, profileByRank };
+	const memberTag = {
+		queryFn: () => getQuery('/api/common/memberTag'),
+		onSuccess: (result: { response: commonResult }) => {
+			const common: commonResult = result.response;
+			const data: userList[] = common.result;
+			if (common.isSuccessful) {
+				setUserList(data);
+			}
+		},
+		onError: (error: any) => {
+			openModal({ type: 3, contents: error, color: 'red' });
+		},
+	};
+
+	return { idCheckMutation, selProfile, updateProfileMutation, getProfileList, modifyPw, profileByRank, memberTag };
 };

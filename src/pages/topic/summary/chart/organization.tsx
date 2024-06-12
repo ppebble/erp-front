@@ -130,11 +130,11 @@ const Organization = () => {
 	};
 
 	return (
-		<Card className="w-full h-full p-4 overflow-x-auto">
-			<div style={{ marginRight: '200px', minWidth: '450px', zIndex: '10' }}>
+		<Card className="w-full h-full p-4 my-1">
+			<div className="mr-[50px] min-w-[450px] z-10">
 				<OrgChart tree={initechOrg1} NodeComponent={MyNodeComponent} />
 			</div>
-			<div style={{ marginTop: '-75px', minWidth: '450px' }}>
+			<div className="mt-[-75px] min-w-[450px">
 				<OrgChart tree={initechOrg2} NodeComponent={MyNodeComponent} />
 			</div>
 		</Card>

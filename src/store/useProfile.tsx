@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { profile, detail, dept, education, army, career, license, coursework, skill } from '../network/response/profileParams';
-import { profieRank, profileList, profileSearch } from '../network/response/profileList';
+import { profieRank, profileList, profileSearch, userList } from '../network/response/profileList';
 
 interface ProfileStore {
 	// 기본정보
@@ -44,6 +44,8 @@ interface ProfileStore {
 	setClearSearch: () => void;
 	rank: profieRank[];
 	setRank: (state: profieRank[]) => void;
+	userList: userList[];
+	setUserList: (state: userList[]) => void;
 }
 
 const useProfile = create(
@@ -83,6 +85,8 @@ const useProfile = create(
 			setSearch: (select) => set((state) => ({ ...state, search: select })),
 			rank: [],
 			setRank: (select) => set((state) => ({ ...state, rank: select })),
+			userList: [],
+			setUserList: (select) => set((state) => ({ ...state, userList: select })),
 			setClearProfile: () =>
 				set(() => ({
 					profile: { profileNo: 0, empNo: '', userId: '', userEmail: '', pw: '', rePw: '', authority: 0, isDel: false },
