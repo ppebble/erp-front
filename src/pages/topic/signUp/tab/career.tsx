@@ -11,8 +11,7 @@ const Career = () => {
 
 	useEffect(() => {
 		setCareer(value);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value]);
+	}, [setCareer, value]);
 
 	return (
 		<div>

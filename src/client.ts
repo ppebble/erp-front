@@ -18,34 +18,27 @@ export const defaultConfig = {
 	},
 };
 
+export const uploadConfig = {
+	timeout: 10000,
+	withCredentials: true,
+	// mode: 'cors',
+	headers: {
+		Accept: 'multipart/form-data',
+	},
+};
+
 const client = axios.create({
 	...defaultConfig,
 });
 
-// client.interceptors.request.use(
-// 	async (config: any) => {
-// 		const { headers, data } = config;
-// 		// 토큰정보가 필요한 경우 추가 입력
-// 		const accessToken = sessionStorage.getItem('nex_accessToken') ? sessionStorage.getItem('nex_accessToken') : '';
-// 		console.log(accessToken);
-// 		const token = accessToken === '' ? null : `Bearer ${accessToken}`;
-// 		return {
-// 			...config,
-// 			data,
-// 			headers: {
-// 				...headers,
-// 				Authorization: token,
-// 			},
-// 		};
-// 	},
-// 	(error) => {
-// 		Promise.reject(error).then(() => {});
-// 	},
-// );
+const upload = axios.create({
+	...uploadConfig,
+});
+
 const refTokenQuery = mem(
-	async (): Promise<string> => {
+	async (module): Promise<string> => {
 		try {
-			const result = await client.post('/api/auth/tokenRefresh');
+			const result = await module.post('/api/auth/tokenRefresh');
 
 			console.log(`ref token:: ${result.data}`);
 			sessionStorage.setItem('nex_accessToken', result.data.result.accessToken);
@@ -91,7 +84,7 @@ client.interceptors.response.use(
 		if (res.data.resultCode === 'B202') {
 			// eslint-disable-next-line no-param-reassign
 			res.request.sent = true;
-			const accessToken = await refTokenQuery();
+			const accessToken = await refTokenQuery(client);
 
 			if (accessToken !== '') {
 				// eslint-disable-next-line no-param-reassign
@@ -111,5 +104,53 @@ client.interceptors.response.use(
 	},
 );
 
-axiosRetry(client, { retries: 2 });
-export default client;
+upload.interceptors.request.use((config) => {
+	if (!config.headers) return config;
+
+	let token: string | null = null;
+
+	if (config.url?.includes('/api/auth/tokenRefresh')) {
+		token = new Cookies().get('nex_refToken');
+	} else {
+		token = sessionStorage.getItem('nex_accessToken');
+	}
+
+	if (token !== null) {
+		// eslint-disable-next-line no-param-reassign
+		config.headers.Authorization = `Bearer ${token}`;
+	}
+
+	return config;
+});
+
+upload.interceptors.response.use(
+	async (res) => {
+		console.log(res.request.responseURL?.includes('/api/auth/tokenRefresh'));
+		console.log(res.request.responseURL);
+		console.log(res.data.resultCode);
+
+		if (res.data.resultCode === 'B202') {
+			// eslint-disable-next-line no-param-reassign
+			res.request.sent = true;
+			const accessToken = await refTokenQuery(upload);
+
+			if (accessToken !== '') {
+				// eslint-disable-next-line no-param-reassign
+				res.config.headers.Authorization = `Bearer ${accessToken}`;
+				return axios(res.config);
+			}
+		}
+		if (res.data.resultCode === 'B201' || res.data.resultCode === 'B012') {
+			sessionStorage.removeItem('nex_accessToken');
+			new Cookies().remove('nex_refToken');
+		}
+
+		return res;
+	},
+	(error) => {
+		Promise.reject(error).then(() => {});
+	},
+);
+
+// axiosRetry(client, { retries: 2 });
+export { client, upload };

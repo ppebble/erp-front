@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import {
 	InputGroup,
 	InputLeftAddon,
@@ -10,13 +12,11 @@ import {
 	AccordionPanel,
 	Flex,
 	Spacer,
-	FormLabel,
-	Badge,
 	Tag,
-	TagLabel,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import useProfile from '../../store/useProfile';
+import useProject from '../../store/useProject';
+import ProfileNumberInput from '../profileNumberInput';
 
 type InputComponentprops = {
 	inputItems: any;
@@ -25,15 +25,39 @@ type InputComponentprops = {
 	InputDelete: (id: number) => void;
 	detailDelete?: (id: number) => void;
 	onChange: (e: any, id: any) => void;
+	onFileChange?: (e: any) => void;
 	onDetailChange?: (e: any, id: any) => void;
 	type: string;
+	style?: string;
+	readOnly?: boolean;
 };
 
-const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDelete, onChange, onDetailChange, type }: InputComponentprops) => {
+const InputComponent = ({
+	inputItems,
+	addInput,
+	addDetail,
+	InputDelete,
+	detailDelete,
+	onChange,
+	onFileChange,
+	onDetailChange,
+	type,
+	style,
+	readOnly,
+}: InputComponentprops) => {
 	const { careerIndex, setCareerIndex } = useProfile();
+	const { project, projectOutput } = useProject();
 
 	const changeSelect = (index: number) => {
 		setCareerIndex(index);
+	};
+
+	const downloadList = (index: number) => {
+		let attachmentText = '첨부 파일이 없습니다.';
+		if (projectOutput.length >= 1) {
+			attachmentText = projectOutput[index].fileName;
+		}
+		return attachmentText;
 	};
 
 	const inputComponent = () => {
@@ -102,7 +126,7 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 															<Input
 																id="projectName"
 																className="!min-w-[100px]"
-																name={`projectName_${detailItem.id}`}
+																name={`projectName_${detailIndex}_${detailItem.id}`}
 																defaultValue={detailItem.projectName}
 																onChange={(e) => onDetailChange && onDetailChange(e, detailIndex)}
 															/>
@@ -110,7 +134,7 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 															<Input
 																id="task"
 																className="!min-w-[100px]"
-																name={`task_${detailItem.id}`}
+																name={`task_${detailIndex}_${detailItem.id}`}
 																defaultValue={detailItem.task}
 																onChange={(e) => onDetailChange && onDetailChange(e, detailIndex)}
 															/>
@@ -118,7 +142,7 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 															<Input
 																id="term"
 																className="!min-w-[100px]"
-																name={`term_${detailItem.id}`}
+																name={`term_${detailIndex}_${detailItem.id}`}
 																defaultValue={detailItem.term}
 																onChange={(e) => onDetailChange && onDetailChange(e, detailIndex)}
 															/>
@@ -213,24 +237,37 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 					</>
 				);
 				break;
-			case 'project':
+			case 'attachment':
 				component = (
 					<>
 						<div>
-							<Flex className="mb-[10px]">
+							<Flex className="mb-[10px] flex">
 								<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px]">
 									산출물
 								</Tag>
+
 								<Spacer />
-								<Button onClick={() => addInput()}>추가</Button>
+								{!readOnly && <Button onClick={() => addInput()}>추가</Button>}
 							</Flex>
 						</div>
 						{inputItems.map((item: any, index: any) => {
 							return (
-								<div key={`project_${item.id}`} className="my-[2px]">
+								<div key={`attachment_${item.id}`} className="my-[2px]">
 									<InputGroup className="mb-2">
-										<Input id={`file_${item.id}`} type="file" onChange={(e) => onChange(e, index)} />
-										<CloseButton onClick={() => InputDelete(index)} />
+										{readOnly ? (
+											<Link
+												to={`http://192.168.0.218:8092/api/file/downloadFile/project/${project?.projectNo}/${projectOutput[index]?.outputNo}`}
+												download
+												target="_self"
+											>
+												{downloadList(index)}
+											</Link>
+										) : (
+											<>
+												<Input name={`file_${item.id}`} type="file" onChange={(e) => onFileChange && onFileChange(e.target.files)} />
+												<CloseButton onClick={() => InputDelete(index)} />
+											</>
+										)}
 									</InputGroup>
 								</div>
 							);
@@ -247,20 +284,35 @@ const InputComponent = ({ inputItems, addInput, addDetail, InputDelete, detailDe
 									팀원
 								</Tag>
 								<Spacer />
-								<Button onClick={() => addInput()}>추가</Button>
+								{!readOnly && <Button onClick={() => addInput()}>추가</Button>}
 							</Flex>
 						</div>
 						{inputItems.map((item: any, index: any) => {
 							return (
-								<div key={`member_${item.id}`}>
+								<div key={`member_${item?.id ? item?.id : item?.memberNo}`}>
 									<InputGroup className="mb-2">
 										<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
-										<Input id="licenseName" defaultValue={item.member} onChange={(e) => onChange(e, index)} />
+										<ProfileNumberInput
+											id="member"
+											className={`${readOnly && 'pointer-events-none'}`}
+											onChange={(e: any) => onChange(e, index)}
+											defaultValue={item?.member || ''}
+										/>
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">직책</InputLeftAddon>
-										<Input id="licenseDate" defaultValue={item.role} onChange={(e) => onChange(e, index)} />
+										<Input
+											id="role"
+											className={`${readOnly && 'pointer-events-none'}`}
+											defaultValue={item?.role || ''}
+											onChange={(e) => onChange(e, index)}
+										/>
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">업무</InputLeftAddon>
-										<Input id="licenseDate" defaultValue={item.task} onChange={(e) => onChange(e, index)} />
-										<CloseButton onClick={() => InputDelete(index)} />
+										<Input
+											id="task"
+											className={`${readOnly && 'pointer-events-none'}`}
+											defaultValue={item?.task || ''}
+											onChange={(e) => onChange(e, index)}
+										/>
+										{!readOnly && <CloseButton onClick={() => InputDelete(index)} />}
 									</InputGroup>
 								</div>
 							);

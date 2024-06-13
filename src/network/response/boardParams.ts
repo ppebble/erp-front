@@ -1,4 +1,4 @@
-export interface newsType {
+export interface boardType {
 	boardNo: number;
 	name: string;
 	authority: number;
@@ -9,12 +9,12 @@ export interface newsType {
 	newsNo: number;
 }
 
-export interface boardTable {
+export interface boardViewType {
+	postNo: number;
+	name: string;
 	title: string;
 	body: string;
-	name: string;
 	createDate: string;
-	modifyDate: string;
 }
 
 export const newsArray = [

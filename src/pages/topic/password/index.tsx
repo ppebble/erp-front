@@ -35,7 +35,7 @@ const Password = () => {
 				</div>
 				<div className="mt-5 overflow-x-scroll xl:overflow-x-hidden min-h-[800px] xl:pl-[10%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
 					<InputGroup className="mb-2">
-						<InputLeftAddon className="!min-w-[150px]">비밀번호 확인</InputLeftAddon>
+						<InputLeftAddon className="!min-w-[150px]">비밀번호</InputLeftAddon>
 						<Input
 							id="pw"
 							className="!min-w-[100px]"
@@ -43,7 +43,7 @@ const Password = () => {
 							autoComplete="off"
 							pr="4.5rem"
 							type={show ? 'text' : 'password'}
-							placeholder="변경할 비밀번호를 한번 더 입력하세요."
+							placeholder="변경할 비밀번호를 입력하세요."
 						/>
 						<InputRightElement width="4.5rem">
 							<Button h="1.75rem" size="sm" onClick={handle}>

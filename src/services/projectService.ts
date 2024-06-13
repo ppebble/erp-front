@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { getQuery, postQuery } from './base/AxiosQueryService';
+import { getQuery, postQuery, postUploadQuery } from './base/AxiosQueryService';
 import { commonResult } from '../network/commonResult';
 import { projectDetailParams, project } from '../network/response/projectParams';
 import useModal from '../store/useModal';
 import useProject from '../store/useProject';
 
 export const ProjectService = () => {
-	const { projectNo, setProject, setProjectList, setProjectDetail, setProjectMember, setProjectNo } = useProject();
+	const { projectNo, setProject, setProjectList, setProjectDetail, setProjectMember, setProjectOutput } = useProject();
 	const { openModal } = useModal();
 	const navigate = useNavigate();
 
@@ -34,6 +34,7 @@ export const ProjectService = () => {
 				setProject(data.project);
 				setProjectDetail(data.projectDetail);
 				setProjectMember(data.projectMember);
+				setProjectOutput(data.projectOutput);
 				navigate('/topic/projectDetail', { state: { isNew: 0 } });
 			}
 		},
@@ -43,9 +44,21 @@ export const ProjectService = () => {
 		enabled: !!projectNo,
 	};
 
-	const modifyProject = useMutation({
-		mutationFn: (params: any) => postQuery('/api/project/modifyProject', params),
+	const insertProject = useMutation({
+		mutationFn: (params: any) => postUploadQuery('/api/project/project', params),
 		onSuccess: (result) => {
+			navigate('/topic/project');
+			return result.response;
+		},
+		onError: (error) => {
+			openModal({ type: 3, contents: error, color: 'red' });
+		},
+	});
+
+	const modifyProject = useMutation({
+		mutationFn: (params: any) => postUploadQuery('/api/project/modifyProject', params),
+		onSuccess: (result) => {
+			navigate('/topic/project');
 			return result.response;
 		},
 		onError: (error) => {
@@ -56,6 +69,7 @@ export const ProjectService = () => {
 	const delProject = useMutation({
 		mutationFn: (params: any) => postQuery('/api/project/delProject', params),
 		onSuccess: (result) => {
+			navigate('/topic/project');
 			return result.response;
 		},
 		onError: (error) => {
@@ -63,15 +77,5 @@ export const ProjectService = () => {
 		},
 	});
 
-	const insertProject = useMutation({
-		mutationFn: (params: any) => postQuery('/api/project/project', params),
-		onSuccess: (result) => {
-			return result.response;
-		},
-		onError: (error) => {
-			openModal({ type: 3, contents: error, color: 'red' });
-		},
-	});
-
-	return { projectList, projectDetail, modifyProject, delProject, insertProject };
+	return { projectList, projectDetail, insertProject, modifyProject, delProject };
 };

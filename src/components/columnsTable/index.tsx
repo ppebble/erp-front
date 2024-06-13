@@ -1,16 +1,9 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import {
-	AccessorKeyColumnDef,
-	SortingState,
-	createColumnHelper,
-	flexRender,
-	getCoreRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from '@tanstack/react-table';
-import { Flex, Input, InputGroup, InputRightElement, Select, Spacer } from '@chakra-ui/react';
+import { AccessorKeyColumnDef, SortingState, flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
+import { Button, Card, CardBody, CardHeader, Heading, Input, InputGroup, Select, SimpleGrid, Text } from '@chakra-ui/react';
+import { BsPlusCircle } from 'react-icons/bs';
 import { SearchIcon } from '@chakra-ui/icons';
 import { ProfileService } from '../../services/profileService';
 import useModal from '../../store/useModal';
@@ -22,7 +15,7 @@ type searchType = {
 };
 
 type ColumnsTableProps = {
-	columns: AccessorKeyColumnDef<any, any>[];
+	columns?: AccessorKeyColumnDef<any, any>[];
 	list: any;
 	show: number;
 	isClick: boolean;
@@ -31,9 +24,25 @@ type ColumnsTableProps = {
 	search?: searchType;
 	setSearch?: (state: searchType) => void;
 	filter?: any;
+	addButton?: any;
+	detailButton?: any;
+	type: string;
 };
 
-const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, search, setSearch, filter }: ColumnsTableProps) => {
+const ColumnsTable = ({
+	columns,
+	searchItem,
+	list,
+	isClick,
+	isSearch,
+	show,
+	search,
+	setSearch,
+	filter,
+	addButton,
+	detailButton,
+	type,
+}: ColumnsTableProps) => {
 	useQuery('getProfileList', ProfileService().getProfileList);
 	const { updateBoard } = BoardService();
 	const [row] = useState(show);
@@ -68,12 +77,12 @@ const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, sear
 	};
 
 	const update = () => {
-		openModal({ type: 10, title: '글수정', closeOnOverlay: false });
+		openModal({ type: 2, title: '글수정', closeOnOverlay: false });
 	};
 
 	const itemClick = (index: any) => {
-		const contents = { title: '제목', body: '<p>내용1</p><br/><p>내용2</p>' };
-		openModal({ type: 11, contents, updataClick: update });
+		const contents = { title: '제목', name: '유저1', createDate: '2024-03-01', body: '<p>내용1</p><br/><p>내용2</p>' };
+		openModal({ type: 1, contents, updataClick: update });
 	};
 
 	const [customPagination, setCustomPagination] = useState<any[]>();
@@ -86,17 +95,20 @@ const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, sear
 		setCustomPagination(arr);
 	}, [totalPage]);
 
-	const table = useReactTable({
-		data,
-		columns,
-		state: {
-			sorting,
-		},
-		onSortingChange: setSorting,
-		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		debugTable: true,
-	});
+	const table =
+		columns &&
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		useReactTable({
+			data,
+			columns,
+			state: {
+				sorting,
+			},
+			onSortingChange: setSorting,
+			getCoreRowModel: getCoreRowModel(),
+			getSortedRowModel: getSortedRowModel(),
+			debugTable: true,
+		});
 
 	const onSearch = (e: any) => {
 		if (search && setSearch) {
@@ -143,81 +155,90 @@ const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, sear
 	}, [search, filter]);
 
 	return (
-		<div>
-			<div className="mt-8 mx-[3rem] min-h-[600px]">
-				<table className="w-full">
-					<thead>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<tr key={headerGroup.id} className="!border-px !border-gray-400">
-								{headerGroup.headers.map((header) => {
+		<div className="w-full h-full">
+			{addButton && (
+				<div className="flex justify-end">
+					<Button onClick={() => addButton()}>
+						<BsPlusCircle className="h-6 w-6 bold" />
+					</Button>
+				</div>
+			)}
+			<div className={`mt-8 mx-[3rem] ${type === 'table' ? 'min-h-[35rem]' : 'min-h-[53rem]'}`}>
+				{type === 'table' ? (
+					<table className="w-full">
+						<thead>
+							{table &&
+								table.getHeaderGroups().map((headerGroup) => (
+									<tr key={headerGroup.id} className="!border-px !border-gray-400">
+										{headerGroup.headers.map((header) => {
+											return (
+												<th
+													key={header.id}
+													colSpan={header.colSpan}
+													onClick={header.column.getToggleSortingHandler()}
+													className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
+													style={{ minWidth: header.getSize() }}
+												>
+													<div className="items-center justify-between text-xs text-gray-200">
+														<p className="text-lg font-bold text-gray-600">
+															{header.id}
+															{{
+																asc: '  ▲',
+																desc: '  ▼',
+															}[header.column.getIsSorted() as string] ?? null}
+														</p>
+													</div>
+												</th>
+											);
+										})}
+									</tr>
+								))}
+						</thead>
+						<tbody>
+							{table &&
+								table.getRowModel().rows.map((rows) => {
 									return (
-										<th
-											key={header.id}
-											colSpan={header.colSpan}
-											onClick={header.column.getToggleSortingHandler()}
-											className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
-											style={{ width: header.getSize() }}
+										<tr
+											key={rows.id}
+											className={`${isClick ? 'cursor-pointer' : ''}`}
+											onClick={isClick ? () => itemClick(rows.original.newsNo) : undefined}
 										>
-											<div className="items-center justify-between text-xs text-gray-200">
-												<p className="text-lg font-bold text-gray-600 dark:text-white">
-													{header.id}
-													{{
-														asc: '▲',
-														desc: '▼',
-													}[header.column.getIsSorted() as string] ?? null}
-												</p>
-											</div>
-										</th>
+											{rows.getVisibleCells().map((cell) => {
+												return (
+													<td key={cell.id} className="border-white/0 py-3 pr-4">
+														{flexRender(cell.column.columnDef.cell, cell.getContext())}
+													</td>
+												);
+											})}
+										</tr>
 									);
 								})}
-							</tr>
+						</tbody>
+					</table>
+				) : (
+					<SimpleGrid columns={3} spacing={10} className="mb-[20px]">
+						{data.map((item: any) => (
+							<Card key={item.projectNo} variant="outline" className="cursor-pointer !min-w-[200px]" onClick={() => detailButton(item.projectNo)}>
+								<CardHeader>
+									<Heading size="md"> {item.projectName}</Heading>
+								</CardHeader>
+								<CardBody>
+									<Text>고객사 : {item.client}</Text>
+									<Text>파트너 : {item.partner}</Text>
+									<Text>상태 : {item.status}</Text>
+									<Text>단계 : {item.step}</Text>
+									<Text>시작일 : {item.startDate}</Text>
+									<Text>종료일 : {item.endDate}</Text>
+								</CardBody>
+							</Card>
 						))}
-					</thead>
-					<tbody>
-						{table.getRowModel().rows.map((rows) => {
-							return (
-								<tr
-									key={rows.id}
-									className={`${isClick ? 'cursor-pointer' : ''}`}
-									onClick={isClick ? () => itemClick(rows.original.newsNo) : undefined}
-								>
-									{rows.getVisibleCells().map((cell) => {
-										return (
-											<td key={cell.id} className="border-white/0 py-3 pr-4">
-												{flexRender(cell.column.columnDef.cell, cell.getContext())}
-											</td>
-										);
-									})}
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
+					</SimpleGrid>
+				)}
 			</div>
 
-			<Flex className="mt-[2rem] mx-[2rem]">
-				{/* 검색 */}
-				{isSearch && (
-					<InputGroup className="mb-2">
-						<div className="!w-[8rem]">
-							<Select id="option" defaultValue={search?.option} onChange={(e) => onSearch(e)}>
-								{searchItem.map((item: any) => (
-									<option key={item.option} value={item.option}>
-										{item.value}
-									</option>
-								))}
-							</Select>
-						</div>
-						<Input id="input" className="ml-[2rem]" defaultValue={search?.input} onChange={(e) => onSearch(e)} />
-						<InputRightElement>
-							<SearchIcon />
-						</InputRightElement>
-					</InputGroup>
-				)}
-				<Spacer />
-
+			<div>
 				{/* 페이지 */}
-				<div className="w-full  flex justify-center sm:justify-end flex-col sm:flex-row gap-5 items-center">
+				<div className="flex justify-center flex-col sm:flex-row gap-5">
 					<div className="flex">
 						<ul className="flex justify-center items-center gap-x-[10px] z-30" role="navigation" aria-label="Pagination">
 							<li
@@ -250,7 +271,23 @@ const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, sear
 						</ul>
 					</div>
 				</div>
-			</Flex>
+			</div>
+			{/* 검색 */}
+			{isSearch && (
+				<InputGroup className="mt-2 justify-center">
+					<div className="!w-[8rem]">
+						<Select id="option" defaultValue={search?.option} onChange={(e) => onSearch(e)}>
+							{searchItem.map((item: any) => (
+								<option key={item.option} value={item.option}>
+									{item.value}
+								</option>
+							))}
+						</Select>
+					</div>
+					<Input id="input" className="ml-[1rem] !w-[300px]" defaultValue={search?.input} onChange={(e) => onSearch(e)} />
+					<SearchIcon className="flex my-auto ml-[1rem]" />
+				</InputGroup>
+			)}
 		</div>
 	);
 };

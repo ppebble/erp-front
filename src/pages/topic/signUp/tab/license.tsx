@@ -9,8 +9,7 @@ const License = () => {
 
 	useEffect(() => {
 		setLicense(value);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value]);
+	}, [setLicense, value]);
 
 	return (
 		<InputContainer props={{ id: count, licenseName: '', licenseDate: '' }} count={count} setCount={setCount} setValue={setValue} type="license" />

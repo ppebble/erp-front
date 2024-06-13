@@ -1,18 +1,22 @@
 import { create } from 'zustand';
-import { newsType } from '../network/response/boardParams';
+import { boardType, boardViewType } from '../network/response/boardParams';
 
 interface ModalStore {
 	type: string;
 	setType: (state: string) => void;
-	news: newsType[];
-	setNews: (state: newsType[]) => void;
+	board: boardType[];
+	setBoard: (state: boardType[]) => void;
+	boardDetail: boardViewType;
+	setBoardDetail: (state: boardViewType) => void;
 }
 
 const useBoard = create<ModalStore>()((set) => ({
 	type: '',
 	setType: (select) => set((state) => ({ ...state, type: select })),
-	news: [],
-	setNews: (select) => set((state) => ({ ...state, news: select })),
+	board: [],
+	setBoard: (select) => set((state) => ({ ...state, board: select })),
+	boardDetail: { postNo: 0, name: '', title: '', body: '', createDate: '' },
+	setBoardDetail: (select) => set((state) => ({ ...state, boardDetail: select })),
 }));
 
 export default useBoard;

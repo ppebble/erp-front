@@ -5,18 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import { MdLaptopChromebook } from 'react-icons/md';
 import { HiOutlineDesktopComputer } from 'react-icons/hi';
 import { ProjectService } from '../../../services/projectService';
+import { ProfileService } from '../../../services/profileService';
 import useProject from '../../../store/useProject';
 import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLineWidget';
+import ColumnsTable from '../../../components/columnsTable';
 
 const Project = () => {
-	const list = useQuery('projectList', ProjectService().projectList); // 조회
-	useQuery('projectDetail', ProjectService().projectDetail);
+	const list = useQuery('projectList', ProjectService().projectList); // 목록 조회
+	useQuery('projectDetail', ProjectService().projectDetail); // 상세조회
+	useQuery('getProfileList', ProfileService().getProfileList);
 	const navigate = useNavigate();
-	const { projectList, setProjectNo, setClear } = useProject();
+	const { projectList, setProjectNo, setClearProjectNo, setClear } = useProject();
 	const [title, setTitle] = useState('프로젝트');
 
 	const newProject = () => {
-		navigate('/topic/projectDetail', { state: { isNew: 1 } });
+		navigate('/topic/projectModify', { state: { isNew: true } });
 	};
 
 	const projectClick = (index: number) => {
@@ -28,13 +31,13 @@ const Project = () => {
 	};
 
 	useEffect(() => {
-		return () => setClear();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		setClear();
+		return () => setClearProjectNo();
+	}, [setClear, setClearProjectNo]);
 
 	return (
-		<div className="flex grid grid-cols-12 min-h-[45rem]">
-			<div className="mt-3 mr-5 col-span-2">
+		<div className="flex">
+			<div className="mt-5 mr-5 min-w-[13rem]">
 				<CustomClickableOneLineWidget
 					icon={<MdLaptopChromebook className="h-7 w-7" />}
 					title="프로젝트"
@@ -52,76 +55,33 @@ const Project = () => {
 					selectedTitle={title}
 				/>
 			</div>
-			<div className="mt-5 grid grid-cols-1 col-span-10">
-				<Card className="w-full pb-10 p-4 h-full">
-					{title === '프로젝트' ? (
-						<>
-							<header className="relative flex items-center justify-between">
-								<div className="text-xl font-bold text-navy-700 dark:text-white">프로젝트</div>
-							</header>
+			<Card className="mt-5 w-full pb-10 p-4 h-full">
+				{title === '프로젝트' ? (
+					<>
+						<header className="relative flex items-center justify-between">
+							<div className="text-xl font-bold text-navy-700 dark:text-white">프로젝트</div>
+						</header>
 
-							<Button
-								className="!w-[10rem]"
-								onClick={() => {
-									newProject();
-								}}
-							>
-								등록
-							</Button>
+						<div className="mx-[3rem] min-w-[600px]">
+							{list.isSuccess && (
+								<ColumnsTable list={projectList} show={9} isClick isSearch={false} addButton={newProject} detailButton={projectClick} type="card" />
+							)}
+						</div>
+					</>
+				) : (
+					<>
+						<header className="relative flex items-center justify-between">
+							<div className="text-xl font-bold text-navy-700 dark:text-white">연구과제</div>
+						</header>
 
-							<div className="mt-8 mx-[3rem] min-h-[600px]">
-								<SimpleGrid spacing={10} templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
-									{list.isSuccess
-										? projectList.map((item) => (
-												<Card key={item.projectNo} variant="outline" className="cursor-pointer" onClick={() => projectClick(item.projectNo)}>
-													<CardHeader>
-														<Heading size="md"> {item.projectName}</Heading>
-													</CardHeader>
-													<CardBody>
-														<Text>고객사 : {item.client}</Text>
-														<Text>파트너 : {item.partner}</Text>
-														<Text>상태 : {item.status}</Text>
-														<Text>단계 : {item.step}</Text>
-														<Text>시작일 : {item.startDate}</Text>
-														<Text>종료일 : {item.endDate}</Text>
-													</CardBody>
-												</Card>
-											))
-										: ''}
-								</SimpleGrid>
-							</div>
-						</>
-					) : (
-						<>
-							<header className="relative flex items-center justify-between">
-								<div className="text-xl font-bold text-navy-700 dark:text-white">연구과제</div>
-							</header>
-
-							<div className="mt-8 mx-[3rem] min-h-[600px]">
-								<SimpleGrid spacing={10} templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
-									{list.isSuccess
-										? projectList.map((item) => (
-												<Card key={item.projectNo} variant="outline" className="cursor-pointer" onClick={() => researchClick(item.projectNo)}>
-													<CardHeader>
-														<Heading size="md"> {item.projectName}</Heading>
-													</CardHeader>
-													<CardBody>
-														<Text>고객사 : {item.client}</Text>
-														<Text>파트너 : {item.partner}</Text>
-														<Text>상태 : {item.status}</Text>
-														<Text>단계 : {item.step}</Text>
-														<Text>시작일 : {item.startDate}</Text>
-														<Text>종료일 : {item.endDate}</Text>
-													</CardBody>
-												</Card>
-											))
-										: ''}
-								</SimpleGrid>
-							</div>
-						</>
-					)}
-				</Card>
-			</div>
+						<div className="mx-[3rem] min-w-[600px]">
+							{list.isSuccess && (
+								<ColumnsTable list={projectList} show={9} isClick isSearch={false} addButton={newProject} detailButton={projectClick} type="card" />
+							)}
+						</div>
+					</>
+				)}
+			</Card>
 		</div>
 	);
 };
