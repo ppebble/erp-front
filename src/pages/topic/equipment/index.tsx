@@ -183,7 +183,7 @@ const Equipment = () => {
 						setData(allList.notebook);
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<HiOutlineDesktopComputer className="h-6 w-6" />}
@@ -193,7 +193,7 @@ const Equipment = () => {
 						equipAction.setEquipClear();
 					}}
 					title="데스크탑"
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FiMonitor className="h-7 w-7" />}
@@ -203,7 +203,7 @@ const Equipment = () => {
 						setData(allList.monitor);
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FaServer className="h-6 w-6" />}
@@ -213,7 +213,7 @@ const Equipment = () => {
 						setTitle({ type: 'server', name: '서버장비' });
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FaMobileAlt className="h-7 w-7" />}
@@ -223,27 +223,27 @@ const Equipment = () => {
 						setTitle({ type: 'mobile', name: '모바일' });
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FaBook className="h-6 w-6" />}
 					title="도서"
 					onClickHandler={() => {
 						setData(allList.book);
-						setTitle({ type: 'book', name: '책' });
+						setTitle({ type: 'book', name: '도서' });
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<MdGrid3X3 className="h-6 w-6" />}
 					title="기타 장비"
 					onClickHandler={() => {
 						setData(allList.etc);
-						setTitle({ type: 'etc', name: '기타장비' });
+						setTitle({ type: 'etc', name: '기타 장비' });
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 			</div>
 

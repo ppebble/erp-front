@@ -205,8 +205,8 @@ export const CustomAnnualDetailComponent = () => {
 			),
 		}),
 
-		annReqColHelper.accessor('deny', {
-			id: 'deny',
+		annReqColHelper.accessor('reject', {
+			id: 'reject',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">신청 취소</p>,
 			cell: (info) => (
 				<div className="flex font-bold">

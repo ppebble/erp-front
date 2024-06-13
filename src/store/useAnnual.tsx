@@ -34,6 +34,7 @@ export type AnnReqProps = {
 	reject?: any;
 	approval?: any;
 	manageNote?: string;
+	signType: number;
 };
 type ActionItem = {
 	setPersonalAnnual: (annual: AnnualInfo[]) => void | null;
