@@ -2,21 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { AccessorKeyColumnDef, SortingState, flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
-import {
-	Button,
-	Card,
-	CardBody,
-	CardHeader,
-	Flex,
-	Heading,
-	Input,
-	InputGroup,
-	InputRightElement,
-	Select,
-	SimpleGrid,
-	Spacer,
-	Text,
-} from '@chakra-ui/react';
+import { Button, Card, CardBody, CardHeader, Heading, Input, InputGroup, Select, SimpleGrid, Text } from '@chakra-ui/react';
 import { BsPlusCircle } from 'react-icons/bs';
 import { SearchIcon } from '@chakra-ui/icons';
 import { ProfileService } from '../../services/profileService';
@@ -109,17 +95,20 @@ const ColumnsTable = ({
 		setCustomPagination(arr);
 	}, [totalPage]);
 
-	const table = useReactTable({
-		data,
-		columns,
-		state: {
-			sorting,
-		},
-		onSortingChange: setSorting,
-		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		debugTable: true,
-	});
+	const table =
+		columns &&
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		useReactTable({
+			data,
+			columns,
+			state: {
+				sorting,
+			},
+			onSortingChange: setSorting,
+			getCoreRowModel: getCoreRowModel(),
+			getSortedRowModel: getSortedRowModel(),
+			debugTable: true,
+		});
 
 	const onSearch = (e: any) => {
 		if (search && setSearch) {
@@ -178,50 +167,52 @@ const ColumnsTable = ({
 				{type === 'table' ? (
 					<table className="w-full">
 						<thead>
-							{table.getHeaderGroups().map((headerGroup) => (
-								<tr key={headerGroup.id} className="!border-px !border-gray-400">
-									{headerGroup.headers.map((header) => {
-										return (
-											<th
-												key={header.id}
-												colSpan={header.colSpan}
-												onClick={header.column.getToggleSortingHandler()}
-												className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
-												style={{ minWidth: header.getSize() }}
-											>
-												<div className="items-center justify-between text-xs text-gray-200">
-													<p className="text-lg font-bold text-gray-600">
-														{header.id}
-														{{
-															asc: '  ▲',
-															desc: '  ▼',
-														}[header.column.getIsSorted() as string] ?? null}
-													</p>
-												</div>
-											</th>
-										);
-									})}
-								</tr>
-							))}
-						</thead>
-						<tbody>
-							{table.getRowModel().rows.map((rows) => {
-								return (
-									<tr
-										key={rows.id}
-										className={`${isClick ? 'cursor-pointer' : ''}`}
-										onClick={isClick ? () => itemClick(rows.original.newsNo) : undefined}
-									>
-										{rows.getVisibleCells().map((cell) => {
+							{table &&
+								table.getHeaderGroups().map((headerGroup) => (
+									<tr key={headerGroup.id} className="!border-px !border-gray-400">
+										{headerGroup.headers.map((header) => {
 											return (
-												<td key={cell.id} className="border-white/0 py-3 pr-4">
-													{flexRender(cell.column.columnDef.cell, cell.getContext())}
-												</td>
+												<th
+													key={header.id}
+													colSpan={header.colSpan}
+													onClick={header.column.getToggleSortingHandler()}
+													className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
+													style={{ minWidth: header.getSize() }}
+												>
+													<div className="items-center justify-between text-xs text-gray-200">
+														<p className="text-lg font-bold text-gray-600">
+															{header.id}
+															{{
+																asc: '  ▲',
+																desc: '  ▼',
+															}[header.column.getIsSorted() as string] ?? null}
+														</p>
+													</div>
+												</th>
 											);
 										})}
 									</tr>
-								);
-							})}
+								))}
+						</thead>
+						<tbody>
+							{table &&
+								table.getRowModel().rows.map((rows) => {
+									return (
+										<tr
+											key={rows.id}
+											className={`${isClick ? 'cursor-pointer' : ''}`}
+											onClick={isClick ? () => itemClick(rows.original.newsNo) : undefined}
+										>
+											{rows.getVisibleCells().map((cell) => {
+												return (
+													<td key={cell.id} className="border-white/0 py-3 pr-4">
+														{flexRender(cell.column.columnDef.cell, cell.getContext())}
+													</td>
+												);
+											})}
+										</tr>
+									);
+								})}
 						</tbody>
 					</table>
 				) : (
