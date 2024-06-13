@@ -5,12 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { MdLaptopChromebook } from 'react-icons/md';
 import { HiOutlineDesktopComputer } from 'react-icons/hi';
 import { ProjectService } from '../../../services/projectService';
+import { ProfileService } from '../../../services/profileService';
 import useProject from '../../../store/useProject';
 import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLineWidget';
+import ColumnsTable from '../../../components/columnsTable';
 
 const Project = () => {
 	const list = useQuery('projectList', ProjectService().projectList); // 목록 조회
 	useQuery('projectDetail', ProjectService().projectDetail); // 상세조회
+	useQuery('getProfileList', ProfileService().getProfileList);
 	const navigate = useNavigate();
 	const { projectList, setProjectNo, setClearProjectNo, setClear } = useProject();
 	const [title, setTitle] = useState('프로젝트');
@@ -59,40 +62,10 @@ const Project = () => {
 							<div className="text-xl font-bold text-navy-700 dark:text-white">프로젝트</div>
 						</header>
 
-						<Button
-							className="!w-[10rem]"
-							onClick={() => {
-								newProject();
-							}}
-						>
-							등록
-						</Button>
-
-						<div className="mt-8 mx-[3rem] min-w-[600px]">
-							<SimpleGrid columns={3} spacing={10}>
-								{list.isSuccess
-									? projectList.map((item) => (
-											<Card
-												key={item.projectNo}
-												variant="outline"
-												className="cursor-pointer !min-w-[200px]"
-												onClick={() => projectClick(item.projectNo)}
-											>
-												<CardHeader>
-													<Heading size="md"> {item.projectName}</Heading>
-												</CardHeader>
-												<CardBody>
-													<Text>고객사 : {item.client}</Text>
-													<Text>파트너 : {item.partner}</Text>
-													<Text>상태 : {item.status}</Text>
-													<Text>단계 : {item.step}</Text>
-													<Text>시작일 : {item.startDate}</Text>
-													<Text>종료일 : {item.endDate}</Text>
-												</CardBody>
-											</Card>
-										))
-									: ''}
-							</SimpleGrid>
+						<div className="mx-[3rem] min-w-[600px]">
+							{list.isSuccess && (
+								<ColumnsTable list={projectList} show={9} isClick isSearch={false} addButton={newProject} detailButton={projectClick} type="card" />
+							)}
 						</div>
 					</>
 				) : (
@@ -101,25 +74,10 @@ const Project = () => {
 							<div className="text-xl font-bold text-navy-700 dark:text-white">연구과제</div>
 						</header>
 
-						<div className="mt-8 mx-[3rem] min-h-[600px]">
-							<SimpleGrid columns={3} spacing={10} templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
-								{list.isSuccess &&
-									projectList.map((item) => (
-										<Card key={item.projectNo} variant="outline" className="cursor-pointer" onClick={() => researchClick(item.projectNo)}>
-											<CardHeader>
-												<Heading size="md"> {item.projectName}</Heading>
-											</CardHeader>
-											<CardBody>
-												<Text>고객사 : {item.client}</Text>
-												<Text>파트너 : {item.partner}</Text>
-												<Text>상태 : {item.status}</Text>
-												<Text>단계 : {item.step}</Text>
-												<Text>시작일 : {item.startDate}</Text>
-												<Text>종료일 : {item.endDate}</Text>
-											</CardBody>
-										</Card>
-									))}
-							</SimpleGrid>
+						<div className="mx-[3rem] min-w-[600px]">
+							{list.isSuccess && (
+								<ColumnsTable list={projectList} show={9} isClick isSearch={false} addButton={newProject} detailButton={projectClick} type="card" />
+							)}
 						</div>
 					</>
 				)}

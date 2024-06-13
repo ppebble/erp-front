@@ -13,6 +13,7 @@ import {
 	Text,
 	InputGroup,
 	InputLeftAddon,
+	Tag,
 } from '@chakra-ui/react';
 import useModal from '../../store/useModal';
 import ToastEditor from '../textEditor/toastEditor';
@@ -100,7 +101,9 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 								<InputLeftAddon className="!min-w-[120px] ml-[20px]">작성자</InputLeftAddon>
 								<Input id="name" className="pointer-events-none" defaultValue={contents.name || ''} />
 							</InputGroup>
-							<p>내용</p>
+							<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px] mb-[10px]">
+								내용
+							</Tag>
 							<Text
 								id="body"
 								className="border border-[#E2E8F0] border-solid rounded-md px-[10px] py-[5px] !h-[20rem]"
@@ -128,7 +131,9 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 
 					<AlertDialogBody>
 						<div>
-							<p>제목</p>
+							<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px] mb-[10px]">
+								제목
+							</Tag>
 							<Input defaultValue={contents?.title || ''} className="mb-[10px]" />
 							<InputContainer
 								props={{ id: fileCount, file: '' }}
@@ -138,7 +143,9 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 								type="attachment"
 								style={'board' || ''}
 							/>
-							<p>내용</p>
+							<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px] mb-[10px]">
+								내용
+							</Tag>
 							<ToastEditor />
 						</div>
 					</AlertDialogBody>

@@ -107,6 +107,7 @@ const Workforce = () => {
 						search={search}
 						setSearch={setSearch}
 						filter={filter}
+						type="table"
 					/>
 				)}
 			</Card>

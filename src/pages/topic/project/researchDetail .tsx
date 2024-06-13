@@ -71,7 +71,7 @@ const ResearchDetail = () => {
 			<Card className="w-full h-full pt-[20px] pb-10 sm:px-[20px]">
 				<div className="flex pl-[10%] pr-[20%]">
 					<header className="flex mt-[auto] float-left">
-						<div className="text-xl font-bold text-navy-700">프로젝트 상세보기</div>
+						<div className="text-xl font-bold text-navy-700">연구과제 상세보기</div>
 					</header>
 				</div>
 				<div className="mt-5 overflow-x-scroll xl:overflow-x-hidden min-h-[800px] xl:pl-[10%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">

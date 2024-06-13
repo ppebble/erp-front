@@ -1,16 +1,22 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
+import { AccessorKeyColumnDef, SortingState, flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import {
-	AccessorKeyColumnDef,
-	SortingState,
-	createColumnHelper,
-	flexRender,
-	getCoreRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from '@tanstack/react-table';
-import { Button, Flex, Input, InputGroup, InputRightElement, Select, Spacer } from '@chakra-ui/react';
+	Button,
+	Card,
+	CardBody,
+	CardHeader,
+	Flex,
+	Heading,
+	Input,
+	InputGroup,
+	InputRightElement,
+	Select,
+	SimpleGrid,
+	Spacer,
+	Text,
+} from '@chakra-ui/react';
 import { BsPlusCircle } from 'react-icons/bs';
 import { SearchIcon } from '@chakra-ui/icons';
 import { ProfileService } from '../../services/profileService';
@@ -23,7 +29,7 @@ type searchType = {
 };
 
 type ColumnsTableProps = {
-	columns: AccessorKeyColumnDef<any, any>[];
+	columns?: AccessorKeyColumnDef<any, any>[];
 	list: any;
 	show: number;
 	isClick: boolean;
@@ -33,9 +39,24 @@ type ColumnsTableProps = {
 	setSearch?: (state: searchType) => void;
 	filter?: any;
 	addButton?: any;
+	detailButton?: any;
+	type: string;
 };
 
-const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, search, setSearch, filter, addButton }: ColumnsTableProps) => {
+const ColumnsTable = ({
+	columns,
+	searchItem,
+	list,
+	isClick,
+	isSearch,
+	show,
+	search,
+	setSearch,
+	filter,
+	addButton,
+	detailButton,
+	type,
+}: ColumnsTableProps) => {
 	useQuery('getProfileList', ProfileService().getProfileList);
 	const { updateBoard } = BoardService();
 	const [row] = useState(show);
@@ -153,55 +174,75 @@ const ColumnsTable = ({ columns, searchItem, list, isClick, isSearch, show, sear
 					</Button>
 				</div>
 			)}
-			<div className="mt-8 mx-[3rem] min-h-[600px]">
-				<table className="w-full">
-					<thead>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<tr key={headerGroup.id} className="!border-px !border-gray-400">
-								{headerGroup.headers.map((header) => {
-									return (
-										<th
-											key={header.id}
-											colSpan={header.colSpan}
-											onClick={header.column.getToggleSortingHandler()}
-											className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
-											style={{ width: header.getSize() }}
-										>
-											<div className="items-center justify-between text-xs text-gray-200">
-												<p className="text-lg font-bold text-gray-600">
-													{header.id}
-													{{
-														asc: '  ▲',
-														desc: '  ▼',
-													}[header.column.getIsSorted() as string] ?? null}
-												</p>
-											</div>
-										</th>
-									);
-								})}
-							</tr>
-						))}
-					</thead>
-					<tbody>
-						{table.getRowModel().rows.map((rows) => {
-							return (
-								<tr
-									key={rows.id}
-									className={`${isClick ? 'cursor-pointer' : ''}`}
-									onClick={isClick ? () => itemClick(rows.original.newsNo) : undefined}
-								>
-									{rows.getVisibleCells().map((cell) => {
+			<div className={`mt-8 mx-[3rem] ${type === 'table' ? 'min-h-[35rem]' : 'min-h-[53rem]'}`}>
+				{type === 'table' ? (
+					<table className="w-full">
+						<thead>
+							{table.getHeaderGroups().map((headerGroup) => (
+								<tr key={headerGroup.id} className="!border-px !border-gray-400">
+									{headerGroup.headers.map((header) => {
 										return (
-											<td key={cell.id} className="border-white/0 py-3 pr-4">
-												{flexRender(cell.column.columnDef.cell, cell.getContext())}
-											</td>
+											<th
+												key={header.id}
+												colSpan={header.colSpan}
+												onClick={header.column.getToggleSortingHandler()}
+												className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
+												style={{ minWidth: header.getSize() }}
+											>
+												<div className="items-center justify-between text-xs text-gray-200">
+													<p className="text-lg font-bold text-gray-600">
+														{header.id}
+														{{
+															asc: '  ▲',
+															desc: '  ▼',
+														}[header.column.getIsSorted() as string] ?? null}
+													</p>
+												</div>
+											</th>
 										);
 									})}
 								</tr>
-							);
-						})}
-					</tbody>
-				</table>
+							))}
+						</thead>
+						<tbody>
+							{table.getRowModel().rows.map((rows) => {
+								return (
+									<tr
+										key={rows.id}
+										className={`${isClick ? 'cursor-pointer' : ''}`}
+										onClick={isClick ? () => itemClick(rows.original.newsNo) : undefined}
+									>
+										{rows.getVisibleCells().map((cell) => {
+											return (
+												<td key={cell.id} className="border-white/0 py-3 pr-4">
+													{flexRender(cell.column.columnDef.cell, cell.getContext())}
+												</td>
+											);
+										})}
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				) : (
+					<SimpleGrid columns={3} spacing={10} className="mb-[20px]">
+						{data.map((item: any) => (
+							<Card key={item.projectNo} variant="outline" className="cursor-pointer !min-w-[200px]" onClick={() => detailButton(item.projectNo)}>
+								<CardHeader>
+									<Heading size="md"> {item.projectName}</Heading>
+								</CardHeader>
+								<CardBody>
+									<Text>고객사 : {item.client}</Text>
+									<Text>파트너 : {item.partner}</Text>
+									<Text>상태 : {item.status}</Text>
+									<Text>단계 : {item.step}</Text>
+									<Text>시작일 : {item.startDate}</Text>
+									<Text>종료일 : {item.endDate}</Text>
+								</CardBody>
+							</Card>
+						))}
+					</SimpleGrid>
+				)}
 			</div>
 
 			<div>

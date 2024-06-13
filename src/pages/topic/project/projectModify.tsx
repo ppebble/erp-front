@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Input, InputGroup, InputLeftAddon, Textarea, Divider, Table, Card, Select } from '@chakra-ui/react';
+import { ArrowLeftIcon } from '@chakra-ui/icons';
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from 'react-icons/io';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { GoDot, GoDotFill } from 'react-icons/go';
@@ -12,15 +12,15 @@ import useProfile from '../../../store/useProfile';
 import useModal from '../../../store/useModal';
 import { partnerType, projectMember as projectMemberType } from '../../../network/response/projectParams';
 import { ProjectService } from '../../../services/projectService';
-import { ProfileService } from '../../../services/profileService';
+import ProfileNumberInput from '../../../components/profileNumberInput';
 
 // 프로젝트 추가 / 수정
 const ProjectModify = () => {
 	const { state } = useLocation();
+	const navigate = useNavigate();
 	const { isNew } = state;
 	const insert = ProjectService().insertProject;
 	const modify = ProjectService().modifyProject;
-	useQuery('getProfileList', ProfileService().getProfileList);
 	const { project, projectDetail, projectMember, projectOutput, setProject, setProjectDetail, setProjectMember, setProjectOutput, setClear } =
 		useProject();
 	const { openModal, closeModal } = useModal();
@@ -85,7 +85,7 @@ const ProjectModify = () => {
 
 	const newProject = () => {
 		const formData = new FormData();
-		project.managerNo = 21;
+		// project.managerNo = 21;
 		const param = { project, projectDetail, projectMember, projectOutput };
 		console.log(param);
 
@@ -94,7 +94,7 @@ const ProjectModify = () => {
 		});
 		formData.append('projectDataVo', JSON.stringify(param));
 
-		// insert.mutate(formData);
+		insert.mutate(formData);
 	};
 
 	const updateOk = () => {
@@ -144,6 +144,7 @@ const ProjectModify = () => {
 
 	useEffect(() => {
 		if (memberValue && search && search.length === 1) {
+			console.log(search[0].profileNo);
 			memberValue[selectIndex].profileNo = search[0].profileNo;
 			setProjectMember(memberValue);
 		}
@@ -153,10 +154,17 @@ const ProjectModify = () => {
 	return (
 		<div className="mt-5 grid">
 			<Card className="w-full h-full pt-[20px] pb-10 sm:px-[20px]">
-				<div className="flex xl:pl-[20%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
-					<header className="flex mt-[auto] float-left">
-						<div className="text-xl font-bold text-navy-700">{isNew ? '프로젝트 추가' : '프로젝트 수정'}</div>
-					</header>
+				<div>
+					<div className="float-left text-right md:w-[10%] xl:w-[20%]">
+						<Button className="mr-[2rem]" onClick={() => navigate('/topic/project')}>
+							<ArrowLeftIcon />
+						</Button>
+					</div>
+					<div className="float-left md:pr-[10%] xl:pr-[20%]">
+						<header className="flex mt-[auto]">
+							<div className="text-xl font-bold text-navy-700">{isNew ? '프로젝트 추가' : '프로젝트 수정'}</div>
+						</header>
+					</div>
 				</div>
 				<div className="mt-5 overflow-x-scroll xl:overflow-x-hidden xl:pl-[20%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
 					{/* project */}
@@ -164,7 +172,7 @@ const ProjectModify = () => {
 						<InputLeftAddon className="!min-w-[120px]">프로젝트명</InputLeftAddon>
 						<Input id="projectName" onChange={(e) => changeProject(e)} defaultValue={isNew ? '' : project.projectName} />
 						<InputLeftAddon className="!min-w-[120px] ml-[20px]">담당자</InputLeftAddon>
-						<Input id="managerNo" onChange={(e) => changeProject(e)} defaultValue={isNew ? '' : project.managerNo} />
+						<ProfileNumberInput id="managerNo" onChange={(e: any) => changeProject(e)} defaultValue={isNew ? '' : project.managerNo} />
 					</InputGroup>
 					<InputGroup className="mb-3">
 						<InputLeftAddon className="!min-w-[120px]">시작일</InputLeftAddon>

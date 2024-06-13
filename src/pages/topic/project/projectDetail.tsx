@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Input, InputGroup, InputLeftAddon, Textarea, Divider, Table, Card } from '@chakra-ui/react';
+import { ArrowBackIcon, ArrowLeftIcon } from '@chakra-ui/icons';
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from 'react-icons/io';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { GoDot, GoDotFill } from 'react-icons/go';
@@ -69,10 +70,17 @@ const ProjectDetail = () => {
 	return (
 		<div className="mt-5 grid">
 			<Card className="w-full h-full pt-[20px] pb-10 sm:px-[20px]">
-				<div className="flex xl:pl-[20%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
-					<header className="flex mt-[auto] float-left">
-						<div className="text-xl font-bold text-navy-700">프로젝트 상세보기</div>
-					</header>
+				<div>
+					<div className="float-left text-right md:w-[10%] xl:w-[20%]">
+						<Button className="mr-[2rem]" onClick={() => navigate('/topic/project')}>
+							<ArrowLeftIcon />
+						</Button>
+					</div>
+					<div className="float-left md:pr-[10%] xl:pr-[20%]">
+						<header className="flex mt-[auto]">
+							<div className="text-xl font-bold text-navy-700">프로젝트 상세보기</div>
+						</header>
+					</div>
 				</div>
 				<div className="mt-5 overflow-x-scroll xl:overflow-x-hidden xl:pl-[20%] xl:pr-[20%] md:pl-[10%] md:pr-[10%]">
 					{/* project */}

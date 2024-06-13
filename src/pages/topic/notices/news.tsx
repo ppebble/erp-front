@@ -65,7 +65,7 @@ const News = () => {
 				<header className="relative flex items-center justify-between">
 					<div className="text-xl font-bold text-navy-700 dark:text-white">회사소식</div>
 				</header>
-				{isSuccess && <ColumnsTable columns={columns} list={news} show={show} isClick isSearch={false} addButton={write} />}
+				{isSuccess && <ColumnsTable columns={columns} list={news} show={show} isClick isSearch={false} addButton={write} type="table" />}
 			</Card>
 		</div>
 	);

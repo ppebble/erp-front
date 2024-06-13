@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 import useProfile from '../../store/useProfile';
 import useProject from '../../store/useProject';
+import ProfileNumberInput from '../profileNumberInput';
 
 type InputComponentprops = {
 	inputItems: any;
@@ -241,13 +242,9 @@ const InputComponent = ({
 					<>
 						<div>
 							<Flex className="mb-[10px] flex">
-								{style === 'board' ? (
-									<p className="self-end">첨부파일</p>
-								) : (
-									<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px]">
-										산출물
-									</Tag>
-								)}
+								<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px]">
+									산출물
+								</Tag>
 
 								<Spacer />
 								{!readOnly && <Button onClick={() => addInput()}>추가</Button>}
@@ -295,12 +292,11 @@ const InputComponent = ({
 								<div key={`member_${item?.id ? item?.id : item?.memberNo}`}>
 									<InputGroup className="mb-2">
 										<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
-										<Input
+										<ProfileNumberInput
 											id="member"
 											className={`${readOnly && 'pointer-events-none'}`}
-											placeholder="이름만 입력하세요."
+											onChange={(e: any) => onChange(e, index)}
 											defaultValue={item?.member || ''}
-											onChange={(e) => onChange(e, index)}
 										/>
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">직책</InputLeftAddon>
 										<Input

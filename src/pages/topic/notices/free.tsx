@@ -32,22 +32,22 @@ const Board = () => {
 		columnHelper.accessor('body', {
 			id: '내용',
 			cell: (info) => addTag(info.getValue()),
-			size: 200,
+			size: 300,
 		}),
 		columnHelper.accessor('name', {
 			id: '작성자',
 			cell: (info) => addTag(info.getValue()),
-			size: 200,
+			size: 100,
 		}),
 		columnHelper.accessor('createDate', {
 			id: '작성일',
 			cell: (info) => addTag(info.getValue()),
-			size: 200,
+			size: 100,
 		}),
 		columnHelper.accessor('modifyDate', {
 			id: '수정일',
 			cell: (info) => addTag(info.getValue()),
-			size: 250,
+			size: 100,
 		}),
 	];
 
@@ -61,11 +61,11 @@ const Board = () => {
 
 	return (
 		<div className="mt-5 grid">
-			<Card extra="w-full pb-10 p-4 h-full">
+			<Card extra="w-full pb-10 p-4 h-full overflow-auto">
 				<header className="relative flex items-center justify-between">
 					<div className="text-xl font-bold text-navy-700 dark:text-white">자유게시판</div>
 				</header>
-				{isSuccess && <ColumnsTable columns={columns} list={news} show={show} isClick isSearch={false} addButton={write} />}
+				{isSuccess && <ColumnsTable columns={columns} list={news} show={show} isClick isSearch={false} addButton={write} type="table" />}
 			</Card>
 		</div>
 	);
