@@ -53,13 +53,13 @@ const App = () => {
 					<Route path="free" element={<Free />} />
 					<Route path="notice" element={<Notice />} />
 					<Route path="signup" element={<SignUp />} />
+					<Route path="password" element={<Password />} />
 				</Route>
 				<Route path="external" element={<AdminPopup />}>
 					<Route path="mailAccept/*" element={<AnnualMailAccept />} />
 				</Route>
 				<Route path="admin" element={<Topic />}>
 					<Route path="annualManage" element={<AnnualManageComponent />} />
-					<Route path="password" element={<Password />} />
 					<Route path="upload" element={<Upload />} />
 				</Route>
 				<Route path="/" element={<Navigate to="/auth/login" replace />} />
