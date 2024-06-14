@@ -63,7 +63,7 @@ const AnnualManageComponent = () => {
 		return (
 			<div className="flex font-bold">
 				<Textarea
-					readOnly={!dateValidation(row.original.start)}
+					readOnly={!dateValidation(row.original.start) && row.original.signType !== 0}
 					defaultValue={value}
 					onChange={(e) => {
 						setValue(e.target.value);
