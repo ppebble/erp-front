@@ -10,25 +10,7 @@ import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useEvents, 
 import { CustomCalendarModal } from '../../../components/calendar/modal/CustomCalendarModal';
 import { CalendarTaskType } from '../../../components/calendar/utils/event-utils';
 import CalendarService from '../../../services/calendarService';
-
-const taskColor = {
-	sc: '#1cb9e0',
-	sf: '#00e413',
-	manage: '#f52b4d',
-	dev: '#9842fa',
-	personal: '#787f8f',
-	sb: '#e9baba',
-	myPersonal: '#aaafbb',
-};
-const taskLists = [
-	{ id: 'sc', name: 'SC사업부', color: taskColor.sc },
-	{ id: 'sf', name: 'SF&신사업부', color: taskColor.sf },
-	{ id: 'manage', name: '경영팀', color: taskColor.manage },
-	{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
-	{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
-	{ id: 'personal', name: '개인일정', color: taskColor.personal },
-	// { id: 'myPersonal', name: '나의 개인일정', color: taskColor.myPersonal },
-] as const;
+import { taskColor, taskLists } from '../../../store/common/useCommon';
 
 // 부서 필터 default value ... 개인일정... + (로그인한 본인 부서)
 let filter = ['personal'] as string[];
@@ -46,24 +28,12 @@ const CompanyCalendar = () => {
 		const task = { id: 'personal', name: '개인일정', color: taskColor.personal };
 		calendarAction.setCalendarParam({ display: 'block', task });
 	}, []);
-	// useEffect(() => {
-	// 	if (!isDialogOpen) {
-	// 		queryClient.invalidateQueries('getEvents');
-	// 	}
-	// }, [isDialogOpen]);
 	const activeTask = (task: CalendarTaskType) => {
 		if (task.id !== selectedTask.id) {
 			setSelectedTask(task);
 			calendarAction.setCalendarParam({ display: 'block', task });
 		}
 	};
-	// useEffect(() => {
-	// 	calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
-	// }, []);
-
-	// useEffect(() => {
-	// 	calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
-	// }, [events]);
 
 	return (
 		<>
@@ -87,9 +57,7 @@ const CompanyCalendar = () => {
 										<div className="mt-3 h-px w-full bg-gray-200 dark:bg-white/20 " />
 										<CheckboxGroup
 											onChange={(e) => {
-												// e = arrayList
 												filter = Object.assign([], e);
-												// calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
 												calendarAction.setFilter(filter);
 												queryClient.invalidateQueries(['getEvents']);
 											}}
@@ -121,8 +89,6 @@ const CompanyCalendar = () => {
 										onClick={() => {
 											// 일정 추가 팝업 모달
 											if (!isDialogOpen) {
-												// calendarAction.setCalendarEventParam(clickInfo.event);
-												// calendarAction.setAddFlag(true);
 												calendarAction.setWorkType('add');
 												calendarAction.setCalendarParam({
 													display: 'block',

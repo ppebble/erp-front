@@ -1,10 +1,5 @@
 import React, { useEffect } from 'react';
-import { BsThreeDots } from 'react-icons/bs';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { FiToggleLeft, FiToggleRight } from 'react-icons/fi';
-import Card from '../../../../components/card';
-import CustomViewTable from '../../../../components/table/CustomViewTable';
-import Progress from '../../../../components/progress';
 
 type AttendRow = {
 	enterTime?: string;

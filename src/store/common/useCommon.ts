@@ -49,6 +49,46 @@ export type taskList = (typeof taskList)[keyof typeof taskList];
 
 type ValuesOf<E> = E[keyof E];
 
+export enum ModalList {
+	PROJECT_PARTER_ADD, // 프로젝트 - 파트너 추가
+	BOARD_VIEW_DETAIL, // 게시판 글 상세보기
+	BOARD_WRITE, // 게시판 글쓰기
+	ALERT_ALARM, // 알림
+	ALERT_CONFIRM, // 수정/삭제
+	ANNUAL_ADD, // 연차 신청
+	EQUIP_ADD, // 장비 등록/조회
+	BOOK_ADD, // 도서 등록/조회
+}
+export enum AnnualType {
+	반차,
+	연차,
+}
+export enum SignType {
+	self,
+	undefined,
+	director,
+	CEO,
+	reject,
+	cancel,
+}
+export const taskColor = {
+	sc: '#1cb9e0',
+	sf: '#00e413',
+	manage: '#f52b4d',
+	dev: '#9842fa',
+	personal: '#787f8f',
+	sb: '#e9baba',
+	myPersonal: '#aaafbb',
+};
+export const taskLists = [
+	{ id: 'sc', name: 'SC사업부', color: taskColor.sc },
+	{ id: 'sf', name: 'SF&신사업부', color: taskColor.sf },
+	{ id: 'manage', name: '경영팀', color: taskColor.manage },
+	{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
+	{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
+	{ id: 'personal', name: '개인일정', color: taskColor.personal },
+] as const;
+
 // 쓸지 알 수 없음
 export const errorCode = {
 	7000: { code: '7000', message: 'SUCCESS' },

@@ -22,20 +22,14 @@ type MailAcceptProps = {
 
 const AnnualMailAccept = () => {
 	const location = useLocation();
-	console.log(location.pathname.split('/'));
 	const extractData = location.pathname.substring(21);
-	console.log(extractData);
 
-	// const encryptedData =
-	// 	'xYXj6mgjPlOMz3ayHllDoFurhpl5GbSrnSS1bO4W/M6oMabbinb/PPodYS0F9QqQ4ErFrxRNlBK/ygMMMWGKofzatzGLGfsiQfE+3GqgsxNzdBhBN5S93KUib5/96wkD';
 	const encryptedData = extractData;
 	const secretKey = 'NexmoreUrlTokenParam!!!'; // key
 	const decryptedData = decryptData(encryptedData, secretKey);
 	const data: MailAcceptProps = JSON.parse(decryptedData);
 	const annualService = AnnualService();
-	if (decryptedData) {
-		console.log(data);
-	}
+
 	useEffect(() => {
 		annualService.approveAnnual.mutate(
 			{
@@ -46,7 +40,6 @@ const AnnualMailAccept = () => {
 			{
 				onSuccess: () => {
 					window.open('about:blank', '_self')?.self.close();
-					// window.close();
 				},
 			},
 		);
@@ -437,9 +430,6 @@ const AnnualMailAccept = () => {
 							<img src={logo} alt="NEXMORE" />
 						</td>
 					</tr>
-					{/* <tr>
-						<td style={{ textAlign: 'left' }}>첨부 : [사유서 또는 향군등의 경우 자료 첨부]</td>
-					</tr> */}
 				</tbody>
 			</table>
 		</div>

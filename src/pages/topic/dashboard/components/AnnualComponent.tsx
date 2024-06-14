@@ -1,9 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState } from 'react';
-import { createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
-import { BsThreeDots } from 'react-icons/bs';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
-import Progress from '../../../../components/progress';
 import Card from '../../../../components/card';
 import useModal from '../../../../store/useModal';
 import { CustomAnnualDetailComponent } from './modal/CustomAnnualDetailComponent';
@@ -17,7 +14,6 @@ const AnnualComponent = () => {
 	return (
 		<Card extra="w-full p-2 h-full">
 			<div className="grid items-center grid-cols-12 gap-2 md:grid-cols-12">
-				{/* <div className="text-xl font-bold text-navy-700 dark:text-white col-span-3">유효 기간 : {defaultData.validDate || ''}</div> */}
 				<div className="text-xl font-bold text-navy-700 dark:text-white col-span-3">
 					연차 총량 : {defaultData.length > 0 ? defaultData[0].annualDay : 0}
 				</div>
@@ -37,7 +33,6 @@ const AnnualComponent = () => {
 					<div className="col-span-1" />
 					<button
 						onClick={() => {
-							// openModal({ type: 6, closeOnOverlay: true });
 							setIsDetail(!isDetail);
 						}}
 						className="dark:active-bg-white-20 linear col-span-2 rounded-md bg-lightPrimary px-4 py-2 text-base font-medium text-brand-500 transition duration-200 hover:bg-gray-100 active:bg-gray-200 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"

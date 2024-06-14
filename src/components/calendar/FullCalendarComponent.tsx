@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import '@fullcalendar/react/dist/vdom';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/react';
-import { useQuery, useQueryClient } from 'react-query';
-import moment from 'moment';
-import { CalendarParam, getTodayString, INITIAL_EVENTS } from './utils/event-utils';
+import FullCalendar, { EventClickArg, EventContentArg } from '@fullcalendar/react';
+import { useQuery } from 'react-query';
+import { getTodayString } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
@@ -15,22 +14,16 @@ import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendar
 import CalendarService from '../../services/calendarService';
 
 const FullCalendarComponent = () => {
-	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
-
 	const { isSideBar } = useSideBar();
 	const calendarRef = useRef<FullCalendar>(null);
-	const calendarParam = useCalendarParam();
 	const isDialogOpen = useCalendarDialogOpen();
 	const calendarAction = useCalendarAction();
-	const events = useEvents();
 	const calendar = calendarRef.current?.getApi();
 
 	const initEvents = useFilteredEvents();
 	const [currentDate, setCurrentDate] = useState<string>(getTodayString());
-	const { isSuccess, refetch } = useQuery(['getEvents', currentDate.slice(0, 7)], CalendarService(currentDate).getEventQuery);
-	const queryClient = useQueryClient();
+	const { isSuccess } = useQuery(['getEvents', currentDate.slice(0, 7)], CalendarService(currentDate).getEventQuery);
 
-	const filter = [''] as string[];
 	const convertDate = (date: any) => {
 		const yyyy = date.getFullYear().toString();
 		const mm = date.getMonth() + 1;
@@ -54,9 +47,6 @@ const FullCalendarComponent = () => {
 	useEffect(() => {
 		if (initEvents && calendar) {
 			calendar.addEvent(initEvents);
-			if (isSuccess) {
-				// calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
-			}
 		}
 	}, [initEvents]);
 	useEffect(() => {
@@ -73,25 +63,13 @@ const FullCalendarComponent = () => {
 		(clickInfo: EventClickArg) => {
 			if (!isDialogOpen) {
 				calendarAction.setWorkType('edit');
-				const event = { ...clickInfo.event };
-				// event.event.end = moment(clickInfo.event.end).subtract(1, 'days');
 				calendarAction.setCalendarEventParam(clickInfo.event);
 				calendarAction.setCalendarDialogFlag(true);
 			}
 		},
 		[isDialogOpen],
 	);
-	const renderEventContent = (eventContent: EventContentArg) => (
-		<>
-			{/* <b>{eventContent.timeText}</b> */}
-			<p className="hover:cursor-pointer">{eventContent.event.title}</p>
-		</>
-	);
-	// useEffect(() => {
-	// 	if (!isDialogOpen) {
-	// 		queryClient.invalidateQueries([`getEvents, ${currentDate.slice(0, 7)}`]);
-	// 	}
-	// }, [isDialogOpen]);
+	const renderEventContent = (eventContent: EventContentArg) => <p className="hover:cursor-pointer">{eventContent.event.title}</p>;
 	return (
 		<Card extra="mt-15 flex w-full h-full flex-col px-3 py-3">
 			<div
@@ -119,7 +97,6 @@ const FullCalendarComponent = () => {
 					events={initEvents}
 					customButtons={{
 						cPrevBtn: {
-							// text: '<',
 							icon: 'chevron-left',
 							click: () => {
 								calendar?.prev();

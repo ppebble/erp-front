@@ -1,42 +1,16 @@
-import {
-	AlertDialogContent,
-	AlertDialogHeader,
-	Button,
-	AlertDialogBody,
-	AlertDialogCloseButton,
-	AlertDialogFooter,
-	useDisclosure,
-	Select,
-} from '@chakra-ui/react';
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
-import { EventInput } from '@fullcalendar/react';
+import { AlertDialogContent, AlertDialogHeader, Button, AlertDialogBody, AlertDialogCloseButton, AlertDialogFooter, Select } from '@chakra-ui/react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import ReactSignatureCanvas from 'react-signature-canvas';
-import {
-	useCalendarDialogOpen,
-	useCalendarEvnetParam,
-	useCalendarParam,
-	useEvents,
-	useInputEvent,
-	useWorkType,
-} from '../../../../../store/useCalendar';
-import { getEventColor } from '../../../../../components/calendar/utils/event-utils';
+import { useCalendarEvnetParam } from '../../../../../store/useCalendar';
 import { annualProps, scheduleResult } from '../../../../../network/response/scheduleResult';
-import CalendarService from '../../../../../services/calendarService';
 import AnnualService from '../../../../../services/annualService';
 import { useAnnualAction, useManagerList } from '../../../../../store/useAnnual';
 import useModal from '../../../../../store/useModal';
+import { AnnualType, SignType } from '../../../../../store/common/useCommon';
 
 export const CustomAnnualAddModal = ({ onClose }: any) => {
-	const { isOpen, onOpen } = useDisclosure();
-	// const [size, setSize] = useState('md');
-	const isDialogOpen = useCalendarDialogOpen();
-	const [isConfirm, setIsConfirm] = useState<boolean>(false);
-	// const refAnnType = useRef<HTMLSelectElement>(null);
 	const [annType, setAnnType] = useState<string>('연차');
 	const selectedEvent = useCalendarEvnetParam();
-	// const isAdd = useAddEventFlag();
-	// const [eventParam, setEventParam] = useState<scheduleResult>({} as scheduleResult);
-	// const [annualParam, setAnnualParam] = useState<annualProps>({} as annualProps);
 	const [manager, setManager] = useState<number>(0);
 
 	const [defStart, setDefStart] = useState<string | undefined>('');
@@ -52,7 +26,6 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 	const managerList = useManagerList();
 	const { openModal } = useModal();
 
-	useEffect(() => {}, [refEventStartDate.current]);
 	const createAnnual = AnnualService().createAnnualMutation;
 
 	const onCloseAnn = () => {
@@ -98,15 +71,14 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 		}
 
 		annualParam.sign = refSignCanvas.current?.toDataURL();
-		annualParam.annType = annType.includes('반차') ? 0 : 1;
+		annualParam.annType = annType.includes('반차') ? AnnualType.반차 : AnnualType.연차;
 		annualParam.managerNo = manager;
-		annualParam.signType = 0;
+		annualParam.signType = SignType.self;
 		if (refEventDesc.current?.value) {
 			annualParam.note = refEventDesc.current.value;
 		}
 
 		// 연차 신청서 작성
-		console.log(annualParam);
 		createAnnual.mutate(annualParam);
 
 		onCloseAnn();
@@ -199,7 +171,6 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 							>
 								{managerList.length > 0 &&
 									managerList.map((e) => {
-										console.log(managerList);
 										return (
 											<option key={e.profileNo} value={e.profileNo}>
 												{e.name}
@@ -242,9 +213,6 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 					<option value="오후반차">오후 반차</option>
 					<option value="경조">경조</option>
 					<option value="결근">결근</option>
-					{/* <option value="조퇴">조퇴</option> */}
-					{/* <option value="외출">외출</option>
-					<option value="월차">월차</option> */}
 					<option value="하기휴가">하기휴가</option>
 				</Select>
 				<Button

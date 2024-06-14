@@ -25,7 +25,6 @@ const AnnualManageComponent = () => {
 	const { isSuccess } = useQuery(['getAnnApproveList'], AnnualService({ managerNo: 49 }).getAdminAnnualRequest);
 
 	const reqData = useAdminAnnRequest();
-	const annualAction = useAnnualAction();
 	const annReqColHelper = createColumnHelper<AnnReqProps>();
 	const refSignCanvas = useRef() as MutableRefObject<any>;
 	const [title, setTitle] = useState<string>(ANNUAL_STRING.reqMng);
@@ -38,7 +37,7 @@ const AnnualManageComponent = () => {
 
 	const [pagination, setPagination] = useState<PaginationState>({
 		pageIndex: 0,
-		pageSize: 100,
+		pageSize: 5,
 	});
 	useEffect(() => {
 		if (title === ANNUAL_STRING.aprMng) {
@@ -63,10 +62,13 @@ const AnnualManageComponent = () => {
 		return (
 			<div className="flex font-bold">
 				<Textarea
-					readOnly={!dateValidation(row.original.start) && row.original.signType !== 0}
+					disabled={!dateValidation(row.original.start) && row.original.signType !== 0}
 					defaultValue={value}
 					onChange={(e) => {
 						setValue(e.target.value);
+					}}
+					onMouseDown={(e) => {
+						e.currentTarget.focus();
 					}}
 					onBlur={onBlur}
 					className="read-only ml-2 flex h-10 w-full h-full items-center border bg-white/0 p-1 border-b-gray-500 border-white/10 text-sm outline-none"
@@ -125,11 +127,6 @@ const AnnualManageComponent = () => {
 									expires: info.row.original.start,
 									managerSign: refSignCanvas.current?.isEmpty() ? '' : refSignCanvas.current?.toDataURL(),
 								});
-								// console.log({
-								// 	historyNo: info.row.original.historyNo,
-								// 	expires: info.row.original.start,
-								// 	sign: refSignCanvas.current?.isEmpty() ? '' : refSignCanvas.current?.toDataURL(),
-								// });
 							}
 						}}
 						colorScheme="blue"
@@ -163,35 +160,6 @@ const AnnualManageComponent = () => {
 		annReqColHelper.accessor('manageNote', {
 			id: 'manageNote',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">반려 사유</p>,
-			// cell: (info) => {
-			// 	const onBlur = () => {
-			// 		setNote((old: any) =>
-			// 			old.map((row: any, index: any) => {
-			// 				if (index === info.row.index) {
-			// 					return {
-			// 						...old[info.row.index],
-			// 						[info.column.id]: info.getValue(),
-			// 					};
-			// 				}
-			// 				return row;
-			// 			}),
-			// 		);
-			// 	};
-			// 	return (
-			// 		<div className="flex font-bold">
-			// 			<Textarea
-			// 				ref={refMngNote}
-			// 				readOnly={!dateValidation(info.row.original.start)}
-			// 				defaultValue={note}
-			// 				onChange={(e) => {
-			// 					setNote(e.target.value);
-			// 				}}
-			// 				onBlur={onBlur}
-			// 				className="read-only ml-2 flex h-10 w-full h-full items-center border bg-white/0 p-1 border-b-gray-500 border-white/10 text-sm outline-none"
-			// 			/>
-			// 		</div>
-			// 	);
-			// },
 			cell: NoteCell,
 		}),
 	];
@@ -229,9 +197,6 @@ const AnnualManageComponent = () => {
 					icon={<MdFormatListBulleted className="h-7 w-7" />}
 					title="신청 연차 관리"
 					onClickHandler={() => {
-						// setTitle({ type: 'notebook', name: '노트북' });
-						// setData(allList.notebook);
-						// equipAction.setEquipClear();
 						setTitle(ANNUAL_STRING.reqMng);
 					}}
 					selectedTitle={title}
@@ -240,9 +205,6 @@ const AnnualManageComponent = () => {
 					icon={<MdOutlineCheck className="h-7 w-7" />}
 					title="연차 승인 관리"
 					onClickHandler={() => {
-						// setTitle({ type: 'notebook', name: '노트북' });
-						// setData(allList.notebook);
-						// equipAction.setEquipClear();
 						setTitle(ANNUAL_STRING.aprMng);
 					}}
 					selectedTitle={title}
@@ -278,15 +240,6 @@ const AnnualManageComponent = () => {
 								>
 									지우기
 								</Button>
-								{/* <Button
-									colorScheme="red"
-									className="mt-2"
-									onClick={() => {
-										console.log(refSignCanvas.current?.toDataURL());
-									}}
-								>
-									code
-								</Button> */}
 							</div>
 						</div>
 					</Dropdown>
@@ -343,10 +296,16 @@ const AnnualManageComponent = () => {
 								</li>
 								{Array.from({ length: annReqTable.getPageCount() || 0 }).map((_, index) => (
 									<li
-										className={`flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
+										className={`${
+											index > annReqTable.getState().pagination.pageIndex - 5 && annReqTable.getState().pagination.pageIndex + 5 > index
+												? ''
+												: 'hidden'
+										} flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
 											annReqTable.getState().pagination.pageIndex === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
 										}`}
-										onClick={() => annReqTable.setPageIndex(index)}
+										onClick={() => {
+											annReqTable.setPageIndex(index);
+										}}
 										// eslint-disable-next-line react/no-array-index-key
 										key={index}
 									>
@@ -369,23 +328,6 @@ const AnnualManageComponent = () => {
 					<div className="w-full" />
 				</div>
 			</Card>
-			{/* <Card extra={`${openSign ? 'w-0 h-0 hidden' : ''} w-full pl-4 p-2 h-full min-h-[65vh] mt-5 col-span-3`}>
-				<div className="text-xl mt-3 font-bold text-navy-700 dark:text-white col-span-3 ml-1 mb-3"> 승인자 서명</div>
-				<div>
-					<ReactSignatureCanvas ref={refSignCanvas} canvasProps={{ className: 'border bg-gray-100' }} />
-					<div className="mt-5 flex flex-end">
-						<Button
-							colorScheme="red"
-							className=""
-							onClick={() => {
-								refSignCanvas.current?.clear();
-							}}
-						>
-							지우기
-						</Button>
-					</div>
-				</div>
-			</Card> */}
 		</div>
 	);
 };

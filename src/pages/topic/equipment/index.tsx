@@ -41,12 +41,6 @@ const Equipment = () => {
 			enableGlobalFilter: true,
 			filterFn: 'includesString',
 		}),
-		// columnHelper.accessor('equipmentNo', {
-		// 	id: 'equipmentNo',
-		// 	header: title.type === 'book' ? '도서 번호' : '장비 번호',
-		// 	filterFn: 'includesString',
-		// 	enableGlobalFilter: true,
-		// }),
 		columnHelper.accessor('user', {
 			id: 'user',
 			header: '사용자',
@@ -67,9 +61,13 @@ const Equipment = () => {
 			enableGlobalFilter: true,
 			filterFn: 'includesString',
 		}),
-		columnHelper.accessor('note', {
-			id: 'note',
-			header: '비고',
+		// columnHelper.accessor('note', {
+		// 	id: 'note',
+		// 	header: '비고',
+		// }),
+		columnHelper.accessor('createDate', {
+			id: 'createDate',
+			header: '입고일',
 		}),
 	];
 	const serverColumns = [
@@ -80,13 +78,6 @@ const Equipment = () => {
 			enableGlobalFilter: true,
 			filterFn: 'includesString',
 		}),
-		// columnHelper.accessor('equipmentNo', {
-		// 	id: 'equipmentNo',
-		// 	header: title.type === 'book' ? '도서 번호' : '장비 번호',
-
-		// 	filterFn: 'includesString',
-		// 	enableGlobalFilter: true,
-		// }),
 		columnHelper.accessor('user', {
 			id: 'user',
 			header: '사용자',
@@ -99,13 +90,16 @@ const Equipment = () => {
 			filterFn: 'includesString',
 			enableGlobalFilter: true,
 		}),
-
 		columnHelper.accessor('status', {
 			id: 'status',
 			header: '상태',
 			enableColumnFilter: true,
 			enableGlobalFilter: true,
 			filterFn: 'includesString',
+		}),
+		columnHelper.accessor('createDate', {
+			id: 'createDate',
+			header: '입고일',
 		}),
 	];
 	const vmColumns = [

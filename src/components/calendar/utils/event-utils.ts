@@ -6,9 +6,6 @@ import { taskList } from '../../../store/common/useCommon';
 
 // let eventGuid = 0;
 const todayStr = new Date().toISOString().replace(/T.*$/, ''); // YYYY-MM-DD of today
-// export function createEventId() {
-// 	return String((eventGuid += 1))
-// }
 
 export type CalendarTaskType = {
 	id?: string;
@@ -95,8 +92,10 @@ export const getEventTask = (taskName: string | undefined) => {
  *  endDate = end(string)
  *  status ?   ???
  *
-
  */
+
+// EVENT_MODEL_EXAMPLE
+
 export const INITIAL_EVENTS: EventInput[] = [
 	{
 		id: 'event1',
