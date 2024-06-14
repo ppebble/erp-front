@@ -6,7 +6,6 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import Progress from '../../../../components/progress';
 import Card from '../../../../components/card';
 import useModal from '../../../../store/useModal';
-import { CustomAnnualDetailModal } from './modal/CustomAnnualDetailModal';
 import { CustomAnnualDetailComponent } from './modal/CustomAnnualDetailComponent';
 import { usePersonalAnnual } from '../../../../store/useAnnual';
 

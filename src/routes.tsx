@@ -76,7 +76,7 @@ const routes = [
 			{
 				name: '회사소식',
 				layout: '/topic',
-				path: 'news',
+				path: 'equipment',
 				icon: <MdOutlineNewspaper className="h-6 w-6" />,
 			},
 			{

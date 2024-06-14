@@ -1,27 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
-import {
-	AlertDialogContent,
-	AlertDialogHeader,
-	Button,
-	AlertDialogBody,
-	AlertDialogCloseButton,
-	AlertDialogFooter,
-	useDisclosure,
-	Select,
-} from '@chakra-ui/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { EventInput } from '@fullcalendar/react';
+import { Button } from '@chakra-ui/react';
+import { useRef, useState } from 'react';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import {
-	useCalendarDialogOpen,
-	useCalendarEvnetParam,
-	useCalendarParam,
-	useEvents,
-	useInputEvent,
-	useWorkType,
-} from '../../../../../store/useCalendar';
-import { getEventColor } from '../../../../../components/calendar/utils/event-utils';
-import { tableAnnualRow } from '../../../equipment/variables/tableHeapDataColumns';
 import Card from '../../../../../components/card';
 import { AnnReqProps, AnnualInfo, useAnnRequest, usePersonalAnnual } from '../../../../../store/useAnnual';
 import AnnualService from '../../../../../services/annualService';
@@ -30,8 +10,6 @@ import useModal from '../../../../../store/useModal';
 //     historyNo start end note deny
 
 export const CustomAnnualDetailComponent = () => {
-	const refEventStartDate = useRef<HTMLInputElement>(null);
-
 	const [open, setOpen] = useState(false);
 	const data = usePersonalAnnual();
 	const reqData = useAnnRequest();

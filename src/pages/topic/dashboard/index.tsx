@@ -8,7 +8,6 @@ import { GoDot, GoDotFill } from 'react-icons/go';
 import { Button } from '@chakra-ui/react';
 import DashboardCalendarComponent from './components/DashboardCalendarComponent';
 import CustomViewTable from '../../../components/table/CustomViewTable';
-import { tableAnnualRow } from '../equipment/variables/tableHeapDataColumns';
 import AnnualComponent from './components/AnnualComponent';
 import { useDeptEvents, usePersonalEvents } from '../../../store/useCalendar';
 import CalendarService from '../../../services/calendarService';
