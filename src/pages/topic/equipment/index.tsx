@@ -34,12 +34,19 @@ const Equipment = () => {
 
 	const { openModal } = useModal();
 	const columns = [
-		columnHelper.accessor('equipmentNo', {
-			id: 'equipmentNo',
-			header: title.type === 'book' ? '도서 번호' : '장비 번호',
-			filterFn: 'includesString',
+		columnHelper.accessor('equipmentName', {
+			id: 'equipmentName',
+			header: title.type === 'book' ? '도서 명' : '장비 모델 명',
+			enableColumnFilter: true,
 			enableGlobalFilter: true,
+			filterFn: 'includesString',
 		}),
+		// columnHelper.accessor('equipmentNo', {
+		// 	id: 'equipmentNo',
+		// 	header: title.type === 'book' ? '도서 번호' : '장비 번호',
+		// 	filterFn: 'includesString',
+		// 	enableGlobalFilter: true,
+		// }),
 		columnHelper.accessor('user', {
 			id: 'user',
 			header: '사용자',
@@ -52,13 +59,7 @@ const Equipment = () => {
 			filterFn: 'includesString',
 			enableGlobalFilter: true,
 		}),
-		columnHelper.accessor('equipmentName', {
-			id: 'equipmentName',
-			header: title.type === 'book' ? '도서 명' : '장비 모델 명',
-			enableColumnFilter: true,
-			enableGlobalFilter: true,
-			filterFn: 'includesString',
-		}),
+
 		columnHelper.accessor('status', {
 			id: 'status',
 			header: '상태',
@@ -72,13 +73,20 @@ const Equipment = () => {
 		}),
 	];
 	const serverColumns = [
-		columnHelper.accessor('equipmentNo', {
-			id: 'equipmentNo',
-			header: title.type === 'book' ? '도서 번호' : '장비 번호',
-
-			filterFn: 'includesString',
+		columnHelper.accessor('equipmentName', {
+			id: 'equipmentName',
+			header: title.type === 'book' ? '도서 명' : '장비 모델 명',
+			enableColumnFilter: true,
 			enableGlobalFilter: true,
+			filterFn: 'includesString',
 		}),
+		// columnHelper.accessor('equipmentNo', {
+		// 	id: 'equipmentNo',
+		// 	header: title.type === 'book' ? '도서 번호' : '장비 번호',
+
+		// 	filterFn: 'includesString',
+		// 	enableGlobalFilter: true,
+		// }),
 		columnHelper.accessor('user', {
 			id: 'user',
 			header: '사용자',
@@ -91,13 +99,7 @@ const Equipment = () => {
 			filterFn: 'includesString',
 			enableGlobalFilter: true,
 		}),
-		columnHelper.accessor('equipmentName', {
-			id: 'equipmentName',
-			header: title.type === 'book' ? '도서 명' : '장비 모델 명',
-			enableColumnFilter: true,
-			enableGlobalFilter: true,
-			filterFn: 'includesString',
-		}),
+
 		columnHelper.accessor('status', {
 			id: 'status',
 			header: '상태',
@@ -171,7 +173,7 @@ const Equipment = () => {
 		setData(allList.notebook);
 	}, []);
 	return (
-		<div className="flex grid grid-cols-12 min-h-[45rem]">
+		<div className="flex grid grid-cols-12">
 			<div className="mt-3 mr-5 col-span-2">
 				<CustomClickableOneLineWidget
 					icon={<MdLaptopChromebook className="h-7 w-7" />}
@@ -181,7 +183,7 @@ const Equipment = () => {
 						setData(allList.notebook);
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<HiOutlineDesktopComputer className="h-6 w-6" />}
@@ -191,7 +193,7 @@ const Equipment = () => {
 						equipAction.setEquipClear();
 					}}
 					title="데스크탑"
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FiMonitor className="h-7 w-7" />}
@@ -201,7 +203,7 @@ const Equipment = () => {
 						setData(allList.monitor);
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FaServer className="h-6 w-6" />}
@@ -211,7 +213,7 @@ const Equipment = () => {
 						setTitle({ type: 'server', name: '서버장비' });
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FaMobileAlt className="h-7 w-7" />}
@@ -221,27 +223,27 @@ const Equipment = () => {
 						setTitle({ type: 'mobile', name: '모바일' });
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<FaBook className="h-6 w-6" />}
 					title="도서"
 					onClickHandler={() => {
 						setData(allList.book);
-						setTitle({ type: 'book', name: '책' });
+						setTitle({ type: 'book', name: '도서' });
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 				<CustomClickableOneLineWidget
 					icon={<MdGrid3X3 className="h-6 w-6" />}
 					title="기타 장비"
 					onClickHandler={() => {
 						setData(allList.etc);
-						setTitle({ type: 'etc', name: '기타장비' });
+						setTitle({ type: 'etc', name: '기타 장비' });
 						equipAction.setEquipClear();
 					}}
-					selectedTitle={title.type}
+					selectedTitle={title.name}
 				/>
 			</div>
 

@@ -142,7 +142,8 @@ export const CustomCalendarModal = () => {
 		const result = [] as MemberTagInfo[];
 		selectedTags.forEach((item) => {
 			const tag = item.split(' | ') || [];
-			result.push({ team: tag[0], name: tag[1] });
+			const name = tag[1].split(' ') || [];
+			result.push({ team: tag[0], name: name[0] });
 		});
 		newEvent.members = result;
 		// calendarAction.setAddEventParam(eventParam);
@@ -180,8 +181,8 @@ export const CustomCalendarModal = () => {
 	};
 	const deleteEvent = async () => {
 		if (workType === 'edit') {
-			const params = {} as { scheduleNo: number };
-			params.scheduleNo = Number.parseInt(selectedEvent?.id || '0', 10);
+			const params = {} as { seqNo: number };
+			params.seqNo = Number.parseInt(selectedEvent?.id || '0', 10);
 			deleteEventMutation.mutate(params);
 		}
 		calendarAction.setCalendarDialogFlag(false);
@@ -234,6 +235,7 @@ export const CustomCalendarModal = () => {
 				setIsAllDay(refAllDaySwitch.current?.checked);
 			}
 			onOpen();
+			// console.log(selectedEvent?.extendedProps.isAnnual);
 			// console.log(defStart);
 			// console.log(defEnd);
 		} else {
@@ -396,7 +398,7 @@ export const CustomCalendarModal = () => {
 									type="text"
 									ref={refEventName}
 									id="eventName"
-									disabled={false}
+									disabled={selectedEvent?.extendedProps ? selectedEvent?.extendedProps.isAnnual : false}
 									defaultValue={selectedEvent?.title}
 									className="mt-2 read-only flex h-12 w-full items-center border bg-white/0 p-3 border-b-gray-500 border-white/10 text-sm outline-none dark:!border-white/10 dark:text-white"
 								/>
@@ -411,7 +413,7 @@ export const CustomCalendarModal = () => {
 									type="datetime-local"
 									ref={refEventStartDateTime}
 									id="eventName"
-									disabled={false}
+									disabled={selectedEvent?.extendedProps ? selectedEvent?.extendedProps.isAnnual : false}
 									onChange={(e) => {}}
 									defaultValue={defStartTime}
 									className="mt-2 mr-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
@@ -423,7 +425,7 @@ export const CustomCalendarModal = () => {
 									type="datetime-local"
 									ref={refEventEndDateTime}
 									id="eventName"
-									disabled={false}
+									disabled={selectedEvent?.extendedProps ? selectedEvent?.extendedProps.isAnnual : false}
 									onChange={(e) => {
 										// console.log(refEventEndDate.current?.value);
 									}}
@@ -436,7 +438,7 @@ export const CustomCalendarModal = () => {
 									type="date"
 									ref={refEventStartDate}
 									id="eventName"
-									disabled={false}
+									disabled={selectedEvent?.extendedProps ? selectedEvent?.extendedProps.isAnnual : false}
 									defaultValue={defStart}
 									className="mt-2 mr-3 read-only flex h-12 w-full items-center justify-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 								/>
@@ -447,7 +449,7 @@ export const CustomCalendarModal = () => {
 									type="date"
 									ref={refEventEndDate}
 									id="eventName"
-									disabled={false}
+									disabled={selectedEvent?.extendedProps ? selectedEvent?.extendedProps.isAnnual : false}
 									onChange={(e) => {
 										// console.log(refEventEndDate.current?.value);
 									}}
@@ -466,7 +468,7 @@ export const CustomCalendarModal = () => {
 									ref={refEventDetail}
 									id="eventName"
 									defaultValue={selectedEvent?.extendedProps?.eventDesc}
-									disabled={false}
+									disabled={selectedEvent?.extendedProps ? selectedEvent?.extendedProps.isAnnual : false}
 									className="mt-2 read-only flex h-12 w-full items-center  border bg-white/0 p-3 text-sm outline-none border-b-gray-500 border-white/10 dark:!border-white/10 dark:text-white"
 								/>
 							</div>
@@ -475,7 +477,9 @@ export const CustomCalendarModal = () => {
 							<div className="flex justify-start">
 								<p className="text-base font-bold text-navy-700 dark:text-white mb-5">인원 :</p>
 							</div>
-							<div className="flex justify-start mb-10">
+							<div
+								className={`${selectedEvent?.extendedProps && selectedEvent?.extendedProps.isAnnual ? 'invisible h-0 w-0' : ''} flex justify-start mb-10 `}
+							>
 								<TagifyComponent
 									// initValue에 edit이면 extendedProps.연관인원리스트 를 넣도록, 아니면 로그인한 인원 profile
 									initialValue={workType === 'edit' && isDialogOpen ? selectedEvent?.extendedProps.members : ['']}
@@ -484,12 +488,12 @@ export const CustomCalendarModal = () => {
 							</div>
 						</div>
 					</div>
-				</ModalBody>
+				</ModalBody>{' '}
 				<div className="h-px w-full bg-gray-300 dark:bg-white/20 " />
 				<ModalFooter>
 					<Button
 						colorScheme="blue"
-						className="mr-3"
+						className={`${selectedEvent?.extendedProps && selectedEvent?.extendedProps.isAnnual ? 'invisible h-0 w-0' : ''} mr-3`}
 						onClick={() => {
 							setIsConfirm(!isConfirm);
 							onClickConfirm();
@@ -498,16 +502,7 @@ export const CustomCalendarModal = () => {
 						확인
 					</Button>
 					<Button
-						colorScheme="red"
-						className="mr-3"
-						onClick={() => {
-							calendarAction.setCalendarDialogFlag(false);
-							onClose;
-						}}
-					>
-						취소
-					</Button>
-					<Button
+						className={`${selectedEvent?.extendedProps && selectedEvent?.extendedProps.isAnnual ? 'invisible h-0 w-0' : ''}mr-3`}
 						colorScheme="red"
 						onClick={() => {
 							calendarAction.setCalendarDialogFlag(false);
@@ -516,6 +511,16 @@ export const CustomCalendarModal = () => {
 						}}
 					>
 						삭제
+					</Button>
+					<Button
+						colorScheme="red"
+						className="mr-1"
+						onClick={() => {
+							calendarAction.setCalendarDialogFlag(false);
+							onClose;
+						}}
+					>
+						취소
 					</Button>
 				</ModalFooter>
 			</ModalContent>

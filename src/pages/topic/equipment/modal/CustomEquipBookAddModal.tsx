@@ -58,6 +58,15 @@ export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) =
 	const [updateTime, setUpdateTime] = useState<string>('');
 	const { openModal } = useModal();
 
+	const encodeToBase64 = (image: File) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(image);
+		reader.onload = () => {
+			setBookCover(reader.result as string);
+		};
+		return reader.result as string;
+	};
+
 	const refCreateTime = useRef<HTMLInputElement>(null);
 	const refUpdateTime = useRef<HTMLInputElement>(null);
 	const [place, setPlace] = useState<string>('');
@@ -120,7 +129,7 @@ export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) =
 			bookName: refBookName.current.value,
 			publisher: refPublisher.current.value,
 			author: refAuthor.current.value,
-			bookCover: refBookCover.current?.value || '',
+			bookCover: bookCover || '',
 		};
 		if (row) {
 			param.equipment = {
@@ -169,7 +178,7 @@ export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) =
 	}, [isSuccess, equipDtl]);
 
 	return (
-		<AlertDialogContent className="min-w-[40vw] ">
+		<AlertDialogContent className="min-w-[60vw] ">
 			<AlertDialogHeader>
 				<div className="flex justify-between">
 					<p>도서 등록</p>
@@ -193,7 +202,29 @@ export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) =
 				}}
 			/>
 			<AlertDialogBody>
-				<div className="grid h-full grid-cols-2">
+				<div className="grid h-full grid-cols-3">
+					<div className="grid col-span-1">
+						<div className="grid grid-rows-8">
+							<div className="row-span-6 m-4 w-min-[300px] border border-gray-600">
+								{bookCover && <img className="h-min-[320px] w-min-[240px]" src={bookCover} alt="bookCover" />}
+							</div>
+							<div className="row-span-2">
+								<input
+									type="file"
+									id="thumbnail"
+									accept="image/*"
+									className={`${isEditable ? '' : 'hidden'}`}
+									name="thumbnail"
+									onChange={(e) => {
+										if (e.target.files && e.target.files?.length > 0) {
+											setBookCover(encodeToBase64(e.target.files[0]));
+										}
+									}}
+								/>
+							</div>
+						</div>
+					</div>
+
 					<div className="grid col-span-1">
 						<div className="flex mt-2 mb-2 start justify-start">
 							<div className="flex items-start">
@@ -372,22 +403,6 @@ export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) =
 									id="bookAuthor"
 									ref={refAuthor}
 									defaultValue={author || ''}
-									disabled={false}
-									className="read-only ml-2 flex h-10 w-full items-center border bg-white/0 p-1 border-b-gray-500 border-white/10 text-sm outline-none"
-								/>
-							</div>
-						</div>
-						<div className="flex mt-2 mb-2 start justify-start">
-							<div className="flex">
-								<p className="min-w-[5vw] flex items-center text-base font-bold text-navy-700 dark:text-white">표지 사진 :</p>
-							</div>
-							<div className="">
-								<input
-									type="text"
-									ref={refBookCover}
-									id="bookCover"
-									readOnly={!isEditable}
-									defaultValue={bookCover || ''}
 									disabled={false}
 									className="read-only ml-2 flex h-10 w-full items-center border bg-white/0 p-1 border-b-gray-500 border-white/10 text-sm outline-none"
 								/>

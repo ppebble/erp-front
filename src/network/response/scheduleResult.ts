@@ -11,3 +11,13 @@ export interface scheduleResult {
 	end: string;
 	members: MemberTagInfo[];
 }
+export interface annualProps {
+	sign: string;
+	requestDate: string;
+	note?: string;
+	managerNo: number;
+	start: string;
+	end: string;
+	annType: number;
+	signType: number;
+}

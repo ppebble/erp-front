@@ -20,11 +20,14 @@ import {
 	useWorkType,
 } from '../../../../../store/useCalendar';
 import { getEventColor } from '../../../../../components/calendar/utils/event-utils';
-import { scheduleResult } from '../../../../../network/response/scheduleResult';
+import { annualProps, scheduleResult } from '../../../../../network/response/scheduleResult';
 import CalendarService from '../../../../../services/calendarService';
+import AnnualService from '../../../../../services/annualService';
+import { useAnnualAction, useManagerList } from '../../../../../store/useAnnual';
+import useModal from '../../../../../store/useModal';
 
-export const CustomAnnualAddModal = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+export const CustomAnnualAddModal = ({ onClose }: any) => {
+	const { isOpen, onOpen } = useDisclosure();
 	// const [size, setSize] = useState('md');
 	const isDialogOpen = useCalendarDialogOpen();
 	const [isConfirm, setIsConfirm] = useState<boolean>(false);
@@ -32,7 +35,9 @@ export const CustomAnnualAddModal = () => {
 	const [annType, setAnnType] = useState<string>('연차');
 	const selectedEvent = useCalendarEvnetParam();
 	// const isAdd = useAddEventFlag();
-	const [eventParam, setEventParam] = useState<scheduleResult>({} as scheduleResult);
+	// const [eventParam, setEventParam] = useState<scheduleResult>({} as scheduleResult);
+	// const [annualParam, setAnnualParam] = useState<annualProps>({} as annualProps);
+	const [manager, setManager] = useState<number>(0);
 
 	const [defStart, setDefStart] = useState<string | undefined>('');
 	const [defEnd, setDefEnd] = useState<string | undefined>('');
@@ -44,82 +49,71 @@ export const CustomAnnualAddModal = () => {
 
 	const refSignCanvas = useRef() as MutableRefObject<any>;
 
-	useEffect(() => {
-		// if (refAllDaySwitch.current) {
-		// 	if (refAllDaySwitch.current?.checked) {
-		// 		refEventStartDate.current?.setAttribute('defaultValue', refEventStartDateTime.current?.value?.slice(0, 10) || '');
-		// 		refEventEndDate.current?.setAttribute('defaultValue', refEventEndDateTime.current?.value?.slice(0, 10) || '');
-		// 	} else {
-		// 		refEventStartDateTime.current?.setAttribute('defaultValue', `${refEventStartDate.current?.value}T00:00:00` || '');
-		// 		refEventEndDateTime.current?.setAttribute('defaultValue', `${refEventEndDate.current?.value}T23:59:59` || '');
-		// 	}
-		// }
-	}, [refEventStartDate.current]);
-	const createEvent = CalendarService().createEventMutation;
+	const managerList = useManagerList();
+	const { openModal } = useModal();
+
+	useEffect(() => {}, [refEventStartDate.current]);
+	const createAnnual = AnnualService().createAnnualMutation;
+
+	const onCloseAnn = () => {
+		setDefEnd('');
+		setDefStart('');
+		onClose();
+	};
 
 	const setEvnet = async () => {
-		setEventParam({} as scheduleResult);
-		eventParam.eventDesc = refEventDesc.current?.value || '';
-		eventParam.title = `[${annType}]`;
+		const annualParam = {} as annualProps;
 
-		let endDate;
-		let startDate;
+		if (!refEventDesc.current?.value) {
+			openModal({ type: 3, closeOnOverlay: true, contents: '사유 누락' });
+			return;
+		}
+		if (annType.includes('반차')) {
+			if (!refAnnHalfDate.current?.value) {
+				openModal({ type: 3, closeOnOverlay: true, contents: '날짜 입력 누락' });
+				return;
+			}
+		} else {
+			if (!refEventStartDate.current?.value) {
+				openModal({ type: 3, closeOnOverlay: true, contents: '시작 날짜 입력 누락' });
+				return;
+			}
+			if (!refEventEndDate.current?.value) {
+				openModal({ type: 3, closeOnOverlay: true, contents: '종료 날짜 입력 누락' });
+				return;
+			}
+		}
+
 		if (annType.includes('반차')) {
 			if (annType === '오전반차') {
-				startDate = `${refAnnHalfDate.current?.value.slice(0, 10)}T09:00`;
-				endDate = `${refAnnHalfDate.current?.value.slice(0, 10)}T14:00`;
+				annualParam.start = `${refAnnHalfDate.current?.value.slice(0, 10)}T09:00`;
+				annualParam.end = `${refAnnHalfDate.current?.value.slice(0, 10)}T14:00`;
 			} else if (annType === '오후반차') {
-				startDate = `${refAnnHalfDate.current?.value.slice(0, 10)}T13:00`;
-				endDate = `${refAnnHalfDate.current?.value.slice(0, 10)}T18:00`;
+				annualParam.start = `${refAnnHalfDate.current?.value.slice(0, 10)}T13:00`;
+				annualParam.end = `${refAnnHalfDate.current?.value.slice(0, 10)}T18:00`;
 			}
-			eventParam.allDay = false;
 		} else {
-			eventParam.allDay = true;
-			startDate = refEventStartDate.current?.value;
-			endDate = refEventEndDate.current?.value;
+			annualParam.start = `${refEventStartDate.current?.value}T09:00` || '';
+			annualParam.end = `${refEventEndDate.current?.value}T18:00` || '';
 		}
-		eventParam.start = startDate || '';
-		eventParam.end = endDate || '';
-		eventParam.task = '개인일정';
-		eventParam.members = [];
-		eventParam.register;
 
-		if (!eventParam.title) {
-			alert('일정 타이틀 입력 누락');
-			return;
+		annualParam.sign = refSignCanvas.current?.toDataURL();
+		annualParam.annType = annType.includes('반차') ? 0 : 1;
+		annualParam.managerNo = manager;
+		annualParam.signType = 0;
+		if (refEventDesc.current?.value) {
+			annualParam.note = refEventDesc.current.value;
 		}
-		if (!eventParam.start) {
-			alert('일정 시작일자 입력 누락');
-			return;
-		}
-		if (!eventParam.end) {
-			alert('일정 종료일자 입력 누락');
-			return;
-		}
-		if (eventParam.start > eventParam.end) {
-			alert('시작일자가 종료일자보다 미래일 수 없습니다.');
-			return;
-		}
-		// 연차 일정 신청
-		createEvent.mutate(eventParam);
 
 		// 연차 신청서 작성
+		console.log(annualParam);
+		createAnnual.mutate(annualParam);
 
-		onClose();
+		onCloseAnn();
 	};
 	const onClickConfirm = () => {
 		setEvnet();
 	};
-
-	useEffect(() => {
-		if (isDialogOpen) {
-			onOpen();
-		} else {
-			setDefEnd('');
-			setDefStart('');
-			onClose();
-		}
-	}, [isDialogOpen]);
 
 	return (
 		<AlertDialogContent>
@@ -131,7 +125,7 @@ export const CustomAnnualAddModal = () => {
 			<div className="h-px w-full bg-gray-300 dark:bg-white/20 " />
 			<AlertDialogCloseButton
 				onClick={() => {
-					onClose;
+					onCloseAnn();
 				}}
 			/>
 			<AlertDialogBody>
@@ -196,10 +190,22 @@ export const CustomAnnualAddModal = () => {
 							<p className="text-base font-bold text-navy-700 dark:text-white">승인 :</p>
 						</div>
 						<div className="flex justify-start mb-5">
-							<Select id="task" className="!min-w-[120px]">
-								<option value="ann">김용걸대표</option>
-								<option value="annHalf">김상순상무</option>
-								<option value="경영팀">박지용이사</option>
+							<Select
+								id="task"
+								className="!min-w-[120px]"
+								onChange={(e) => {
+									setManager(Number.parseInt(e.target.value, 10));
+								}}
+							>
+								{managerList.length > 0 &&
+									managerList.map((e) => {
+										console.log(managerList);
+										return (
+											<option key={e.profileNo} value={e.profileNo}>
+												{e.name}
+											</option>
+										);
+									})}
 							</Select>
 						</div>
 					</div>
@@ -217,15 +223,6 @@ export const CustomAnnualAddModal = () => {
 								}}
 							>
 								지우기
-							</Button>
-							<Button
-								colorScheme="blue"
-								className="ml-3"
-								onClick={() => {
-									console.log(refSignCanvas.current?.toDataURL());
-								}}
-							>
-								코드확인
 							</Button>
 						</div>
 					</div>
@@ -254,7 +251,6 @@ export const CustomAnnualAddModal = () => {
 					colorScheme="blue"
 					className="mr-3 ml-3"
 					onClick={() => {
-						setIsConfirm(!isConfirm);
 						onClickConfirm();
 					}}
 				>
@@ -263,7 +259,7 @@ export const CustomAnnualAddModal = () => {
 				<Button
 					colorScheme="red"
 					onClick={() => {
-						onClose;
+						onCloseAnn();
 					}}
 				>
 					취소

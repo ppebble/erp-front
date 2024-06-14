@@ -39,9 +39,10 @@ export const CalendarService = (date?: string) => {
 								id: taskId,
 								name: data[i].task,
 							},
+							isAnnual: !!(data[i].title.includes('[반휴]') || data[i].title.includes('[연차]')),
 							// 연관 인원 리스트 추가
 							members: data[i].members.map((e: any) => {
-								return `${e.name} | ${e.team}`;
+								return `${e.team} | ${e.name}`;
 							}),
 						};
 						param.color = getEventColor(taskId);
@@ -194,7 +195,7 @@ export const CalendarService = (date?: string) => {
 		},
 	});
 	const updateEventMutation = useMutation({
-		mutationFn: (params: any) => postQuery(`/api/schedule/modifySchedule?scheduleNo=${params.scheduleNo}`, params),
+		mutationFn: (params: any) => postQuery(`/api/schedule/modifySchedule`, params),
 		onSuccess: (result) => {
 			queryClient.invalidateQueries('getEvents');
 			return result.response;
@@ -204,7 +205,7 @@ export const CalendarService = (date?: string) => {
 		},
 	});
 	const deleteEventMutation = useMutation({
-		mutationFn: (params: any) => postQuery(`/api/schedule/deleteSchedule?scheduleNo=${params.scheduleNo}`, params),
+		mutationFn: (params: any) => postQuery(`/api/schedule/deleteSchedule`, params),
 		onSuccess: (result) => {
 			queryClient.invalidateQueries('getEvents');
 			return result.response;

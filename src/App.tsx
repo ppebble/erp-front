@@ -9,8 +9,6 @@ import Login from './pages/auth/login/Login';
 // topic
 import Topic from './pages/topic';
 import Dashboard from './pages/topic/dashboard';
-// import NFTMarketplace from './pages/topic/marketplace';
-import AnnualRequest from './pages/topic/dashboard/components/modal/AnnualRequest';
 import Summary from './pages/topic/summary';
 import Workforce from './pages/topic/workforce';
 import CompanyCalendar from './pages/topic/calendar';
@@ -28,6 +26,10 @@ import Upload from './pages/topic/notices/upload'; // 업로드 테스트
 
 // error
 import NotFound from './pages/error/NotFound';
+import AnnualRequest from './pages/topic/dashboard/components/modal/AnnualRequest';
+import AnnualMailAccept from './pages/topic/dashboard/components/modal/AnnualMailAccept';
+import AdminPopup from './pages/admin';
+import AnnualManageComponent from './pages/admin/annualManage';
 
 const App = () => {
 	return (
@@ -51,6 +53,12 @@ const App = () => {
 					<Route path="free" element={<Free />} />
 					<Route path="notice" element={<Notice />} />
 					<Route path="signup" element={<SignUp />} />
+				</Route>
+				<Route path="external" element={<AdminPopup />}>
+					<Route path="mailAccept/*" element={<AnnualMailAccept />} />
+				</Route>
+				<Route path="admin" element={<Topic />}>
+					<Route path="annualManage" element={<AnnualManageComponent />} />
 					<Route path="password" element={<Password />} />
 					<Route path="upload" element={<Upload />} />
 				</Route>

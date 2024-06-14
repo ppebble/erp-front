@@ -99,5 +99,19 @@ const routes = [
 			},
 		],
 	},
+	{
+		name: '관리자',
+		layout: '/admin',
+		path: 'admin',
+		icon: <MdOutlineBusiness className="h-6 w-6" />,
+		child: [
+			{
+				name: '연차 승인 관리',
+				layout: '/admin',
+				path: 'annualManage',
+				icon: <MdOutlineCalendarMonth className="h-6 w-6" />,
+			},
+		],
+	},
 ];
 export default routes;
