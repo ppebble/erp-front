@@ -143,7 +143,7 @@ const AnnualManageComponent = () => {
 			id: 'reject',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">반려</p>,
 			cell: (info) => (
-				<div className={`${dateValidation(info.row.original.start) ? '' : 'hidden'} flex font-bold`}>
+				<div className={`${dateValidation(info.row.original.start) || info.row.original.signType === 0 ? '' : 'hidden'} flex font-bold`}>
 					<Button
 						onClick={() => {
 							if (window.confirm('연차 신청을 반려하시겠습니까?')) {

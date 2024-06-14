@@ -34,7 +34,6 @@ export const AnnualService = (param?: any) => {
 				const data = result.response.result; // arrayList
 				if (data) {
 					annualAction.setAnnualRequest(data);
-					console.log(data);
 				}
 			}
 			return false;
@@ -51,7 +50,6 @@ export const AnnualService = (param?: any) => {
 				const data = result.response.result; // arrayList
 				if (data) {
 					annualAction.setAdminAnnualRequest(data);
-					console.log(data);
 				}
 			}
 			return false;
