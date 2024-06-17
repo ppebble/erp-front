@@ -15,6 +15,7 @@ import EquipService from '../../../services/equipService';
 import useEquip, { useEquipAction } from '../../../store/useEquip';
 import CustomEquipPagingTable from './components/CustomEquipPagingTable';
 import CustomServerEquipComponent from './components/CustomServerEquipComponent';
+import { ModalList } from '../../../store/common/useCommon';
 
 type EquipTitleProp = {
 	type: string;
@@ -127,9 +128,9 @@ const Equipment = () => {
 	const OpenDetail = (row: any) => {
 		if (row) {
 			if (title.type === 'book') {
-				openModal({ type: 8, closeOnOverlay: false, contents: { title, row, setOpen: setIsOpen } });
+				openModal({ type: ModalList.BOOK_ADD, closeOnOverlay: false, contents: { title, row, setOpen: setIsOpen } });
 			} else {
-				openModal({ type: 7, closeOnOverlay: false, contents: { title, row, setOpen: setIsOpen } });
+				openModal({ type: ModalList.EQUIP_ADD, closeOnOverlay: false, contents: { title, row, setOpen: setIsOpen } });
 			}
 			setIsOpen(true);
 		}
@@ -248,10 +249,10 @@ const Equipment = () => {
 						<button
 							onClick={() => {
 								if (title.type === 'book') {
-									openModal({ type: 8, closeOnOverlay: false, contents: { title, setOpen: setIsOpen } });
+									openModal({ type: ModalList.BOOK_ADD, closeOnOverlay: false, contents: { title, setOpen: setIsOpen } });
 									setIsOpen(true);
 								} else {
-									openModal({ type: 7, closeOnOverlay: false, contents: { title, setOpen: setIsOpen } });
+									openModal({ type: ModalList.EQUIP_ADD, closeOnOverlay: false, contents: { title, setOpen: setIsOpen } });
 									setIsOpen(true);
 								}
 							}}

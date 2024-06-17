@@ -50,26 +50,65 @@ export type taskList = (typeof taskList)[keyof typeof taskList];
 type ValuesOf<E> = E[keyof E];
 
 export enum ModalList {
-	PROJECT_PARTER_ADD, // 프로젝트 - 파트너 추가
-	BOARD_VIEW_DETAIL, // 게시판 글 상세보기
-	BOARD_WRITE, // 게시판 글쓰기
-	ALERT_ALARM, // 알림
-	ALERT_CONFIRM, // 수정/삭제
-	ANNUAL_ADD, // 연차 신청
-	EQUIP_ADD, // 장비 등록/조회
-	BOOK_ADD, // 도서 등록/조회
+	PROJECT_PARTER_ADD = 0, // 프로젝트 - 파트너 추가
+	BOARD_VIEW_DETAIL = 1, // 게시판 글 상세보기
+	BOARD_WRITE = 2, // 게시판 글쓰기
+	ALERT_ALARM = 3, // 알림
+	ALERT_CONFIRM = 4, // 수정/삭제
+	ANNUAL_ADD = 5, // 연차 신청
+	EQUIP_ADD = 6, // 장비 등록/조회
+	BOOK_ADD = 7, // 도서 등록/조회
 }
-export enum AnnualType {
-	반차,
-	연차,
+export const enum AnnualType {
+	반차 = 0,
+	연차 = 1,
 }
-export enum SignType {
-	self,
-	undefined,
-	director,
-	CEO,
-	reject,
-	cancel,
+export const enum SignType {
+	self = 0,
+	director = 2,
+	CEO = 3,
+	reject = 4,
+	cancel = 5,
+}
+export enum RamType {
+	DDR3 = 'DDR3',
+	DDR4 = 'DDR4',
+	DDR5 = 'DDR5',
+}
+export enum DDR3Hz {
+	Hz800 = '800',
+	Hz1066 = '1066',
+	Hz1333 = '1333',
+	Hz1600 = '1600',
+	Hz1866 = '1866',
+	Hz2133 = '2133',
+}
+export enum DDR4Hz {
+	Hz1600 = '1600',
+	Hz1866 = '1866',
+	Hz2133 = '2133',
+	Hz2400 = '2400',
+	Hz2666 = '2666',
+	Hz2933 = '2933',
+	Hz3200 = '3200',
+}
+export enum DDR5Hz {
+	Hz4800 = '4800',
+	Hz5333 = '5333',
+	Hz5866 = '5866',
+	Hz6400 = '6400',
+}
+export enum EquipType {
+	notebook = '노트북',
+	desktop = '데스크탑',
+	monitor = '모니터',
+	server = '서버',
+	mobile = '모바일',
+	etc = '기타장비',
+}
+export enum BookStatus {
+	비치중 = '비치중',
+	폐기 = '폐기',
 }
 export const taskColor = {
 	sc: '#1cb9e0',
@@ -79,7 +118,7 @@ export const taskColor = {
 	personal: '#787f8f',
 	sb: '#e9baba',
 	myPersonal: '#aaafbb',
-};
+} as const;
 export const taskLists = [
 	{ id: 'sc', name: 'SC사업부', color: taskColor.sc },
 	{ id: 'sf', name: 'SF&신사업부', color: taskColor.sf },

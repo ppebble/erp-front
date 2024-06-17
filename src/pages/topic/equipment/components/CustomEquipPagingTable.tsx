@@ -8,6 +8,8 @@ import DebouncedInput from '../../../../components/table/CustomTableFilterCompon
 const CustomEquipPagingTable = (props: { tableData: any; columns: any; title?: string; onClick?: any }) => {
 	const { tableData, columns, title, onClick } = props;
 	const defaultData = useMemo(() => tableData, []);
+
+	// selectedIndex   >> 선택한 ROW에 음영 넣는 기능 ... 현재 주석처리 (line 84)
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
 	const [globalFilter, setGlobalFilter] = useState('');
