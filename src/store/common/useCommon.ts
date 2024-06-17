@@ -110,6 +110,41 @@ export enum BookStatus {
 	비치중 = '비치중',
 	폐기 = '폐기',
 }
+export enum EquipStatus {
+	비치중 = '사용중',
+	유휴 = '유휴',
+	불량 = '불량',
+	폐기 = '폐기',
+}
+export enum AnnualProps {
+	연차 = '연차',
+	오전반차 = '오전반차',
+	오후반차 = '오후반차',
+	경조 = '경조',
+	결근 = '결근',
+	하기휴가 = '하기휴가',
+}
+export enum OsProps {
+	LINUX = 'LINUX',
+	Window = 'Window',
+	Android = 'Android',
+	IOS = 'iOS',
+}
+export enum ProjectStepProps {
+	요구사항분석 = '요구사항분석',
+	설계 = '설계',
+	개발 = '개발',
+	단위테스트 = '단위테스트',
+	통합테스트 = '통합테스트',
+	인수 = '인수',
+}
+export enum ProjectStatus { // 개발진행, 운영진행 띄어쓰기 구분
+	개발진행 = '개발 진행',
+	운영진행 = '운영 진행',
+	완료 = '완료',
+	유예 = '유예',
+	연구과제 = '연구과제',
+}
 export const taskColor = {
 	sc: '#1cb9e0',
 	sf: '#00e413',
@@ -119,6 +154,33 @@ export const taskColor = {
 	sb: '#e9baba',
 	myPersonal: '#aaafbb',
 } as const;
+export enum RankProps {
+	주임 = '주임',
+	대리 = '대리',
+	과장 = '과장',
+	차장 = '차장',
+	부장 = '부장',
+	이사 = '이사',
+	상무 = '상무',
+	대표 = '대표',
+	회장 = '회장',
+}
+export enum PositionProps {
+	CEO = 'CEO',
+	사업부장 = '사업부장',
+	본부장 = '본부장',
+	연구소장 = '연구소장',
+	실장 = '실장',
+	팀장 = '팀장',
+	파트장 = '파트장',
+}
+export enum WorkPlaceProps {
+	본사 = '본사',
+	SKT = 'SKT',
+	안산 = '안산',
+	윤선생 = '윤선생',
+	미라콤 = '미라콤',
+}
 export const taskLists = [
 	{ id: 'sc', name: 'SC사업부', color: taskColor.sc },
 	{ id: 'sf', name: 'SF&신사업부', color: taskColor.sf },

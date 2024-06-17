@@ -6,7 +6,7 @@ import { annualProps, scheduleResult } from '../../../../../network/response/sch
 import AnnualService from '../../../../../services/annualService';
 import { useAnnualAction, useManagerList } from '../../../../../store/useAnnual';
 import useModal from '../../../../../store/useModal';
-import { AnnualType, SignType } from '../../../../../store/common/useCommon';
+import { AnnualProps, AnnualType, SignType } from '../../../../../store/common/useCommon';
 
 export const CustomAnnualAddModal = ({ onClose }: any) => {
 	const [annType, setAnnType] = useState<string>('연차');
@@ -208,12 +208,21 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 					id="task"
 					className="!min-w-[120px]"
 				>
-					<option value="연차">연차</option>
+					{Object.entries(AnnualProps).map((e, idx) => {
+						console.log(e);
+						return (
+							// eslint-disable-next-line react/no-array-index-key
+							<option key={idx} value={e[0]}>
+								{e[1]}
+							</option>
+						);
+					})}
+					{/* <option value="연차">연차</option>
 					<option value="오전반차">오전 반차</option>
 					<option value="오후반차">오후 반차</option>
 					<option value="경조">경조</option>
 					<option value="결근">결근</option>
-					<option value="하기휴가">하기휴가</option>
+					<option value="하기휴가">하기휴가</option> */}
 				</Select>
 				<Button
 					colorScheme="blue"

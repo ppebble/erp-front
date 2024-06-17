@@ -19,7 +19,7 @@ import { useMemberTags } from '../../../../store/useCalendar';
 import CalendarService from '../../../../services/calendarService';
 import { VmInfo } from './CustomEquipServerVm';
 import useModal from '../../../../store/useModal';
-import { DDR3Hz, DDR4Hz, DDR5Hz, EquipType, RamType, taskColor } from '../../../../store/common/useCommon';
+import { DDR3Hz, DDR4Hz, DDR5Hz, EquipStatus, EquipType, OsProps, RamType, taskColor } from '../../../../store/common/useCommon';
 
 export type AddEquipParam = {
 	equipType: string;
@@ -573,10 +573,14 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 										setStatus(e.target.value);
 									}}
 								>
-									<option value="사용중">사용중</option>
-									<option value="유휴">유휴</option>
-									<option value="불량">불량</option>
-									<option value="폐기">폐기</option>
+									{Object.entries(EquipStatus).map((e, idx) => {
+										return (
+											// eslint-disable-next-line react/no-array-index-key
+											<option key={idx} value={e[0]}>
+												{e[1]}
+											</option>
+										);
+									})}
 								</Select>
 							</div>
 						</div>
@@ -691,10 +695,18 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 										setOs(e.target.value);
 									}}
 								>
-									<option value="LINUX">LINUX</option>
+									{Object.entries(OsProps).map((e, idx) => {
+										return (
+											// eslint-disable-next-line react/no-array-index-key
+											<option key={idx} value={e[0]}>
+												{e[1]}
+											</option>
+										);
+									})}
+									{/* <option value="LINUX">LINUX</option>
 									<option value="Window">Window</option>
 									<option value="Android">Android</option>
-									<option value="IOS">iOS</option>
+									<option value="IOS">iOS</option> */}
 								</Select>
 								<input
 									type="text"
@@ -932,7 +944,6 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 					}}
 				>
 					{Object.entries(EquipType).map((e, idx) => {
-						console.log(e);
 						return (
 							// eslint-disable-next-line react/no-array-index-key
 							<option key={idx} value={e[0]}>
