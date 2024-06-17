@@ -91,7 +91,6 @@ const WeeklyAttendanceComponent = () => {
 		columns: attendColumns,
 		// sorting :: 정렬되는 객체, asc|desc   :: 첫 클릭 부터 desc =  false / true / sort 해제 순
 		getCoreRowModel: getCoreRowModel(),
-		debugTable: true,
 	});
 	return (
 		<div className="max-w-[30vw] pl-4 p-2 h-full min-h-[23rem]">

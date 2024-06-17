@@ -207,7 +207,6 @@ export const CustomAnnualDetailComponent = () => {
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
-		debugTable: true,
 	});
 	const annReqTable = useReactTable({
 		data: reqData,

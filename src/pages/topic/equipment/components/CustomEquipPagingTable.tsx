@@ -40,7 +40,6 @@ const CustomEquipPagingTable = (props: { tableData: any; columns: any; title?: s
 		getFilteredRowModel: getFilteredRowModel(),
 		onPaginationChange: setPagination,
 		onGlobalFilterChange: setGlobalFilter,
-		debugTable: true,
 	});
 
 	return (
