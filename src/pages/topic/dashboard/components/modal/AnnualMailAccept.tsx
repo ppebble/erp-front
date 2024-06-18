@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import moment from 'moment';
 import logo from '../../../../../assets/img/logo/logo.png';
 import redCircle from '../../../../../assets/img/logo/redCircle.png';
 import { decryptData } from '../../../../../services/serialize/Deserialize';
@@ -195,7 +196,9 @@ const AnnualMailAccept = () => {
 								<div>
 									<span>&nbsp;</span>
 								</div>
-								<span style={{ fontSize: '12.0pt' }}>XXXX 년 XX 월 XX 일</span>
+								<span style={{ fontSize: '12.0pt' }}>
+									{moment().year()} 년 {moment().month() + 1} 월 {moment().date()} 일
+								</span>
 							</div>
 						</td>
 						<td style={{ border: 'none' }} />
