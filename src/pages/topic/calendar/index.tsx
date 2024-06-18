@@ -13,11 +13,13 @@ import CalendarService from '../../../services/calendarService';
 import { taskColor, taskLists } from '../../../store/common/useCommon';
 
 // 부서 필터 default value ... 개인일정... + (로그인한 본인 부서)
-let filter = ['personal'] as string[];
+let filter = ['personal', 'sc', 'sf', 'manage', 'dev', 'sb'] as string[];
 const CompanyCalendar = () => {
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();
 	const isDialogOpen = useCalendarDialogOpen();
+
+	const calendarParam = useCalendarParam();
 
 	const eventParam = {} as EventApi;
 	const events = useEvents();
@@ -28,6 +30,9 @@ const CompanyCalendar = () => {
 		const task = { id: 'personal', name: '개인일정', color: taskColor.personal };
 		calendarAction.setCalendarParam({ display: 'block', task });
 	}, []);
+	useEffect(() => {
+		console.log(calendarParam);
+	}, [calendarParam]);
 	const activeTask = (task: CalendarTaskType) => {
 		if (task.id !== selectedTask.id) {
 			setSelectedTask(task);
