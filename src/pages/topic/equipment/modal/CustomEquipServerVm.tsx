@@ -32,7 +32,7 @@ import { AddEquipParam } from './CustomEquipAddModal';
 import DebouncedInput from '../../../../components/table/CustomTableFilterComponent';
 import CustomEquipPagingTable from '../components/CustomEquipPagingTable';
 import useModal from '../../../../store/useModal';
-import { DDR3Hz, DDR4Hz, DDR5Hz, RamType } from '../../../../store/common/useCommon';
+import { DDR3Hz, DDR4Hz, DDR5Hz, EquipStatus, PcOsProps, RamType } from '../../../../store/common/useCommon';
 
 export type VmInfo = {
 	vmNo?: number | undefined;
@@ -502,10 +502,14 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 													setStatus(e.target.value);
 												}}
 											>
-												<option value="사용중">사용중</option>
-												<option value="유휴">유휴</option>
-												<option value="불량">불량</option>
-												<option value="폐기">폐기</option>
+												{Object.entries(EquipStatus).map((e, idx) => {
+													return (
+														// eslint-disable-next-line react/no-array-index-key
+														<option key={idx} value={e[0]}>
+															{e[0]}
+														</option>
+													);
+												})}
 											</Select>
 										</div>
 									</div>
@@ -631,10 +635,14 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 													setOs(e.target.value);
 												}}
 											>
-												<option value="LINUX">LINUX</option>
-												<option value="Window">Window</option>
-												{/* <option value="Android">Android</option>
-												<option value="IOS">iOS</option> */}
+												{Object.entries(PcOsProps).map((e, idx) => {
+													return (
+														// eslint-disable-next-line react/no-array-index-key
+														<option key={idx} value={e[0]}>
+															{e[0]}
+														</option>
+													);
+												})}
 											</Select>
 											<input
 												type="text"
@@ -915,8 +923,14 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 														setVmOs(e.target.value);
 													}}
 												>
-													<option value="LINUX">LINUX</option>
-													<option value="Window">Window</option>
+													{Object.entries(PcOsProps).map((e, idx) => {
+														return (
+															// eslint-disable-next-line react/no-array-index-key
+															<option key={idx} value={e[0]}>
+																{e[0]}
+															</option>
+														);
+													})}
 												</Select>
 												<input
 													type="text"

@@ -106,6 +106,10 @@ export enum EquipType {
 	mobile = '모바일',
 	etc = '기타장비',
 }
+export enum PcOsProps {
+	LINUX = 'LINUX',
+	Window = 'Window',
+}
 export enum BookStatus {
 	비치중 = '비치중',
 	폐기 = '폐기',
@@ -146,14 +150,18 @@ export enum ProjectStatus { // 개발진행, 운영진행 띄어쓰기 구분
 	연구과제 = '연구과제',
 }
 export const taskColor = {
-	sc: '#1cb9e0',
-	sf: '#00e413',
-	manage: '#f52b4d',
+	lab: '#b5bf24',
+	sf: '#32a14f',
+	manage: '#b53840',
 	dev: '#9842fa',
 	personal: '#787f8f',
 	sb: '#e9baba',
-	myPersonal: '#aaafbb',
+	sc: '#3c9ba6',
 } as const;
+export enum DevDeptProps {
+	개발1팀 = '개발1팀',
+	개발2팀 = '개발2팀',
+}
 export enum RankProps {
 	주임 = '주임',
 	대리 = '대리',
@@ -181,12 +189,21 @@ export enum WorkPlaceProps {
 	윤선생 = '윤선생',
 	미라콤 = '미라콤',
 }
+export enum TaskProps {
+	SF = 'SF&신사업부',
+	SC = 'SC사업부',
+	DEV = '기술개발본부',
+	MNG = '경영팀',
+	SB = '전략사업본부',
+	LAB = '기업부설연구소',
+}
 export const taskLists = [
-	{ id: 'sc', name: 'SC사업부', color: taskColor.sc },
-	{ id: 'sf', name: 'SF&신사업부', color: taskColor.sf },
+	{ id: 'sc', name: 'SC사업본부', color: taskColor.sc },
+	{ id: 'sf', name: 'SF&신사업본부', color: taskColor.sf },
 	{ id: 'manage', name: '경영팀', color: taskColor.manage },
 	{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
 	{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
+	{ id: ' lab', name: '기업부설연구소', color: taskColor.lab },
 	{ id: 'personal', name: '개인일정', color: taskColor.personal },
 ] as const;
 

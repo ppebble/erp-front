@@ -13,6 +13,7 @@ import useModal from '../../../store/useModal';
 import { partnerType, projectMember as projectMemberType } from '../../../network/response/projectParams';
 import { ProjectService } from '../../../services/projectService';
 import ProfileNumberInput from '../../../components/profileNumberInput';
+import { ProjectStatus, ProjectStepProps } from '../../../store/common/useCommon';
 
 // 프로젝트 추가 / 수정
 const ProjectModify = () => {
@@ -258,22 +259,38 @@ const ProjectModify = () => {
 										<InputLeftAddon className="!min-w-[120px]">상태</InputLeftAddon>
 										<Select id="status" className="!min-w-[150px]" onChange={(e) => changeProject(e)} defaultValue={isNew ? '-' : project.status}>
 											<option value="-">-</option>
-											<option value="완료">완료</option>
+											{/* <option value="완료">완료</option>
 											<option value="개발 진행">개발 진행</option>
 											<option value="운영 진행">운영 진행</option>
 											<option value="완료">완료</option>
 											<option value="유예">유예</option>
-											<option value="연구과제">연구과제</option>
+											<option value="연구과제">연구과제</option> */}
+											{Object.entries(ProjectStatus).map((e, idx) => {
+												return (
+													// eslint-disable-next-line react/no-array-index-key
+													<option key={idx} value={e[0]}>
+														{e[0]}
+													</option>
+												);
+											})}
 										</Select>
 										<InputLeftAddon className="!min-w-[120px] ml-[20px]">단계</InputLeftAddon>
 										<Select id="step" className="!min-w-[150px]" onChange={(e) => changeProject(e)} defaultValue={isNew ? '-' : project.step}>
 											<option value="-">-</option>
-											<option value="요구사항분석">요구사항분석</option>
+											{/* <option value="요구사항분석">요구사항분석</option>
 											<option value="설계">설계</option>
 											<option value="개발">개발</option>
 											<option value="단위테스트">단위테스트</option>
 											<option value="통합테스트">통합테스트</option>
-											<option value="인수">인수</option>
+											<option value="인수">인수</option> */}
+											{Object.entries(ProjectStepProps).map((e, idx) => {
+												return (
+													// eslint-disable-next-line react/no-array-index-key
+													<option key={idx} value={e[0]}>
+														{e[0]}
+													</option>
+												);
+											})}
 										</Select>
 									</InputGroup>
 								</td>
