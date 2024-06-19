@@ -71,7 +71,7 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 		}
 
 		annualParam.sign = refSignCanvas.current?.toDataURL();
-		annualParam.annType = annType.includes('반차') ? AnnualType.반차 : AnnualType.연차;
+		annualParam.annType = annType.includes('반차') ? AnnualType.HALF_ANN : AnnualType.HALF_ANN;
 		annualParam.managerNo = manager;
 		annualParam.signType = SignType.self;
 		if (refEventDesc.current?.value) {
@@ -209,10 +209,9 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 					className="!min-w-[120px]"
 				>
 					{Object.entries(AnnualProps).map((e, idx) => {
-						console.log(e);
 						return (
 							// eslint-disable-next-line react/no-array-index-key
-							<option key={idx} value={e[0]}>
+							<option key={idx} value={e[1]}>
 								{e[1]}
 							</option>
 						);

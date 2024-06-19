@@ -70,8 +70,8 @@ export enum ModalList {
 	BOOK_ADD = 7, // 도서 등록/조회
 }
 export const enum AnnualType {
-	반차 = 0,
-	연차 = 1,
+	HALF_ANN = 0,
+	ANN = 1,
 }
 export const enum SignType {
 	self = 0,
@@ -121,22 +121,22 @@ export enum PcOsProps {
 	Window = 'Window',
 }
 export enum BookStatus {
-	비치중 = '비치중',
-	폐기 = '폐기',
+	ON_DISP = '비치중',
+	DISCARD = '폐기',
 }
 export enum EquipStatus {
-	비치중 = '사용중',
-	유휴 = '유휴',
-	불량 = '불량',
-	폐기 = '폐기',
+	ON_USE = '사용중',
+	IDLE = '유휴',
+	FAULTY = '불량',
+	DISCARD = '폐기',
 }
 export enum AnnualProps {
-	연차 = '연차',
-	오전반차 = '오전반차',
-	오후반차 = '오후반차',
-	경조 = '경조',
-	결근 = '결근',
-	하기휴가 = '하기휴가',
+	ANN = '연차',
+	AM_HALF = '오전반차',
+	PM_HALF = '오후반차',
+	EVENT = '경조',
+	ABSENCE = '결근',
+	SUMMBER_HOLIDAY = '하기휴가',
 }
 export enum OsProps {
 	LINUX = 'LINUX',
@@ -145,51 +145,51 @@ export enum OsProps {
 	IOS = 'iOS',
 }
 export enum ProjectStepProps {
-	요구사항분석 = '요구사항분석',
-	설계 = '설계',
-	개발 = '개발',
-	단위테스트 = '단위테스트',
-	통합테스트 = '통합테스트',
-	인수 = '인수',
+	REQ = '요구사항분석',
+	DESIGN = '설계',
+	DEV = '개발',
+	UNIT_TEST = '단위테스트',
+	INT_TEST = '통합테스트',
+	TAKE_OVER = '인수',
 }
 export enum ProjectStatus { // 개발진행, 운영진행 띄어쓰기 구분
-	개발진행 = '개발 진행',
-	운영진행 = '운영 진행',
-	완료 = '완료',
-	유예 = '유예',
-	연구과제 = '연구과제',
+	DEV = '개발 진행',
+	QS = '운영 진행',
+	DONE = '완료',
+	SUSPEND = '유예',
+	RESEARCH = '연구과제',
 }
 
 export enum DevDeptProps {
-	개발1팀 = '개발1팀',
-	개발2팀 = '개발2팀',
+	DEV1 = '개발1팀',
+	DEV2 = '개발2팀',
 }
 export enum RankProps {
-	주임 = '주임',
-	대리 = '대리',
-	과장 = '과장',
-	차장 = '차장',
-	부장 = '부장',
-	이사 = '이사',
-	상무 = '상무',
-	대표 = '대표',
-	회장 = '회장',
+	FOREMEN = '주임',
+	PROXY = '대리',
+	CHIEF = '과장',
+	DEPUTY_DIRECTOR = '차장',
+	HEAD_DEPT = '부장',
+	HEAD_DIRECTOR = '이사',
+	DIRECTOR = '상무',
+	REPRESENT = '대표',
+	CHAIRMAN = '회장',
 }
 export enum PositionProps {
 	CEO = 'CEO',
-	사업부장 = '사업부장',
-	본부장 = '본부장',
-	연구소장 = '연구소장',
-	실장 = '실장',
-	팀장 = '팀장',
-	파트장 = '파트장',
+	HEAD_BUSS = '사업부장',
+	DIRECTOR = '본부장',
+	HEAD_LAB = '연구소장',
+	HEAD_DEPT = '실장',
+	HEAD_TEAM = '팀장',
+	HEAD_PART = '파트장',
 }
 export enum WorkPlaceProps {
-	본사 = '본사',
+	HEAD = '본사',
 	SKT = 'SKT',
-	안산 = '안산',
-	윤선생 = '윤선생',
-	미라콤 = '미라콤',
+	ANSAN = '안산',
+	YUN = '윤선생',
+	MIRACOM = '미라콤',
 }
 export enum TaskProps {
 	SF = 'SF&신사업부',

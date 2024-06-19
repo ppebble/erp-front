@@ -505,8 +505,8 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 												{Object.entries(EquipStatus).map((e, idx) => {
 													return (
 														// eslint-disable-next-line react/no-array-index-key
-														<option key={idx} value={e[0]}>
-															{e[0]}
+														<option key={idx} value={e[1]}>
+															{e[1]}
 														</option>
 													);
 												})}
@@ -638,8 +638,8 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 												{Object.entries(PcOsProps).map((e, idx) => {
 													return (
 														// eslint-disable-next-line react/no-array-index-key
-														<option key={idx} value={e[0]}>
-															{e[0]}
+														<option key={idx} value={e[1]}>
+															{e[1]}
 														</option>
 													);
 												})}
@@ -706,8 +706,8 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 												{Object.entries(RamType).map((e, idx) => {
 													return (
 														// eslint-disable-next-line react/no-array-index-key
-														<option key={idx} value={e[0]}>
-															{e[0]}
+														<option key={idx} value={e[1]}>
+															{e[1]}
 														</option>
 													);
 												})}
@@ -926,8 +926,8 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 													{Object.entries(PcOsProps).map((e, idx) => {
 														return (
 															// eslint-disable-next-line react/no-array-index-key
-															<option key={idx} value={e[0]}>
-																{e[0]}
+															<option key={idx} value={e[1]}>
+																{e[1]}
 															</option>
 														);
 													})}

@@ -576,7 +576,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 									{Object.entries(EquipStatus).map((e, idx) => {
 										return (
 											// eslint-disable-next-line react/no-array-index-key
-											<option key={idx} value={e[0]}>
+											<option key={idx} value={e[1]}>
 												{e[1]}
 											</option>
 										);
@@ -698,7 +698,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 									{Object.entries(OsProps).map((e, idx) => {
 										return (
 											// eslint-disable-next-line react/no-array-index-key
-											<option key={idx} value={e[0]}>
+											<option key={idx} value={e[1]}>
 												{e[1]}
 											</option>
 										);
@@ -766,8 +766,8 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 									{Object.entries(RamType).map((e, idx) => {
 										return (
 											// eslint-disable-next-line react/no-array-index-key
-											<option key={idx} value={e[0]}>
-												{e[0]}
+											<option key={idx} value={e[1]}>
+												{e[1]}
 											</option>
 										);
 									})}
@@ -946,7 +946,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 					{Object.entries(EquipType).map((e, idx) => {
 						return (
 							// eslint-disable-next-line react/no-array-index-key
-							<option key={idx} value={e[0]}>
+							<option key={idx} value={e[1]}>
 								{e[1]}
 							</option>
 						);

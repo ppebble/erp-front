@@ -277,8 +277,8 @@ export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) =
 									{Object.entries(BookStatus).map((e, idx) => {
 										return (
 											// eslint-disable-next-line react/no-array-index-key
-											<option key={idx} value={e[0]}>
-												{e[0]}
+											<option key={idx} value={e[1]}>
+												{e[1]}
 											</option>
 										);
 									})}

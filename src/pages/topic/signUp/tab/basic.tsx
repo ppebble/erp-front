@@ -158,8 +158,8 @@ const Basic = () => {
 								{Object.entries(DevDeptProps).map((e, idx) => {
 									return (
 										// eslint-disable-next-line react/no-array-index-key
-										<option key={idx} value={e[0]}>
-											{e[0]}
+										<option key={idx} value={e[1]}>
+											{e[1]}
 										</option>
 									);
 								})}
@@ -184,8 +184,8 @@ const Basic = () => {
 						{Object.entries(PositionProps).map((e, idx) => {
 							return (
 								// eslint-disable-next-line react/no-array-index-key
-								<option key={idx} value={e[0]}>
-									{e[0]}
+								<option key={idx} value={e[1]}>
+									{e[1]}
 								</option>
 							);
 						})}
@@ -206,8 +206,8 @@ const Basic = () => {
 						{Object.entries(RankProps).map((e, idx) => {
 							return (
 								// eslint-disable-next-line react/no-array-index-key
-								<option key={idx} value={e[0]}>
-									{e[0]}
+								<option key={idx} value={e[1]}>
+									{e[1]}
 								</option>
 							);
 						})}
@@ -225,8 +225,8 @@ const Basic = () => {
 						{Object.entries(WorkPlaceProps).map((e, idx) => {
 							return (
 								// eslint-disable-next-line react/no-array-index-key
-								<option key={idx} value={e[0]}>
-									{e[0]}
+								<option key={idx} value={e[1]}>
+									{e[1]}
 								</option>
 							);
 						})}

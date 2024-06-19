@@ -268,8 +268,8 @@ const ProjectModify = () => {
 											{Object.entries(ProjectStatus).map((e, idx) => {
 												return (
 													// eslint-disable-next-line react/no-array-index-key
-													<option key={idx} value={e[0]}>
-														{e[0]}
+													<option key={idx} value={e[1]}>
+														{e[1]}
 													</option>
 												);
 											})}
@@ -286,8 +286,8 @@ const ProjectModify = () => {
 											{Object.entries(ProjectStepProps).map((e, idx) => {
 												return (
 													// eslint-disable-next-line react/no-array-index-key
-													<option key={idx} value={e[0]}>
-														{e[0]}
+													<option key={idx} value={e[1]}>
+														{e[1]}
 													</option>
 												);
 											})}
