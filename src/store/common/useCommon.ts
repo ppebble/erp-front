@@ -1,11 +1,22 @@
-export const taskList = {
-	sc: { id: 'sc', name: 'SC사업부', color: '#1cb9e0' },
-	sf: { id: 'sf', name: 'SF&신사업부', color: '#00e413' },
-	manage: { id: 'manage', name: '경영팀', color: '#f52b4d' },
-	dev: { id: 'dev', name: '기술개발본부', color: '#9842fa' },
-	sb: { id: 'sb', name: '전략사업본부', color: '#e9baba' },
-	personal: { id: 'personal', name: '개인일정', color: '#787f8f' },
+export const taskColor = {
+	lab: '#b5bf24',
+	sf: '#32a14f',
+	manage: '#b53840',
+	dev: '#9842fa',
+	personal: '#787f8f',
+	sb: '#e9baba',
+	sc: '#3c9ba6',
 } as const;
+
+export const taskLists = [
+	{ id: 'sc', name: 'SC사업본부', color: taskColor.sc },
+	{ id: 'sf', name: 'SF&신사업본부', color: taskColor.sf },
+	{ id: 'manage', name: '경영팀', color: taskColor.manage },
+	{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
+	{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
+	{ id: 'lab', name: '기업부설연구소', color: taskColor.lab },
+	{ id: 'personal', name: '개인일정', color: taskColor.personal },
+] as const;
 
 export type MemberTagProps = {
 	name: string;
@@ -45,7 +56,6 @@ export type dailyEventProps = {
 	date: string;
 	members?: string;
 };
-export type taskList = (typeof taskList)[keyof typeof taskList];
 
 type ValuesOf<E> = E[keyof E];
 
@@ -149,15 +159,7 @@ export enum ProjectStatus { // 개발진행, 운영진행 띄어쓰기 구분
 	유예 = '유예',
 	연구과제 = '연구과제',
 }
-export const taskColor = {
-	lab: '#b5bf24',
-	sf: '#32a14f',
-	manage: '#b53840',
-	dev: '#9842fa',
-	personal: '#787f8f',
-	sb: '#e9baba',
-	sc: '#3c9ba6',
-} as const;
+
 export enum DevDeptProps {
 	개발1팀 = '개발1팀',
 	개발2팀 = '개발2팀',
@@ -197,15 +199,6 @@ export enum TaskProps {
 	SB = '전략사업본부',
 	LAB = '기업부설연구소',
 }
-export const taskLists = [
-	{ id: 'sc', name: 'SC사업본부', color: taskColor.sc },
-	{ id: 'sf', name: 'SF&신사업본부', color: taskColor.sf },
-	{ id: 'manage', name: '경영팀', color: taskColor.manage },
-	{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
-	{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
-	{ id: ' lab', name: '기업부설연구소', color: taskColor.lab },
-	{ id: 'personal', name: '개인일정', color: taskColor.personal },
-] as const;
 
 // 쓸지 알 수 없음
 export const errorCode = {

@@ -13,7 +13,7 @@ import CalendarService from '../../../services/calendarService';
 import { taskColor, taskLists } from '../../../store/common/useCommon';
 
 // 부서 필터 default value ... 개인일정... + (로그인한 본인 부서)
-let filter = ['personal', 'sc', 'sf', 'manage', 'dev', 'sb'] as string[];
+let filter = ['personal', 'sc', 'sf', 'manage', 'dev', 'sb', 'lab'] as string[];
 const CompanyCalendar = () => {
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();

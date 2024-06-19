@@ -163,7 +163,7 @@ export const CalendarService = (date?: string) => {
 						const param = {} as MemberTagProps;
 						param.name = data[i].name;
 						param.task = {
-							id: getEventTask(data[i].team),
+							id: getEventTask(data[i].team) || '',
 							name: data[i].team,
 						};
 						param.profileNo = data[i].profileNo;
