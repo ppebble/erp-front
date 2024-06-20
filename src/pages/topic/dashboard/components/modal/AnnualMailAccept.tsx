@@ -276,7 +276,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `${data.annType === '반차' ? `url(${redCircle})` : ''}`,
+									backgroundImage: `${data.annType === '반차' || data.annType === '반휴' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',

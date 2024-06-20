@@ -6,27 +6,11 @@ import redCircle from '../../../../assets/img/logo/redCircle.png';
 import logo from '../../../../assets/img/logo/logo.png';
 import AnnualService from '../../../../services/annualService';
 
-type MailAcceptProps = {
-	annType: string;
-	dayDiff: number;
-	endDate: string;
-	expires: string;
-	note: string;
-	register: string;
-	registerEmpNo: string;
-	registerRank: string;
-	registerTask: string;
-	sign: string;
-	startDate: string;
-	historyNo: string;
-};
-
 const AnnualRequestView = ({ historyNo }: any) => {
 	const result = useQuery(['getAnnRequest'], AnnualService({ historyNo }).getAnnualDetail);
 	const [data, setData] = useState<any>('');
 	useEffect(() => {
 		if (result.data) {
-			console.log(result.data.response.result);
 			setData(result.data.response.result);
 		}
 	}, [result]);
@@ -260,7 +244,7 @@ const AnnualRequestView = ({ historyNo }: any) => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `${data.annType === '반차' ? `url(${redCircle})` : ''}`,
+									backgroundImage: `${data.annType === '반차' || data.annType === '반휴' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
