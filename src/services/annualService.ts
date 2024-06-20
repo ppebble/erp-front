@@ -44,7 +44,7 @@ export const AnnualService = (param?: any) => {
 	};
 	const getAdminAnnualRequest = {
 		// queryFn: (date: string) => getEvents(date),
-		queryFn: () => getQuery(`/api/annual/annualApproveList?managerNo=${param.managerNo}`),
+		queryFn: () => getQuery(`/api/annual/annualApproveList?managerNo=${param.managerNo}&currentPage=${param.currentPage}&pageSize=${param.pageSize}`),
 		onSuccess: (result: any) => {
 			if (result.response && result.response.resultCode === '7000') {
 				const data = result.response.result; // arrayList
@@ -53,6 +53,20 @@ export const AnnualService = (param?: any) => {
 				}
 			}
 			return false;
+		},
+		onError: (error: any) => {
+			console.log(error);
+		},
+	};
+	const getAnnualDetail = {
+		// queryFn: (date: string) => getEvents(date),
+		queryFn: () => getQuery(`/api/annual/annualDetail/${param.historyNo}`),
+		onSuccess: (result: any) => {
+			let data;
+			if (result.response && result.response.resultCode === '7000') {
+				data = result.response.result; // arrayList
+			}
+			return data;
 		},
 		onError: (error: any) => {
 			console.log(error);
@@ -144,6 +158,7 @@ export const AnnualService = (param?: any) => {
 		getAnnualRequest,
 		getManagerList,
 		getAdminAnnualRequest,
+		getAnnualDetail,
 		approveAnnual,
 		rejectAnnual,
 		calcleAnnual,

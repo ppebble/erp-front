@@ -22,6 +22,7 @@ import { CustomEquipAddModal } from '../../pages/topic/equipment/modal/CustomEqu
 import { CustomEquipBookAddModal } from '../../pages/topic/equipment/modal/CustomEquipBookAddModal';
 import InputContainer from '../inputContainer';
 import { ModalList } from '../../store/common/useCommon';
+import AnnualRequestView from '../../pages/admin/annualManage/component/AnnualRequestView';
 
 type ModalProps = {
 	change: () => void;
@@ -210,6 +211,18 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 			break;
 		case ModalList.BOOK_ADD:
 			dialog = <CustomEquipBookAddModal title={contents.title} row={contents.row} onClose={change} setOpen={contents.setOpen} />;
+			break;
+		case ModalList.ANNUAL_REQUEST:
+			dialog = (
+				<AlertDialogContent minW="40%" minH="20%">
+					<AlertDialogHeader />
+					<AlertDialogCloseButton size="lg" />
+
+					<AlertDialogBody className="content-center text-center text-xl">
+						<AnnualRequestView historyNo={contents.historyNo} />
+					</AlertDialogBody>
+				</AlertDialogContent>
+			);
 			break;
 		default:
 			break;

@@ -15,6 +15,8 @@ import { AnnReqProps, useAdminAnnRequest, useAnnRequest, useAnnualAction } from 
 import AnnualService from '../../../services/annualService';
 import Dropdown from '../../../components/dropdown';
 import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLineWidget';
+import useModal from '../../../store/useModal';
+import { ModalList } from '../../../store/common/useCommon';
 
 const ANNUAL_STRING = {
 	reqMng: '신청 연차 관리',
@@ -22,14 +24,14 @@ const ANNUAL_STRING = {
 };
 
 const AnnualManageComponent = () => {
-	const { isSuccess } = useQuery(['getAnnApproveList'], AnnualService({ managerNo: 49 }).getAdminAnnualRequest);
-
 	const reqData = useAdminAnnRequest();
 	const annReqColHelper = createColumnHelper<AnnReqProps>();
 	const refSignCanvas = useRef() as MutableRefObject<any>;
 	const [title, setTitle] = useState<string>(ANNUAL_STRING.reqMng);
 	const [openSign, setOpenSign] = useState<boolean>(false);
-	const [data, setData] = useState<any>(reqData);
+	const [data, setData] = useState<any>(reqData.items);
+	const [currentPage, setCurrentPage] = useState<number>(0);
+	const [totalPage, setTotalPage] = useState<number>(reqData.totalPages);
 	const dateValidation = (date: string) => {
 		const today = moment().format('YYYY-MM-DD HH:mm');
 		return moment(date).isAfter(today);
@@ -39,17 +41,45 @@ const AnnualManageComponent = () => {
 		pageIndex: 0,
 		pageSize: 5,
 	});
+	const { isSuccess } = useQuery(
+		['getAnnApproveList', currentPage + 1],
+		AnnualService({ managerNo: 49, currentPage: currentPage + 1, pageSize: pagination.pageSize }).getAdminAnnualRequest,
+	);
+
 	useEffect(() => {
 		if (title === ANNUAL_STRING.aprMng) {
-			setData(reqData.filter((e) => e.signType === 0 && dateValidation(e.start)));
+			setData(reqData.items.filter((e) => e.signType === 0 || dateValidation(e.start)));
+			setCurrentPage(0);
 		} else if (title === ANNUAL_STRING.reqMng) {
-			setData(reqData);
+			setTotalPage(reqData.totalPages);
+			setData(reqData.items);
+			setCurrentPage(0);
 		}
 	}, [title]);
 	useEffect(() => {
-		setData(reqData);
-	}, [isSuccess]);
-
+		if (title === ANNUAL_STRING.aprMng) {
+			setData(reqData.items.filter((e) => e.signType === 0 || dateValidation(e.start)));
+		} else if (title === ANNUAL_STRING.reqMng) {
+			setTotalPage(reqData.totalPages);
+			setData(reqData.items);
+		}
+	}, [reqData]);
+	useEffect(() => {
+		if (title === ANNUAL_STRING.aprMng) {
+			console.log(`TOTAL INDEX === ${Math.ceil(reqData && reqData.totalApproveElements / 5)}`);
+			setTotalPage(Math.ceil(reqData && reqData.totalApproveElements / 5));
+		} else if (title === ANNUAL_STRING.reqMng) {
+			setTotalPage(reqData.totalPages);
+		}
+	}, [data]);
+	useEffect(() => {
+		if (title === ANNUAL_STRING.aprMng) {
+			setData(reqData.items.filter((e) => e.signType === 0 || dateValidation(e.start)));
+		} else if (title === ANNUAL_STRING.reqMng) {
+			setTotalPage(reqData.totalPages);
+			setData(reqData.items);
+		}
+	}, [currentPage]);
 	const NoteCell = ({ getValue, row, column, table }: any) => {
 		const initValue = getValue();
 		const [value, setValue] = useState<string>(initValue);
@@ -118,7 +148,7 @@ const AnnualManageComponent = () => {
 			id: 'approval',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">승인</p>,
 			cell: (info) => (
-				<div className={`${dateValidation(info.row.original.start) && info.row.original.signType !== 2 ? '' : 'hidden'} flex font-bold`}>
+				<div className={`${dateValidation(info.row.original.start) || info.row.original.signType === 0 ? '' : 'hidden'} flex font-bold`}>
 					<Button
 						onClick={() => {
 							if (window.confirm('연차 신청을 승인하시겠습니까?')) {
@@ -136,6 +166,7 @@ const AnnualManageComponent = () => {
 				</div>
 			),
 		}),
+
 		annReqColHelper.accessor('reject', {
 			id: 'reject',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">반려</p>,
@@ -162,10 +193,15 @@ const AnnualManageComponent = () => {
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">반려 사유</p>,
 			cell: NoteCell,
 		}),
+		annReqColHelper.accessor('historyNo', {
+			id: 'historyNo',
+			header: () => <p className="hidden" />,
+			cell: (info) => <p className="hidden">{info.getValue()}</p>,
+		}),
 	];
 
 	const annReqTable = useReactTable({
-		data: data || reqData,
+		data: data || reqData.items || '',
 		columns: annReqColumns,
 		state: {
 			pagination,
@@ -189,6 +225,7 @@ const AnnualManageComponent = () => {
 		getPaginationRowModel: getPaginationRowModel(),
 		onPaginationChange: setPagination,
 	});
+	const { openModal } = useModal();
 
 	return (
 		<div className="grid grid-cols-12 gap-2">
@@ -270,7 +307,19 @@ const AnnualManageComponent = () => {
 										<tr key={row.id}>
 											{row.getVisibleCells().map((cell) => {
 												return (
-													<td key={cell.id} className="min-w-[60px] border-white/0 py-3 pr-2">
+													<td
+														onClick={() => {
+															if (cell.id.includes('register') || cell.id.includes('start') || cell.id.includes('end') || cell.id.includes('note')) {
+																openModal({
+																	type: ModalList.ANNUAL_REQUEST,
+																	closeOnOverlay: false,
+																	contents: { historyNo: row.original.historyNo },
+																});
+															}
+														}}
+														key={cell.id}
+														className="min-w-[60px] border-white/0 py-3 pr-2"
+													>
 														{flexRender(cell.column.columnDef.cell, cell.getContext())}
 													</td>
 												);
@@ -288,23 +337,23 @@ const AnnualManageComponent = () => {
 							<ul className="flex justify-center items-center gap-x-[1px]" role="navigation" aria-label="Pagination">
 								<li
 									className={` prev-btn flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] disabled] ${
-										annReqTable.getState().pagination.pageIndex === 0 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
+										currentPage === 0 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
 									}`}
-									onClick={() => annReqTable.previousPage()}
+									onClick={() => {
+										setCurrentPage(currentPage - 1);
+									}}
 								>
 									<MdChevronLeft />
 								</li>
-								{Array.from({ length: annReqTable.getPageCount() || 0 }).map((_, index) => (
+								{Array.from({ length: totalPage || 0 }).map((_, index) => (
 									<li
 										className={`${
-											index > annReqTable.getState().pagination.pageIndex - 5 && annReqTable.getState().pagination.pageIndex + 5 > index
-												? ''
-												: 'hidden'
+											index + 1 > currentPage - 5 && currentPage + 5 > index + 1 ? '' : 'hidden'
 										} flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
-											annReqTable.getState().pagination.pageIndex === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
+											currentPage === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
 										}`}
 										onClick={() => {
-											annReqTable.setPageIndex(index);
+											setCurrentPage(index);
 										}}
 										// eslint-disable-next-line react/no-array-index-key
 										key={index}
@@ -314,11 +363,11 @@ const AnnualManageComponent = () => {
 								))}
 								<li
 									className={`flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] ${
-										annReqTable.getState().pagination.pageIndex === annReqTable.getPageCount() - 1
-											? 'bg-[#cccccc] pointer-events-none'
-											: ' cursor-pointer'
+										currentPage + 1 === totalPage ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
 									}`}
-									onClick={() => annReqTable.nextPage()}
+									onClick={() => {
+										setCurrentPage(currentPage + 1);
+									}}
 								>
 									<MdChevronRight />
 								</li>

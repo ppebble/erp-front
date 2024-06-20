@@ -57,8 +57,6 @@ export type dailyEventProps = {
 	members?: string;
 };
 
-type ValuesOf<E> = E[keyof E];
-
 export enum ModalList {
 	PROJECT_PARTER_ADD = 0, // 프로젝트 - 파트너 추가
 	BOARD_VIEW_DETAIL = 1, // 게시판 글 상세보기
@@ -68,6 +66,7 @@ export enum ModalList {
 	ANNUAL_ADD = 5, // 연차 신청
 	EQUIP_ADD = 6, // 장비 등록/조회
 	BOOK_ADD = 7, // 도서 등록/조회
+	ANNUAL_REQUEST = 8, // 연차 신청서 조회
 }
 export const enum AnnualType {
 	HALF_ANN = 0,
