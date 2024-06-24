@@ -1,10 +1,21 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { memberList, project, projectDetail, projectFile, projectMember, projectOutput } from '../network/response/projectParams';
+import {
+	businessDetailParams,
+	businessList,
+	memberList,
+	project,
+	projectDetail,
+	projectFile,
+	projectMember,
+	projectOutput,
+} from '../network/response/projectParams';
 
 interface ProjectStore {
 	projectNo: number;
 	setProjectNo: (state: number) => void;
+	businessNo: number;
+	setBusinessNo: (state: number) => void;
 	projectList: project[];
 	setProjectList: (state: project[]) => void;
 	project: project;
@@ -18,7 +29,11 @@ interface ProjectStore {
 	memberList: memberList[];
 	setMemberList: (state: memberList[]) => void;
 	setClear: () => void;
-	setClearProjectNo: () => void;
+	setClearDetailNo: () => void;
+	businessList: businessList[];
+	setBusinessList: (state: businessList[]) => void;
+	businessDetail: businessDetailParams;
+	setBusinessDetail: (state: businessDetailParams) => void;
 }
 
 const useProject = create(
@@ -26,12 +41,15 @@ const useProject = create(
 		(set) => ({
 			projectNo: 0,
 			setProjectNo: (select) => set((state) => ({ ...state, projectNo: select })),
+			businessNo: 0,
+			setBusinessNo: (select) => set((state) => ({ ...state, businessNo: select })),
 			projectList: [
 				{
 					projectNo: 0,
 					field: '',
 					projectName: '',
 					managerNo: 0,
+					manager: '',
 					status: '',
 					step: '',
 					client: '',
@@ -46,6 +64,7 @@ const useProject = create(
 				field: '',
 				projectName: '',
 				managerNo: 0,
+				manager: '',
 				status: '',
 				step: '',
 				client: '',
@@ -77,6 +96,51 @@ const useProject = create(
 			setProjectOutput: (select) => set((state) => ({ ...state, projectOutput: select })),
 			memberList: [{ profileNo: 0, name: '', team: '', empNo: '' }],
 			setMemberList: (select) => set((state) => ({ ...state, memberList: select })),
+			businessList: [],
+			setBusinessList: (select) => set((state) => ({ ...state, businessList: select })),
+			businessDetail: {
+				detail: {
+					info: {
+						businessNo: 0,
+						businessName: '',
+						participationType: '',
+						department: '',
+						startDate: '',
+						endDate: '',
+						register: '',
+						authority: 0,
+						createDate: '',
+						modifyDate: '',
+						isDel: 0,
+					},
+					institution: {
+						insNo: 0,
+						businessNo: 0,
+						proResearchIns: '',
+						proResearchName: '',
+						proResearchNo: '',
+						headResearchIns: '',
+						headResearchName: '',
+						headResearchNo: '',
+						jointResearchIns: '',
+						jointResearchName: '',
+						jointResearchNo: '',
+						detailName: '',
+						detailNo: '',
+					},
+					cost: {
+						costNo: 0,
+						businessNo: 0,
+						fundingCost: 0,
+						privateCost: 0,
+						privateGoods: 0,
+						etcCost: 0,
+					},
+					output: [],
+				},
+				member: [],
+			},
+			setBusinessDetail: (select) => set((state) => ({ ...state, businessDetail: select })),
 			setClear: () =>
 				set(() => ({
 					projectNo: 0,
@@ -85,6 +149,7 @@ const useProject = create(
 						field: '',
 						projectName: '',
 						managerNo: 0,
+						manager: '',
 						status: '',
 						step: '',
 						client: '',
@@ -111,7 +176,7 @@ const useProject = create(
 					projectMember: [],
 					projectOutput: [],
 				})),
-			setClearProjectNo: () => set(() => ({ projectNo: 0 })),
+			setClearDetailNo: () => set(() => ({ projectNo: 0, businessNo: 0 })),
 		}),
 		{
 			name: 'ProjectStorage',

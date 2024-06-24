@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import { Button, Input, InputGroup, InputLeftAddon, Textarea, Divider, Table, Card, Select } from '@chakra-ui/react';
 import { ArrowLeftIcon } from '@chakra-ui/icons';
 import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from 'react-icons/io';
@@ -10,12 +11,14 @@ import InputContainer from '../../../components/inputContainer';
 import useProject from '../../../store/useProject';
 import useProfile from '../../../store/useProfile';
 import useModal from '../../../store/useModal';
+import ProfileNumberInput from '../../../components/profileNumberInput';
 import { partnerType, projectMember as projectMemberType } from '../../../network/response/projectParams';
 import { ProjectService } from '../../../services/projectService';
-import ProfileNumberInput from '../../../components/profileNumberInput';
+import { ProfileService } from '../../../services/profileService';
 
 // 프로젝트 추가 / 수정
 const ProjectModify = () => {
+	useQuery('getProfileList', ProfileService().getProfileList);
 	const { state } = useLocation();
 	const navigate = useNavigate();
 	const { isNew } = state;
@@ -84,11 +87,9 @@ const ProjectModify = () => {
 	};
 
 	const newProject = () => {
-		const formData = new FormData();
-		// project.managerNo = 21;
-		const param = { project, projectDetail, projectMember, projectOutput };
+		const param = { project, projectDetail, projectMember, projectOutput: [] };
 		console.log(param);
-
+		const formData = new FormData();
 		fileValue.forEach((v: any) => {
 			formData.append('uploadFiles', v[0]);
 		});
@@ -99,7 +100,13 @@ const ProjectModify = () => {
 
 	const updateOk = () => {
 		const param = { project, projectDetail, projectMember, projectOutput };
-		modify.mutate(param);
+		const formData = new FormData();
+		fileValue.forEach((v: any) => {
+			formData.append('uploadFiles', v[0]);
+		});
+		formData.append('projectDataVo', JSON.stringify(param));
+		modify.mutate(formData);
+		closeModal();
 	};
 
 	const updateProject = () => {
@@ -129,27 +136,17 @@ const ProjectModify = () => {
 	}, [swiperSetting]);
 
 	useEffect(() => {
-		setProjectOutput([]);
+		// setProjectOutput([]);
 	}, [fileValue, setProjectOutput]);
 
 	useEffect(() => {
-		// setProjectMember([]);
 		if (memberValue) {
-			setSearch(profileList.filter((item) => item.name.includes(memberValue[selectIndex].member)));
 			setProjectMember(memberValue);
 		}
-		setProjectMember([]);
+		// setProjectMember([]);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [memberValue]);
-
-	useEffect(() => {
-		if (memberValue && search && search.length === 1) {
-			console.log(search[0].profileNo);
-			memberValue[selectIndex].profileNo = search[0].profileNo;
-			setProjectMember(memberValue);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [search]);
 
 	return (
 		<div className="mt-5 grid">
@@ -172,7 +169,7 @@ const ProjectModify = () => {
 						<InputLeftAddon className="!min-w-[120px]">프로젝트명</InputLeftAddon>
 						<Input id="projectName" onChange={(e) => changeProject(e)} defaultValue={isNew ? '' : project.projectName} />
 						<InputLeftAddon className="!min-w-[120px] ml-[20px]">담당자</InputLeftAddon>
-						<ProfileNumberInput id="managerNo" onChange={(e: any) => changeProject(e)} defaultValue={isNew ? '' : project.managerNo} />
+						<ProfileNumberInput id="managerNo" onChange={(e: any) => changeProject(e)} defaultValue={isNew ? '' : project.manager} />
 					</InputGroup>
 					<InputGroup className="mb-3">
 						<InputLeftAddon className="!min-w-[120px]">시작일</InputLeftAddon>

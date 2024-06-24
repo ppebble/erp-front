@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
 	InputGroup,
@@ -14,6 +14,7 @@ import {
 	Spacer,
 	Tag,
 } from '@chakra-ui/react';
+import { DownloadIcon } from '@chakra-ui/icons';
 import useProfile from '../../store/useProfile';
 import useProject from '../../store/useProject';
 import ProfileNumberInput from '../profileNumberInput';
@@ -25,7 +26,7 @@ type InputComponentprops = {
 	InputDelete: (id: number) => void;
 	detailDelete?: (id: number) => void;
 	onChange: (e: any, id: any) => void;
-	onFileChange?: (e: any) => void;
+	onFileChange?: (e: any, id: any) => void;
 	onDetailChange?: (e: any, id: any) => void;
 	type: string;
 	style?: string;
@@ -46,18 +47,14 @@ const InputComponent = ({
 	readOnly,
 }: InputComponentprops) => {
 	const { careerIndex, setCareerIndex } = useProfile();
-	const { project, projectOutput } = useProject();
+	const { project, projectOutput, setProjectOutput, projectMember } = useProject();
 
 	const changeSelect = (index: number) => {
 		setCareerIndex(index);
 	};
 
-	const downloadList = (index: number) => {
-		let attachmentText = '첨부 파일이 없습니다.';
-		if (projectOutput.length >= 1) {
-			attachmentText = projectOutput[index].fileName;
-		}
-		return attachmentText;
+	const removeFile = (idx: number) => {
+		setProjectOutput(projectOutput.filter((index: any) => index !== idx));
 	};
 
 	const inputComponent = () => {
@@ -245,33 +242,50 @@ const InputComponent = ({
 								<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px]">
 									산출물
 								</Tag>
-
 								<Spacer />
 								{!readOnly && <Button onClick={() => addInput()}>추가</Button>}
 							</Flex>
 						</div>
-						{inputItems.map((item: any, index: any) => {
-							return (
-								<div key={`attachment_${item.id}`} className="my-[2px]">
-									<InputGroup className="mb-2">
-										{readOnly ? (
-											<Link
-												to={`http://192.168.0.218:8092/api/file/downloadFile/project/${project?.projectNo}/${projectOutput[index]?.outputNo}`}
-												download
-												target="_self"
-											>
-												{downloadList(index)}
-											</Link>
-										) : (
-											<>
-												<Input name={`file_${item.id}`} type="file" onChange={(e) => onFileChange && onFileChange(e.target.files)} />
-												<CloseButton onClick={() => InputDelete(index)} />
-											</>
-										)}
-									</InputGroup>
-								</div>
-							);
-						})}
+						{projectOutput?.length >= 1 ? (
+							projectOutput.map((item: any, index: any) => {
+								return (
+									<div key={`attachment_${item?.id ? item?.id : item?.fileNo}`} className="my-[2px]">
+										<InputGroup className="mb-2">
+											{readOnly ? (
+												<Link
+													to={`${import.meta.env.VITE_TEST_URL2}/api/file/downloadFile/project/${project?.projectNo}/${projectOutput[index]?.outputNo}`}
+													className="float-left"
+													download
+													target="_self"
+												>
+													{projectOutput[index].fileName}
+													<DownloadIcon className="ml-[10px]" />
+												</Link>
+											) : (
+												<>
+													<p>{projectOutput[index].fileName}</p>
+													<Spacer />
+													<CloseButton className="float-left" onClick={() => removeFile(index)} />
+												</>
+											)}
+										</InputGroup>
+									</div>
+								);
+							})
+						) : (
+							<p>{readOnly ? '첨부파일이 없습니다.' : ''}</p>
+						)}
+						{!readOnly &&
+							inputItems.map((item: any, index: any) => {
+								return (
+									<div key={`attachment_${item?.id ? item?.id : item?.fileNo}`} className="my-[2px]">
+										<InputGroup className="mb-2">
+											<Input name={`file_${item.id}`} type="file" onChange={(e) => onFileChange && onFileChange(e.target.files, index)} />
+											<CloseButton onClick={() => InputDelete(index)} />
+										</InputGroup>
+									</div>
+								);
+							})}
 					</>
 				);
 				break;
@@ -292,12 +306,13 @@ const InputComponent = ({
 								<div key={`member_${item?.id ? item?.id : item?.memberNo}`}>
 									<InputGroup className="mb-2">
 										<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
-										<ProfileNumberInput
+										<ProfileNumberInput id="profileNo" onChange={(e: any) => onChange(e, index)} index={index} defaultValue={item?.member || ''} />
+										{/* <Input
 											id="member"
 											className={`${readOnly && 'pointer-events-none'}`}
-											onChange={(e: any) => onChange(e, index)}
 											defaultValue={item?.member || ''}
-										/>
+											onChange={(e) => onChange(e, index)}
+										/> */}
 										<InputLeftAddon className="!min-w-[100px] ml-[20px]">직책</InputLeftAddon>
 										<Input
 											id="role"

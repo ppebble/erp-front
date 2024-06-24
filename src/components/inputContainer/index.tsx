@@ -18,7 +18,7 @@ type InputProps = {
 
 const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type, style, setIndex, readOnly }: InputProps) => {
 	const { career, license, coursework, skill, careerIndex, setCareer } = useProfile();
-	const { projectMember } = useProject();
+	const { projectMember, projectOutput } = useProject();
 	const [state, setState] = useState<any>([props]);
 
 	useEffect(() => {
@@ -54,6 +54,11 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 					setState(projectMember);
 				}
 				break;
+			// case 'attachment':
+			// 	if (projectOutput && projectOutput.length !== 0) {
+			// 		setState(projectOutput);
+			// 	}
+			// 	break;
 			default:
 				break;
 		}
@@ -135,8 +140,8 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...data } : item)));
 	};
 
-	const onFileChange = (e: any) => {
-		setState(state.map((item: any) => ({ ...item, ...e })));
+	const onFileChange = (e: any, idx: number) => {
+		setState(state.map((item: any, index: number) => (index === idx ? { ...item, ...e } : item)));
 	};
 
 	const onDetailChange = (e: any, idx: any) => {

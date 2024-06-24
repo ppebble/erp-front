@@ -12,7 +12,7 @@ import useModal from '../../../store/useModal';
 import { partnerType } from '../../../network/response/projectParams';
 import { ProjectService } from '../../../services/projectService';
 
-// 프로젝트 상세보기
+// 연구과제 상세보기
 const ProjectDetail = () => {
 	const { project, projectDetail, setProject, setProjectDetail, setProjectMember, setProjectOutput, setClear } = useProject();
 	const navigate = useNavigate();
@@ -77,7 +77,7 @@ const ProjectDetail = () => {
 					</div>
 					<div className="float-left md:pr-[10%] xl:pr-[20%]">
 						<header className="flex mt-[auto]">
-							<div className="text-xl font-bold text-navy-700">프로젝트 상세보기</div>
+							<div className="text-xl font-bold text-navy-700">연구과제 상세보기</div>
 						</header>
 					</div>
 				</div>
