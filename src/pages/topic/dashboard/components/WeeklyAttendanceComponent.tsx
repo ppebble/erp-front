@@ -39,7 +39,7 @@ const WeeklyAttendanceComponent = () => {
 			header: '시간',
 		}),
 	];
-	const { data: result } = useQuery(['getWeekAttend'], AttendService({ date: '2024-03-18' }).getWeekAttend);
+	const { data: result } = useQuery(['getWeekAttend'], AttendService({ date: '2024-03-11' }).getWeekAttend);
 
 	const [data, setData] = useState<any>('');
 	useEffect(() => {
@@ -68,10 +68,12 @@ const WeeklyAttendanceComponent = () => {
 				} else {
 					totalTime = totalTime + time.hours + time.minutes / 60;
 				}
+
 				return totalTime;
 			});
 			console.log(Number.parseFloat(totalTime).toFixed(2));
-			setRemainTime(Number.parseFloat(Number.parseFloat(totalTime).toFixed(2)));
+			// remainTime = 주간 일한 시간 총합 + annWorkTime
+			setRemainTime(Number.parseFloat(Number.parseFloat(totalTime).toFixed(2)) + Number.parseInt(result.response.result.annWorkTime, 10));
 			setData(attendData);
 		}
 		// setData(result);
