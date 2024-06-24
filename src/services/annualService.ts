@@ -60,7 +60,7 @@ export const AnnualService = (param?: any) => {
 	};
 	const getAnnualDetail = {
 		// queryFn: (date: string) => getEvents(date),
-		queryFn: () => getQuery(`/api/annual/annualDetail/${param.historyNo}`),
+		queryFn: () => getQuery(`/api/annual/annualDetail/${param.approvalNo}`),
 		onSuccess: (result: any) => {
 			let data;
 			if (result.response && result.response.resultCode === '7000') {

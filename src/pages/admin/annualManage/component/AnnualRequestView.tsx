@@ -6,8 +6,8 @@ import redCircle from '../../../../assets/img/logo/redCircle.png';
 import logo from '../../../../assets/img/logo/logo.png';
 import AnnualService from '../../../../services/annualService';
 
-const AnnualRequestView = ({ historyNo }: any) => {
-	const result = useQuery(['getAnnRequest'], AnnualService({ historyNo }).getAnnualDetail);
+const AnnualRequestView = ({ approvalNo }: any) => {
+	const result = useQuery(['getAnnRequest'], AnnualService({ approvalNo }).getAnnualDetail);
 	const [data, setData] = useState<any>('');
 	useEffect(() => {
 		if (result.data) {
@@ -189,39 +189,6 @@ const AnnualRequestView = ({ historyNo }: any) => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `${data.annType === '결근' ? `url(${redCircle})` : ''}`,
-									paddingBottom: '4px',
-									paddingTop: '3px',
-									backgroundRepeat: 'no-repeat',
-									backgroundPosition: 'center',
-								}}
-							>
-								[결근]
-							</span>
-							<span
-								style={{
-									backgroundImage: `${data.annType === '조퇴' ? `url(${redCircle})` : ''}`,
-									paddingBottom: '4px',
-									paddingTop: '3px',
-									backgroundRepeat: 'no-repeat',
-									backgroundPosition: 'center',
-								}}
-							>
-								[조퇴]
-							</span>
-							<span
-								style={{
-									backgroundImage: `${data.annType === '외출' ? `url(${redCircle})` : ''}`,
-									paddingBottom: '4px',
-									paddingTop: '3px',
-									backgroundRepeat: 'no-repeat',
-									backgroundPosition: 'center',
-								}}
-							>
-								[외출]
-							</span>
-							<span
-								style={{
 									backgroundImage: `${data.annType === '연차' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
@@ -230,17 +197,6 @@ const AnnualRequestView = ({ historyNo }: any) => {
 								}}
 							>
 								[연차]
-							</span>
-							<span
-								style={{
-									backgroundImage: `${data.annType === '월차' ? `url(${redCircle})` : ''}`,
-									paddingBottom: '4px',
-									paddingTop: '3px',
-									backgroundRepeat: 'no-repeat',
-									backgroundPosition: 'center',
-								}}
-							>
-								[월차]
 							</span>
 							<span
 								style={{
@@ -373,7 +329,7 @@ const AnnualRequestView = ({ historyNo }: any) => {
 											<img alt="self" src={data.sign} />
 										</td>
 										<td rowSpan={2} style={{ borderRight: 'solid 1.0pt', width: '25%', fontWeight: 'bolder', textAlign: 'center' }}>
-											{' '}
+											{data.managerSign && <img alt="self" src={data.managerSign} />}
 										</td>
 										<td rowSpan={2} style={{ borderRight: 'solid 1.0pt', width: '25%', fontWeight: 'bolder', textAlign: 'center' }}>
 											{' '}

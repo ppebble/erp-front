@@ -6,7 +6,7 @@ import { annualProps, scheduleResult } from '../../../../../network/response/sch
 import AnnualService from '../../../../../services/annualService';
 import { useAnnualAction, useManagerList } from '../../../../../store/useAnnual';
 import useModal from '../../../../../store/useModal';
-import { AnnualProps, AnnualType, SignType } from '../../../../../store/common/useCommon';
+import { AnnualProps, SignType } from '../../../../../store/common/useCommon';
 
 export const CustomAnnualAddModal = ({ onClose }: any) => {
 	const [annType, setAnnType] = useState<string>('연차');
@@ -71,7 +71,12 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 		}
 
 		annualParam.sign = refSignCanvas.current?.toDataURL();
-		annualParam.annType = annType.includes('반차') ? AnnualType.HALF_ANN : AnnualType.HALF_ANN;
+		if (annType.includes('반차')) {
+			// annualParam.annType = AnnualType.HALF_ANN;
+			annualParam.annType = '반차';
+		} else {
+			annualParam.annType = annType;
+		}
 		annualParam.managerNo = manager;
 		annualParam.signType = SignType.self;
 		if (refEventDesc.current?.value) {
@@ -203,6 +208,7 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 			<AlertDialogFooter>
 				<Select
 					onChange={(e) => {
+						// alert(e.target.value);
 						setAnnType(e.target.value);
 					}}
 					id="task"
@@ -216,12 +222,6 @@ export const CustomAnnualAddModal = ({ onClose }: any) => {
 							</option>
 						);
 					})}
-					{/* <option value="연차">연차</option>
-					<option value="오전반차">오전 반차</option>
-					<option value="오후반차">오후 반차</option>
-					<option value="경조">경조</option>
-					<option value="결근">결근</option>
-					<option value="하기휴가">하기휴가</option> */}
 				</Select>
 				<Button
 					colorScheme="blue"

@@ -153,8 +153,7 @@ const AnnualManageComponent = () => {
 						onClick={() => {
 							if (window.confirm('연차 신청을 승인하시겠습니까?')) {
 								annualService.approveAnnual.mutate({
-									historyNo: info.row.original.historyNo,
-									expires: info.row.original.start,
+									approvalNo: info.row.original.approvalNo,
 									managerSign: refSignCanvas.current?.isEmpty() ? '' : refSignCanvas.current?.toDataURL(),
 								});
 							}
@@ -176,7 +175,7 @@ const AnnualManageComponent = () => {
 						onClick={() => {
 							if (window.confirm('연차 신청을 반려하시겠습니까?')) {
 								annualService.rejectAnnual.mutate({
-									historyNo: info.row.original.historyNo,
+									approvalNo: info.row.original.approvalNo,
 									content: info.row.renderValue('manageNote') || ' ',
 								});
 							}
@@ -193,8 +192,8 @@ const AnnualManageComponent = () => {
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">반려 사유</p>,
 			cell: NoteCell,
 		}),
-		annReqColHelper.accessor('historyNo', {
-			id: 'historyNo',
+		annReqColHelper.accessor('approvalNo', {
+			id: 'approvalNo',
 			header: () => <p className="hidden" />,
 			cell: (info) => <p className="hidden">{info.getValue()}</p>,
 		}),
@@ -313,7 +312,7 @@ const AnnualManageComponent = () => {
 																openModal({
 																	type: ModalList.ANNUAL_REQUEST,
 																	closeOnOverlay: false,
-																	contents: { historyNo: row.original.historyNo },
+																	contents: { approvalNo: row.original.approvalNo },
 																});
 															}
 														}}

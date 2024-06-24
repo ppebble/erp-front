@@ -217,9 +217,8 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 				<AlertDialogContent minW="40%" minH="20%">
 					<AlertDialogHeader />
 					<AlertDialogCloseButton size="lg" />
-
 					<AlertDialogBody className="content-center text-center text-xl">
-						<AnnualRequestView historyNo={contents.historyNo} />
+						<AnnualRequestView approvalNo={contents.approvalNo} />
 					</AlertDialogBody>
 				</AlertDialogContent>
 			);

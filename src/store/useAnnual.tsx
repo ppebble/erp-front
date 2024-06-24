@@ -34,7 +34,7 @@ export type AdminAnnReqProps = {
 	items: AnnReqProps[];
 };
 export type AnnReqProps = {
-	historyNo: number;
+	approvalNo: number;
 	register: string;
 	start: string;
 	end: string;

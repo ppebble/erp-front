@@ -68,10 +68,6 @@ export enum ModalList {
 	BOOK_ADD = 7, // 도서 등록/조회
 	ANNUAL_REQUEST = 8, // 연차 신청서 조회
 }
-export const enum AnnualType {
-	HALF_ANN = 0,
-	ANN = 1,
-}
 export const enum SignType {
 	self = 0,
 	director = 2,
@@ -134,7 +130,11 @@ export enum AnnualProps {
 	AM_HALF = '오전반차',
 	PM_HALF = '오후반차',
 	EVENT = '경조',
-	ABSENCE = '결근',
+	MR = 'MR',
+	NIGHT_WORK = '야간작업',
+	SUB_ANN = '대체휴가',
+	HEALTH_ANN = '보건휴가',
+	SICK_ANN = '병가',
 	SUMMBER_HOLIDAY = '하기휴가',
 }
 export enum OsProps {

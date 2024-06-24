@@ -58,9 +58,9 @@ export const CustomAnnualDetailExternalComponent = () => {
 					<Button
 						onClick={() => {
 							if (window.confirm('연차 신청을 취소하시겠습니까?')) {
-								annualService.calcleAnnual.mutate({ historyNo: info.row.original.historyNo, content: '' });
+								annualService.calcleAnnual.mutate({ approvalNo: info.row.original.approvalNo, content: '' });
 							}
-							console.log(info.row.original.historyNo);
+							console.log(info.row.original.approvalNo);
 						}}
 						colorScheme="red"
 					>

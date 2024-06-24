@@ -10,7 +10,6 @@ type MailAcceptProps = {
 	annType: string;
 	dayDiff: number;
 	endDate: string;
-	expires: string;
 	note: string;
 	register: string;
 	registerEmpNo: string;
@@ -18,7 +17,7 @@ type MailAcceptProps = {
 	registerTask: string;
 	sign: string;
 	startDate: string;
-	historyNo: string;
+	approvalNo: string;
 };
 
 const AnnualMailAccept = () => {
@@ -34,8 +33,7 @@ const AnnualMailAccept = () => {
 	useEffect(() => {
 		annualService.approveAnnual.mutate(
 			{
-				historyNo: data.historyNo,
-				expires: data.expires.slice(0, 16),
+				approvalNo: data.approvalNo,
 				managerSign: '',
 			},
 			{

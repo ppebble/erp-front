@@ -1,91 +1,81 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { FiToggleLeft } from 'react-icons/fi';
+import { useQuery } from 'react-query';
+import moment from 'moment';
 import Card from '../../../../components/card';
 import CustomViewTable from '../../../../components/table/CustomViewTable';
 import Progress from '../../../../components/progress';
+import AttendService from '../../../../services/attendService';
 
 type AttendRow = {
-	enterTime?: string;
-	leaveTime?: string;
-	remoteFlag: boolean;
-	time: string;
+	attendanceDate?: string;
+	leaveWorkDate?: string;
+	attendancePlace: boolean;
+	workTime: string;
 };
-
-const attendHeapData: AttendRow[] = [
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		remoteFlag: false,
-		time: '19:00',
-	},
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		remoteFlag: false,
-		time: '19:00',
-	},
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		remoteFlag: false,
-		time: '19:00',
-	},
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		remoteFlag: false,
-		time: '19:00',
-	},
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		remoteFlag: false,
-		time: '19:00',
-	},
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		remoteFlag: false,
-		time: '19:00',
-	},
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		remoteFlag: false,
-		time: '19:00',
-	},
-];
 
 const WeeklyAttendanceComponent = () => {
 	const attendColumnHelper = createColumnHelper<AttendRow>();
+	const [remainTime, setRemainTime] = useState<number>(0);
 
 	const attendColumns = [
-		attendColumnHelper.accessor('enterTime', {
-			id: 'enterTime',
+		attendColumnHelper.accessor('attendanceDate', {
+			id: 'attendanceDate',
 			header: '출근일시',
 		}),
-		attendColumnHelper.accessor('leaveTime', {
-			id: 'leaveTime',
+		attendColumnHelper.accessor('leaveWorkDate', {
+			id: 'leaveWorkDate',
 			header: '퇴근일시',
 		}),
-		attendColumnHelper.accessor('remoteFlag', {
-			id: 'remoteFlag',
+		attendColumnHelper.accessor('attendancePlace', {
+			id: 'attendancePlace',
 			header: '원격여부',
 		}),
 
-		attendColumnHelper.accessor('time', {
-			id: 'time',
+		attendColumnHelper.accessor('workTime', {
+			id: 'workTime',
 			header: '시간',
 		}),
 	];
+	const { data: result } = useQuery(['getWeekAttend'], AttendService({ date: '2024-03-18' }).getWeekAttend);
 
-	const [data, setData] = React.useState(() => [...attendHeapData]);
+	const [data, setData] = useState<any>('');
 	useEffect(() => {
-		setData(attendHeapData);
-	}, [attendHeapData]);
+		if (result) {
+			const workTime: any = [];
+			let totalTime: any;
+			const attendData: AttendRow[] = [];
+			Object.entries(result.response.result).map((e, idx) => {
+				if (typeof e[1] !== 'string') {
+					if (e[1]) {
+						attendData.push(e[1] as AttendRow);
+						workTime.push({
+							hours: moment(attendData[idx].workTime, 'HH:mm').hour(),
+							minutes: moment(attendData[idx].workTime, 'HH:mm').minute(),
+						});
+					} else {
+						attendData.push({} as AttendRow);
+					}
+				}
 
+				return e;
+			});
+			workTime.map((time: any) => {
+				if (!totalTime) {
+					totalTime = time.hours + time.minutes / 60;
+				} else {
+					totalTime = totalTime + time.hours + time.minutes / 60;
+				}
+				return totalTime;
+			});
+			console.log(Number.parseFloat(totalTime).toFixed(2));
+			setRemainTime(Number.parseFloat(Number.parseFloat(totalTime).toFixed(2)));
+			setData(attendData);
+		}
+		// setData(result);
+	}, [result]);
 	const table = useReactTable({
 		data,
 		columns: attendColumns,
@@ -145,9 +135,11 @@ const WeeklyAttendanceComponent = () => {
 				</table>
 				<div className="h-px w-full bg-gray-300 dark:bg-white/20 " />
 				<div className="flex justify-between min-h-[2.5rem] items-center">
-					<p className="text-base font-bold text-navy-700 dark:text-white"> 잔여 시간 : HH:mm </p>
+					<p className="text-base font-bold text-navy-700 dark:text-white">
+						잔여 시간 | {40 - Math.ceil(remainTime)} : {Math.ceil(60 - (remainTime - Math.floor(remainTime)) * 60)}
+					</p>
 					<div className="pr-5">
-						<Progress width="w-[15rem]" value={20} />
+						<Progress width="w-[15rem]" color={40 - Math.ceil(remainTime) < 0 ? 'red' : 'blue'} value={(remainTime / 40) * 100} />
 					</div>
 				</div>
 			</div>

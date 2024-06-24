@@ -18,6 +18,6 @@ export interface annualProps {
 	managerNo: number;
 	start: string;
 	end: string;
-	annType: number;
+	annType: number | string;
 	signType: number;
 }

@@ -60,7 +60,7 @@ export const CustomCalendarModal = () => {
 
 	const refEventName = useRef<HTMLInputElement>(null);
 	const refEventStartDate = useRef<HTMLInputElement>(null);
-	const refAlterAnnCheck = useRef<HTMLInputElement>(null);
+	const refLegalAnnCheck = useRef<HTMLInputElement>(null);
 	const refEventEndDate = useRef<HTMLInputElement>(null);
 	const refEventStartDateTime = useRef<HTMLInputElement>(null);
 	const refEventEndDateTime = useRef<HTMLInputElement>(null);
@@ -233,17 +233,14 @@ export const CustomCalendarModal = () => {
 	};
 	useEffect(() => {
 		if (refEventName.current) {
-			if (refAlterAnnCheck.current?.checked) {
-				refEventName.current.disabled = true;
-				refEventName.current.setAttribute('value', '대체휴가');
-				refEventName.current.setAttribute('defaultValue', '대체휴가');
+			if (refLegalAnnCheck.current?.checked) {
+				/* empty */
 			} else {
-				refEventName.current.disabled = false;
 				refEventName.current?.setAttribute('value', '');
 				refEventName.current?.setAttribute('defaultValue', '');
 			}
 		}
-	}, [refAlterAnnCheck.current?.checked]);
+	}, [refLegalAnnCheck.current?.checked]);
 	return (
 		<Modal
 			onClose={() => {
@@ -345,8 +342,8 @@ export const CustomCalendarModal = () => {
 								</Dropdown>
 							</div>
 							<div className="flex items-center">
-								<Checkbox ref={refAlterAnnCheck} />
-								<p className="ml-2 text-sm font-medium text-navy-700 dark:text-white">대체휴가 여부</p>
+								<Checkbox ref={refLegalAnnCheck} />
+								<p className="ml-2 text-sm font-medium text-navy-700 dark:text-white">공휴일 여부</p>
 							</div>
 						</div>
 						<div className="mt-5 start justify-start">
