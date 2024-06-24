@@ -16,6 +16,7 @@ import {
 import { ProfileService } from '../../../../services/profileService';
 import useProfile from '../../../../store/useProfile';
 import useModal from '../../../../store/useModal';
+import profileImg from '../../../../assets/img/profile/profile.png';
 
 const Basic = () => {
 	const {
@@ -36,22 +37,16 @@ const Basic = () => {
 		setHighSchool,
 	} = useProfile();
 	const { openModal } = useModal();
-
 	const idCheck = ProfileService().idCheckMutation;
+	const [src, setSrc] = useState<any>(profileImg);
 
 	const isAvailable = () => {
-		if (profile) {
+		if (profile.userId) {
 			idCheck.mutate(profile.userId);
+		} else {
+			openModal({ type: 3, contents: '아이디를 입력하세요.', color: 'red' });
 		}
 	};
-
-	useEffect(() => {
-		if (education) {
-			setHighSchool(education.highSchool.split('/'));
-			setCollage(education.collage.split('/'));
-			setGraduateSchool(education.graduateSchool.split('/'));
-		}
-	}, [education, setCollage, setGraduateSchool, setHighSchool]);
 
 	const changeProfile = (e: any) => {
 		const { id, value } = e.target;
@@ -88,7 +83,26 @@ const Basic = () => {
 		setArmy({ ...army, [id]: value });
 	};
 
-	useEffect(() => {}, []);
+	const changeImage = (e: any) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(e.target.files[0]);
+		reader.onload = () => {
+			setSrc(reader.result);
+		};
+	};
+
+	useEffect(() => {
+		console.log(src);
+	}, [src]);
+
+	useEffect(() => {
+		if (education) {
+			setHighSchool(education.highSchool.split('/'));
+			setCollage(education.collage.split('/'));
+			setGraduateSchool(education.graduateSchool.split('/'));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [education]);
 
 	useEffect(() => {
 		if (idCheck.isSuccess) {
@@ -105,28 +119,66 @@ const Basic = () => {
 		<div>
 			<form>
 				{/* profile */}
-				<InputGroup className="mb-2">
-					<InputLeftAddon className="!min-w-[100px]">사원번호</InputLeftAddon>
-					<Input id="empNo" className="!min-w-[100px]" readOnly defaultValue={profile.empNo || ''} />
-					<InputLeftAddon className="!min-w-[150px] ml-[20px]">국가연구자번호</InputLeftAddon>
-					<Input id="sciTechCertify" onChange={(e) => changeDept(e)} defaultValue={dept.sciTechCertify || ''} />
-				</InputGroup>
-				<InputGroup className="mb-2">
-					<InputLeftAddon className="!min-w-[100px]">아이디</InputLeftAddon>
-					{profile.userId === '' ? (
-						<>
-							<Input id="userId" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userId || ''} />
-							<InputRightAddon>
-								<Button onClick={() => isAvailable()}>중복확인</Button>
-							</InputRightAddon>
-						</>
-					) : (
-						<Input id="userId" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userId || ''} />
-					)}
-					<InputLeftAddon className="!min-w-[100px] ml-[20px]">이메일</InputLeftAddon>
-					<Input id="userEmail" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userEmail || ''} />
-					<InputRightAddon>@nexmore.co.kr</InputRightAddon>
-				</InputGroup>
+				<table className="w-full">
+					<tr>
+						<td>
+							<InputGroup className="mb-2 pr-[20px]">
+								<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
+								<Input id="name" className="!min-w-[100px]" onChange={(e) => changeDetail(e)} defaultValue={detail.name || ''} />
+								<InputLeftAddon className="!min-w-[100px] ml-[20px]">영문이름</InputLeftAddon>
+								<Input id="eName" className="!min-w-[100px]" onChange={(e) => changeDetail(e)} defaultValue={detail.ename || ''} />
+							</InputGroup>
+						</td>
+						<td className="border" rowSpan={5}>
+							<div className="grid w-full place-items-center">
+								<img alt="" className="object-cover w-[180px] h-[180px]" src={src} />
+								<Input type="file" onChange={(e) => changeImage(e)} />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<InputGroup className="mb-2 pr-[20px]">
+								<InputLeftAddon className="!min-w-[100px]">사원번호</InputLeftAddon>
+								<Input id="empNo" className="!min-w-[100px]" readOnly defaultValue={profile.empNo || ''} />
+							</InputGroup>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<InputGroup className="mb-2 pr-[20px]">
+								<InputLeftAddon className="!min-w-[150px]">국가연구자번호</InputLeftAddon>
+								<Input id="sciTechCertify" onChange={(e) => changeDept(e)} defaultValue={dept.sciTechCertify || ''} />
+							</InputGroup>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<InputGroup className="mb-2 pr-[20px]">
+								<InputLeftAddon className="!min-w-[100px]">아이디</InputLeftAddon>
+								{profile.userId === '' ? (
+									<>
+										<Input id="userId" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userId || ''} />
+										<InputRightAddon>
+											<Button onClick={() => isAvailable()}>중복확인</Button>
+										</InputRightAddon>
+									</>
+								) : (
+									<Input id="userId" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userId || ''} readOnly />
+								)}
+							</InputGroup>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<InputGroup className="mb-2 pr-[20px]">
+								<InputLeftAddon className="!min-w-[100px]">이메일</InputLeftAddon>
+								<Input id="userEmail" className="!min-w-[100px]" onChange={(e) => changeProfile(e)} defaultValue={profile.userEmail || ''} />
+								<InputRightAddon>@nexmore.co.kr</InputRightAddon>
+							</InputGroup>
+						</td>
+					</tr>
+				</table>
 
 				{/* profileDept */}
 				<InputGroup className="mb-2">
@@ -192,12 +244,7 @@ const Basic = () => {
 					<Input id="employmentDate" type="date" onChange={(e) => changeDept(e)} defaultValue={dept.employmentDate || ''} />
 				</InputGroup>
 				{/* profileDetail */}
-				<InputGroup className="mb-2">
-					<InputLeftAddon className="!min-w-[100px]">이름</InputLeftAddon>
-					<Input id="name" className="!min-w-[100px]" onChange={(e) => changeDetail(e)} defaultValue={detail.name || ''} />
-					<InputLeftAddon className="!min-w-[100px] ml-[20px]">영문이름</InputLeftAddon>
-					<Input id="eName" className="!min-w-[100px]" onChange={(e) => changeDetail(e)} defaultValue={detail.ename || ''} />
-				</InputGroup>
+
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">전화번호</InputLeftAddon>
 					<Input id="tel" type="tel" onChange={(e) => changeDetail(e)} defaultValue={detail.tel || ''} />

@@ -2,12 +2,23 @@ import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { getQuery, postQuery, postUploadQuery } from './base/AxiosQueryService';
 import { commonResult } from '../network/commonResult';
-import { projectDetailParams, project } from '../network/response/projectParams';
+import { projectDetailParams, project, businessList as businessListType, businessDetailParams } from '../network/response/projectParams';
 import useModal from '../store/useModal';
 import useProject from '../store/useProject';
 
+// 프로젝트 + 연구과제
 export const ProjectService = () => {
-	const { projectNo, setProject, setProjectList, setProjectDetail, setProjectMember, setProjectOutput } = useProject();
+	const {
+		projectNo,
+		businessNo,
+		setProject,
+		setProjectList,
+		setProjectDetail,
+		setProjectMember,
+		setProjectOutput,
+		setBusinessList,
+		setBusinessDetail,
+	} = useProject();
 	const { openModal } = useModal();
 	const navigate = useNavigate();
 
@@ -25,6 +36,20 @@ export const ProjectService = () => {
 		},
 	};
 
+	const businessList = {
+		queryFn: () => getQuery('/api/business/businessList'),
+		onSuccess: (result: { response: commonResult }) => {
+			const common: commonResult = result.response;
+			const data: businessListType[] = common.result;
+			if (common.isSuccessful) {
+				setBusinessList(data);
+			}
+		},
+		onError: (error: any) => {
+			openModal({ type: 3, contents: error, color: 'red' });
+		},
+	};
+
 	const projectDetail = {
 		queryFn: () => getQuery(`/api/project/projectDetail/${projectNo}`),
 		onSuccess: (result: { response: commonResult }) => {
@@ -35,13 +60,29 @@ export const ProjectService = () => {
 				setProjectDetail(data.projectDetail);
 				setProjectMember(data.projectMember);
 				setProjectOutput(data.projectOutput);
-				navigate('/topic/projectDetail', { state: { isNew: 0 } });
+				navigate('/topic/projectDetail');
 			}
 		},
 		onError: (error: any) => {
 			openModal({ type: 3, contents: error, color: 'red' });
 		},
 		enabled: !!projectNo,
+	};
+
+	const businessDetail = {
+		queryFn: () => getQuery(`/api/business/businessDetail/${businessNo}`),
+		onSuccess: (result: { response: commonResult }) => {
+			const common: commonResult = result.response;
+			const data: businessDetailParams = common.result;
+			if (common.isSuccessful) {
+				setBusinessDetail(data);
+				navigate('/topic/businessDetail');
+			}
+		},
+		onError: (error: any) => {
+			openModal({ type: 3, contents: error, color: 'red' });
+		},
+		enabled: !!businessNo,
 	};
 
 	const insertProject = useMutation({
@@ -77,5 +118,5 @@ export const ProjectService = () => {
 		},
 	});
 
-	return { projectList, projectDetail, insertProject, modifyProject, delProject };
+	return { projectList, businessList, projectDetail, businessDetail, insertProject, modifyProject, delProject };
 };

@@ -1,5 +1,5 @@
 import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ForwardedRef, useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import InputField from '../../../components/fields/InputField';
@@ -82,9 +82,9 @@ const Login = () => {
 						/>
 						<p className="ml-2 text-sm font-medium text-navy-700 dark:text-white">아이디 저장</p>
 					</div>
-					<a className="text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-white" href=" ">
-						아이디/비밀번호 찾기
-					</a>
+					<Link to="/auth/findPassword" className="text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-white">
+						비밀번호 찾기
+					</Link>
 				</div>
 				<button
 					className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"

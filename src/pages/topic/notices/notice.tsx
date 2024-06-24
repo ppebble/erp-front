@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { Card } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import ColumnsTable from '../../../components/columnsTable';
 import { BoardService } from '../../../services/boardService';
 import useBoard from '../../../store/useBoard';
-import Card from '../../../components/card';
 import useModal from '../../../store/useModal';
 
-const Suggestions = () => {
+const Notice = () => {
 	const { isSuccess } = useQuery('boardList', BoardService().boardList);
-	const { board: news } = useBoard();
+	const { board } = useBoard();
 	const { setType } = useBoard();
 	const { openModal } = useModal();
 	const columnHelper = createColumnHelper<any>();
@@ -60,15 +60,13 @@ const Suggestions = () => {
 	};
 
 	return (
-		<div className="mt-5 grid">
-			<Card extra="w-full pb-10 p-4 h-full">
-				<header className="relative flex items-center justify-between">
-					<div className="text-xl font-bold text-navy-700 dark:text-white">공지사항</div>
-				</header>
-				{isSuccess && <ColumnsTable columns={columns} list={news} show={show} isClick isSearch={false} addButton={write} type="table" />}
-			</Card>
-		</div>
+		<Card>
+			<header className="relative flex items-center justify-between">
+				<div className="text-xl font-bold text-navy-700 dark:text-white ml-1">공지사항</div>
+			</header>
+			{isSuccess && <ColumnsTable columns={columns} list={board} show={show} isClick isSearch={false} addButton={write} columnsType="table" />}
+		</Card>
 	);
 };
 
-export default Suggestions;
+export default Notice;

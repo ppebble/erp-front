@@ -19,15 +19,18 @@ const SignUp = () => {
 
 	const update = () => {
 		if (isSuccess) {
+			const high = `${highSchool[0]}/${highSchool[1]}/${highSchool[2]}`;
+			const col = `${collage[0]}/${collage[1]}/${collage[2]}/${collage[3]}`;
+			const graduate = `${graduateSchool[0]}/${graduateSchool[1]}/${graduateSchool[2]}/${graduateSchool[3]}`;
 			const param = {
 				profile,
 				detail,
 				dept,
 				education: {
 					pEduNo: education.pEduNo,
-					highSchool: `${highSchool[0]}/${highSchool[1]}/${highSchool[2]}`,
-					collage: `${collage[0]}/${collage[1]}/${collage[2]}/${collage[3]}`,
-					graduateSchool: `${graduateSchool[0]}/${graduateSchool[1]}/${graduateSchool[2]}/${graduateSchool[3]}`,
+					highSchool: high === '/-/' ? '' : high,
+					collage: col === '//-/' ? '' : col,
+					graduateSchool: graduate === '//-/' ? '' : graduate,
 				},
 				army,
 				career,
@@ -35,13 +38,14 @@ const SignUp = () => {
 				license,
 				skill,
 			};
+			console.log(param);
 			updateProfile.mutate(param);
 		}
 	};
 
-	useEffect(() => {
-		return () => setClearProfile();
-	}, [setClearProfile]);
+	// useEffect(() => {
+	// 	return () => setClearProfile();
+	// }, []);
 
 	useEffect(() => {
 		if (updateProfile.isSuccess) {

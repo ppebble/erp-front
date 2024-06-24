@@ -8,6 +8,7 @@ import { SearchIcon } from '@chakra-ui/icons';
 import { ProfileService } from '../../services/profileService';
 import useModal from '../../store/useModal';
 import BoardService from '../../services/boardService';
+import useProject from '../../store/useProject';
 
 type searchType = {
 	option: string;
@@ -26,6 +27,7 @@ type ColumnsTableProps = {
 	filter?: any;
 	addButton?: any;
 	detailButton?: any;
+	columnsType: string;
 	type: string;
 };
 
@@ -41,26 +43,21 @@ const ColumnsTable = ({
 	filter,
 	addButton,
 	detailButton,
+	columnsType,
 	type,
 }: ColumnsTableProps) => {
 	useQuery('getProfileList', ProfileService().getProfileList);
-	const { updateBoard } = BoardService();
+
 	const [row] = useState(show);
 	const { openModal } = useModal();
-	const [totalPage, setTotalPage] = useState(Math.ceil(list.length / row));
 
-	const splitList = () => {
-		const array = [];
-		for (let i = 0; i < totalPage; i += 1) {
-			array.push(list.slice(i * row, (i + 1) * row));
-		}
-		return array;
-	};
+	const [totalPage, setTotalPage] = useState(0);
+	const [customPagination, setCustomPagination] = useState<any[]>();
 
-	const [profileListSplit] = useState<any>(splitList()); // 10개(row)씩 나눈 리스트
+	const [profileListSplit, setProfileListSplit] = useState<any>(); // 10개(row)씩 나눈 리스트
 	const [searchSplit, setSearchSplit] = useState<any>(); // 검색 결과 리스트
 
-	const [data, setData] = useState(profileListSplit[0]);
+	const [data, setData] = useState<any>('');
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [currentPage, setCurrentPage] = useState(0);
 
@@ -85,16 +82,6 @@ const ColumnsTable = ({
 		openModal({ type: 1, contents, updataClick: update });
 	};
 
-	const [customPagination, setCustomPagination] = useState<any[]>();
-
-	useMemo(() => {
-		const arr = [];
-		for (let i = 0; i < totalPage; i += 1) {
-			arr[i] = i;
-		}
-		setCustomPagination(arr);
-	}, [totalPage]);
-
 	const table =
 		columns &&
 		// eslint-disable-next-line react-hooks/rules-of-hooks
@@ -117,45 +104,119 @@ const ColumnsTable = ({
 		}
 	};
 
-	useEffect(() => {
-		if (search?.input) {
-			if (searchSplit) {
-				setData(searchSplit[currentPage]);
+	const cardList = () => {
+		let cardMap;
+		if (data) {
+			if (type === '프로젝트') {
+				cardMap = data.map((pItem: any) => (
+					<Card
+						key={pItem.projectNo}
+						variant="outline"
+						className="cursor-pointer !min-h-[220px] !mt-0 !p-0"
+						onClick={() => detailButton(pItem.projectNo)}
+					>
+						<CardHeader>
+							<Heading size="md" className="truncate ...">
+								{pItem.projectName}
+							</Heading>
+						</CardHeader>
+						<CardBody>
+							<Text className="truncate ...">고객사 : {pItem.client}</Text>
+							<Text>상태 : {pItem.status}</Text>
+							<Text>단계 : {pItem.step}</Text>
+							<Text>시작일 : {pItem.startDate}</Text>
+							<Text>종료일 : {pItem.endDate}</Text>
+						</CardBody>
+					</Card>
+				));
+			} else {
+				cardMap = data.map((bItem: any) => (
+					<Card
+						key={bItem.businessNo}
+						variant="outline"
+						className="cursor-pointer !min-h-[220px] !mt-0 !p-0"
+						onClick={() => detailButton(bItem.businessNo)}
+					>
+						<CardHeader>
+							<Heading size="md" className="truncate ...">
+								{bItem.businessName}
+							</Heading>
+						</CardHeader>
+						<CardBody>
+							<Text>시행부처 : {bItem.department}</Text>
+							<Text>참여유형 : {bItem.participationType}</Text>
+							<Text>시작일 : {bItem.startDate}</Text>
+							<Text>종료일 : {bItem.endDate}</Text>
+						</CardBody>
+					</Card>
+				));
 			}
-		} else {
-			setData(profileListSplit[currentPage]);
 		}
+		return cardMap;
+	};
+
+	useEffect(() => {
+		if (profileListSplit) {
+			if (search?.input) {
+				if (searchSplit) {
+					setData(searchSplit[currentPage]);
+				}
+			} else {
+				setData(profileListSplit[currentPage]);
+			}
+		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentPage]);
 
 	useEffect(() => {
-		if (search) {
-			setCurrentPage(0);
-			if (filter) {
-				if (search.input) {
-					const array = [];
-					if (filter.length >= 10) {
-						for (let i = 0; i < Math.ceil(filter.length / row); i += 1) {
-							array.push(filter.slice(i * row, (i + 1) * row));
+		if (profileListSplit) {
+			if (search) {
+				setCurrentPage(0);
+				if (filter) {
+					if (search.input) {
+						const array = [];
+						if (filter.length >= 10) {
+							for (let i = 0; i < Math.ceil(filter.length / row); i += 1) {
+								array.push(filter.slice(i * row, (i + 1) * row));
+							}
+							setSearchSplit(array);
+							setData(array[0]);
+						} else {
+							setSearchSplit(filter);
+							setData(filter);
 						}
-						setSearchSplit(array);
-						setData(array[0]);
 					} else {
-						setSearchSplit(filter);
-						setData(filter);
+						setData(profileListSplit[currentPage]);
 					}
-				} else {
-					setData(profileListSplit[currentPage]);
-				}
 
-				setTotalPage(Math.ceil(filter.length / row));
+					setTotalPage(Math.ceil(filter.length / row));
+				}
 			}
 		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [search, filter]);
 
+	useEffect(() => {
+		const array = [];
+		if (list) {
+			for (let i = 0; i < Math.ceil(list.length / row); i += 1) {
+				array.push(list.slice(i * row, (i + 1) * row));
+			}
+		}
+		setTotalPage(array.length);
+		const arr = [];
+		for (let i = 0; i < array.length; i += 1) {
+			arr[i] = i;
+		}
+		setCustomPagination(arr);
+		setProfileListSplit(array);
+		setData(array[0]);
+	}, [list]);
+
 	return (
-		<div className="w-full h-full">
+		<div className="w-full">
 			{addButton && (
 				<div className="flex justify-end">
 					<Button onClick={() => addButton()}>
@@ -163,8 +224,8 @@ const ColumnsTable = ({
 					</Button>
 				</div>
 			)}
-			<div className={`mt-8 mx-[3rem] ${type === 'table' ? 'min-h-[35rem]' : 'min-h-[53rem]'}`}>
-				{type === 'table' ? (
+			<div className="mt-8 mx-[3rem]">
+				{columnsType === 'table' ? (
 					<table className="w-full">
 						<thead>
 							{table &&
@@ -216,30 +277,15 @@ const ColumnsTable = ({
 						</tbody>
 					</table>
 				) : (
-					<SimpleGrid columns={3} spacing={10} className="mb-[20px]">
-						{data.map((item: any) => (
-							<Card key={item.projectNo} variant="outline" className="cursor-pointer !min-w-[200px]" onClick={() => detailButton(item.projectNo)}>
-								<CardHeader>
-									<Heading size="md"> {item.projectName}</Heading>
-								</CardHeader>
-								<CardBody>
-									<Text>고객사 : {item.client}</Text>
-									<Text>파트너 : {item.partner}</Text>
-									<Text>상태 : {item.status}</Text>
-									<Text>단계 : {item.step}</Text>
-									<Text>시작일 : {item.startDate}</Text>
-									<Text>종료일 : {item.endDate}</Text>
-								</CardBody>
-							</Card>
-						))}
+					<SimpleGrid columns={3} spacing={5}>
+						{cardList()}
 					</SimpleGrid>
 				)}
 			</div>
-
-			<div>
+			<div className="absolute mt-4 bottom-0 left-0 right-0 mb-[2rem]">
 				{/* 페이지 */}
-				<div className="flex justify-center flex-col sm:flex-row gap-5">
-					<div className="flex">
+				{totalPage > 1 && (
+					<div className="flex justify-center flex-col sm:flex-row gap-5">
 						<ul className="flex justify-center items-center gap-x-[10px] z-30" role="navigation" aria-label="Pagination">
 							<li
 								className={` prev-btn flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] disabled] ${
@@ -249,17 +295,18 @@ const ColumnsTable = ({
 							>
 								<MdChevronLeft />
 							</li>
-							{customPagination?.map((_data, index) => (
-								<li
-									className={`flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
-										currentPage === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
-									}`}
-									onClick={() => changePage(index)}
-									key={_data}
-								>
-									{index + 1}
-								</li>
-							))}
+							{customPagination &&
+								customPagination?.map((_data, index) => (
+									<li
+										className={`flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
+											currentPage === index ? 'text-blue-600  border-sky-500' : 'border-[#E4E4EB] '
+										}`}
+										onClick={() => changePage(index)}
+										key={_data}
+									>
+										{index + 1}
+									</li>
+								))}
 							<li
 								className={`flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] ${
 									currentPage === totalPage - 1 ? 'bg-[#cccccc] pointer-events-none' : ' cursor-pointer'
@@ -270,24 +317,25 @@ const ColumnsTable = ({
 							</li>
 						</ul>
 					</div>
-				</div>
+				)}
+
+				{/* 검색 */}
+				{isSearch && (
+					<InputGroup className="mt-2 justify-center">
+						<div className="!w-[8rem]">
+							<Select id="option" defaultValue={search?.option} onChange={(e) => onSearch(e)}>
+								{searchItem.map((item: any) => (
+									<option key={item.option} value={item.option}>
+										{item.value}
+									</option>
+								))}
+							</Select>
+						</div>
+						<Input id="input" className="ml-[1rem] !w-[300px]" defaultValue={search?.input} onChange={(e) => onSearch(e)} />
+						<SearchIcon className="flex my-auto ml-[1rem]" />
+					</InputGroup>
+				)}
 			</div>
-			{/* 검색 */}
-			{isSearch && (
-				<InputGroup className="mt-2 justify-center">
-					<div className="!w-[8rem]">
-						<Select id="option" defaultValue={search?.option} onChange={(e) => onSearch(e)}>
-							{searchItem.map((item: any) => (
-								<option key={item.option} value={item.option}>
-									{item.value}
-								</option>
-							))}
-						</Select>
-					</div>
-					<Input id="input" className="ml-[1rem] !w-[300px]" defaultValue={search?.input} onChange={(e) => onSearch(e)} />
-					<SearchIcon className="flex my-auto ml-[1rem]" />
-				</InputGroup>
-			)}
 		</div>
 	);
 };

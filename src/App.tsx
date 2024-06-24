@@ -4,7 +4,9 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 
 // auth
 import AuthLayout from './pages/auth';
-import Login from './pages/auth/login/Login';
+import Login from './pages/auth/login';
+import FindPassword from './pages/auth/findPassword';
+import ChangePassword from './pages/auth/changePassword';
 
 // topic
 import Topic from './pages/topic';
@@ -15,6 +17,7 @@ import CompanyCalendar from './pages/topic/calendar';
 import Project from './pages/topic/project';
 import ProjectDetail from './pages/topic/project/projectDetail';
 import ProjectModify from './pages/topic/project/projectModify';
+import BusinessDetail from './pages/topic/project/businessDetail';
 import Equipment from './pages/topic/equipment';
 import News from './pages/topic/notices/news';
 import Seminar from './pages/topic/notices/seminar';
@@ -22,7 +25,6 @@ import Free from './pages/topic/notices/free';
 import Notice from './pages/topic/notices/notice';
 import SignUp from './pages/topic/signUp';
 import Password from './pages/topic/password';
-import Upload from './pages/topic/notices/upload'; // 업로드 테스트
 
 // error
 import NotFound from './pages/error/NotFound';
@@ -37,6 +39,8 @@ const App = () => {
 			<Routes>
 				<Route path="auth" element={<AuthLayout />}>
 					<Route path="login" element={<Login />} />
+					<Route path="findPassword" element={<FindPassword />} />
+					<Route path="changePassword/:key" element={<ChangePassword />} />
 				</Route>
 				<Route path="/topic" element={<Topic />}>
 					<Route path="dashboard" element={<Dashboard />} />
@@ -47,20 +51,20 @@ const App = () => {
 					<Route path="project" element={<Project />} />
 					<Route path="projectDetail" element={<ProjectDetail />} />
 					<Route path="projectModify" element={<ProjectModify />} />
+					<Route path="businessDetail" element={<BusinessDetail />} />
 					<Route path="equipment" element={<Equipment />} />
 					<Route path="news" element={<News />} />
 					<Route path="seminar" element={<Seminar />} />
 					<Route path="free" element={<Free />} />
 					<Route path="notice" element={<Notice />} />
 					<Route path="signup" element={<SignUp />} />
+					<Route path="password" element={<Password />} />
 				</Route>
 				<Route path="external" element={<AdminPopup />}>
 					<Route path="mailAccept/*" element={<AnnualMailAccept />} />
 				</Route>
 				<Route path="admin" element={<Topic />}>
 					<Route path="annualManage" element={<AnnualManageComponent />} />
-					<Route path="password" element={<Password />} />
-					<Route path="upload" element={<Upload />} />
 				</Route>
 				<Route path="/" element={<Navigate to="/auth/login" replace />} />
 				<Route path="*" element={<NotFound />} />

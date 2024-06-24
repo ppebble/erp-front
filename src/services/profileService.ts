@@ -40,7 +40,6 @@ export const ProfileService = () => {
 			const common: commonResult = result.response;
 			const data: profileParams = common.result;
 			if (common.isSuccessful) {
-				// console.log(data);
 				setProfile(data.profile);
 				data.profile.rePw = '';
 				setDetail(data.detail);
@@ -83,7 +82,7 @@ export const ProfileService = () => {
 	};
 
 	const modifyPw = useMutation({
-		mutationFn: (params: any) => postQuery(`/api/profile/modifyPw?pw=${params}`, params),
+		mutationFn: (params: any) => postQuery('/api/profile/modifyPw', params),
 		onSuccess: (result) => {
 			openModal({ type: 3, contents: '비밀번호가 변경 되었습니다.' });
 		},

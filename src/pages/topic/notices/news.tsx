@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { Card } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import ColumnsTable from '../../../components/columnsTable';
 import { BoardService } from '../../../services/boardService';
 import useBoard from '../../../store/useBoard';
-import Card from '../../../components/card';
 import useModal from '../../../store/useModal';
 
 const News = () => {
 	const { isSuccess } = useQuery('boardList', BoardService().boardList);
 	const { insertBoard } = BoardService();
-	const { setType, board: news } = useBoard();
+	const { setType, board } = useBoard();
 	const { openModal } = useModal();
 	const columnHelper = createColumnHelper<any>();
 	const [show] = useState(10);
@@ -47,12 +47,12 @@ const News = () => {
 		}),
 	];
 
-	const insert = () => {
-		console.log('???');
+	const insert = (str: string) => {
+		console.log(str);
 	};
 
 	const write = () => {
-		openModal({ type: 2, title: '글쓰기', closeOnOverlay: false, okClick: insert });
+		openModal({ type: 2, title: '글쓰기', closeOnOverlay: false, updataClick: insert });
 	};
 
 	useEffect(() => {
@@ -60,14 +60,12 @@ const News = () => {
 	}, [setType]);
 
 	return (
-		<div className="mt-5 grid">
-			<Card extra="w-full pb-10 p-4 h-full">
-				<header className="relative flex items-center justify-between">
-					<div className="text-xl font-bold text-navy-700 dark:text-white">회사소식</div>
-				</header>
-				{isSuccess && <ColumnsTable columns={columns} list={news} show={show} isClick isSearch={false} addButton={write} type="table" />}
-			</Card>
-		</div>
+		<Card>
+			<header className="relative flex items-center justify-between">
+				<div className="text-xl font-bold text-navy-700 dark:text-white ml-1">회사소식</div>
+			</header>
+			{isSuccess && <ColumnsTable columns={columns} list={board} show={show} isClick isSearch={false} addButton={write} columnsType="table" />}
+		</Card>
 	);
 };
 

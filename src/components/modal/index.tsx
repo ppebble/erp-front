@@ -36,17 +36,23 @@ type ModalProps = {
 const SetModal = ({ change, type, title, contents, color, okClick, updataClick, deleteClick }: ModalProps) => {
 	const [detailsSize, setDetailsSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
 	const [partner, setPartner] = useState({ company: '', name: '', phone: '', email: '' });
+	const [newBoard, setNewBoard] = useState({ title: '', body: '' });
 
 	const onChangePartner = (e: any) => {
 		const { id, value } = e.target;
 		setPartner({ ...partner, [id]: value });
 	};
 
+	const onChangeNewBoard = (e: any) => {
+		const { id, value } = e.target;
+		setNewBoard({ ...newBoard, [id]: value });
+	};
+
 	const [fileCount, setFileCount] = useState(0);
 	const [fileValue, setFileValue] = useState<any>();
 
 	useEffect(() => {
-		console.log(fileValue);
+		// console.log(fileValue);
 	}, [fileValue]);
 
 	useEffect(() => {
@@ -135,7 +141,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 							<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px] mb-[10px]">
 								제목
 							</Tag>
-							<Input defaultValue={contents?.title || ''} className="mb-[10px]" />
+							<Input id="title" defaultValue={contents?.title || ''} className="mb-[10px]" />
 							<InputContainer
 								props={{ id: fileCount, file: '' }}
 								count={fileCount}
@@ -152,7 +158,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 					</AlertDialogBody>
 
 					<AlertDialogFooter>
-						<Button colorScheme="blue" onClick={okClick}>
+						<Button colorScheme="blue" onClick={() => updataClick('test')}>
 							{title === '글쓰기' ? '등록' : '수정'}
 						</Button>
 						<Button colorScheme="red" ml={3} onClick={change}>
