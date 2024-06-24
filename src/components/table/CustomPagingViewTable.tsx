@@ -16,10 +16,10 @@ import {
 	useReactTable,
 } from '@tanstack/react-table';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import Card from '../card';
 import CardMenu from '../card/CardMenu';
 import Search from './CustomTableFilterComponent';
 import DebouncedInput from './CustomTableFilterComponent';
+import { Card } from '@chakra-ui/react';
 
 const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: string }) => {
 	const { tableData, columns, title } = props;
@@ -67,10 +67,10 @@ const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: st
 	}, [table.getState().columnFilters[0]?.id]);
 	// console.log(data);
 	return (
-		<Card extra="w-full pl-4 p-2 h-full min-h-[65vh]">
+		<Card className="min-h-[65vh]">
 			{title && (
 				<header className="relative flex items-center justify-between pt-5 pb-5">
-					<div className="text-xl font-bold text-navy-700 dark:text-white py-1.5">{title}</div>
+					<div className="text-xl font-bold text-navy-700 dark:text-white ml-1">{title}</div>
 				</header>
 			)}
 			<div className="overflow-x-scroll xl:overflow-x-hidden h-full">

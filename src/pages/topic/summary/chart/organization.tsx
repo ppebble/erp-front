@@ -4,7 +4,11 @@ import { Card } from '@chakra-ui/react';
 import useProfile from '../../../../store/useProfile';
 import 'react-orgchart/index.css';
 
-const Organization = () => {
+type OrganizationProps = {
+	height: string;
+};
+
+const Organization = ({ height }: OrganizationProps) => {
 	const navigate = useNavigate();
 	const { setSearch } = useProfile();
 
@@ -130,7 +134,7 @@ const Organization = () => {
 	};
 
 	return (
-		<Card className="w-full h-full p-4 my-1">
+		<Card className="overflow-auto" style={{ height: `${height}` }}>
 			<div className="mr-[50px] min-w-[450px] z-10">
 				<OrgChart tree={initechOrg1} NodeComponent={MyNodeComponent} />
 			</div>

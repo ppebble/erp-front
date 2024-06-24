@@ -16,7 +16,7 @@ const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSp
 			</span>
 
 			<div className="mx-[28px] flex items-center">
-				<img className="h-[75px] w-[246px]" src={logo} alt="" />
+				<img className="w-[15.3rem]" src={logo} alt="" />
 			</div>
 			<div className="mt-[5px] mb-7 h-px bg-gray-300 dark:bg-white/30" />
 

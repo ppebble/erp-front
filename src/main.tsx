@@ -6,12 +6,13 @@ import { CookiesProvider } from 'react-cookie';
 import App from './App';
 import ModalProvider from './components/modal';
 import './index.css';
+import theme from './theme';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<HashRouter>
 		<CookiesProvider>
 			<QueryClientProvider client={new QueryClient()}>
-				<ChakraProvider>
+				<ChakraProvider theme={theme}>
 					<App />
 					<ModalProvider />
 				</ChakraProvider>

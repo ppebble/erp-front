@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Card } from '@chakra-ui/react';
 import '@fullcalendar/react/dist/vdom';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
@@ -9,7 +10,6 @@ import moment from 'moment';
 import { CalendarParam, getTodayString, INITIAL_EVENTS } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
-import Card from '../card';
 
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents, useFilteredEvents } from '../../store/useCalendar';
 import CalendarService from '../../services/calendarService';
@@ -93,7 +93,7 @@ const FullCalendarComponent = () => {
 	// 	}
 	// }, [isDialogOpen]);
 	return (
-		<Card extra="mt-15 flex w-full h-full flex-col px-3 py-3">
+		<Card>
 			<div
 				onContextMenu={(e) => {
 					e.preventDefault();

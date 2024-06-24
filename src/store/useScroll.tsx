@@ -5,8 +5,8 @@ import routes from '../routes';
 interface ScrollState {
 	isScroll: boolean;
 	setScroll: (select: boolean) => void;
-	divHeight: number;
-	setDivHeight: (select: number) => void;
+	divHeight: string;
+	setDivHeight: (select: string) => void;
 }
 
 export const useScroll = create(
@@ -15,7 +15,7 @@ export const useScroll = create(
 			(set) => ({
 				isScroll: true,
 				setScroll: (select) => set((state) => ({ ...state, isScroll: select })),
-				divHeight: 0,
+				divHeight: '',
 				setDivHeight: (select) => set((state) => ({ ...state, divHeight: select })),
 			}),
 			{

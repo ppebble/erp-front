@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { Button } from '@chakra-ui/react';
+import { Button, Card } from '@chakra-ui/react';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import Card from '../../../../../components/card';
 import { AnnReqProps, AnnualInfo, useAnnRequest, usePersonalAnnual } from '../../../../../store/useAnnual';
 import AnnualService from '../../../../../services/annualService';
 
@@ -78,8 +77,8 @@ export const CustomAnnualDetailExternalComponent = () => {
 	});
 
 	return (
-		<Card extra="w-full p-1 h-full">
-			<div className="text-xl mt-3 font-bold text-navy-700 dark:text-white col-span-3 ml-1"> 연차 신청 목록</div>
+		<Card className="min-h-[17.5rem]">
+			<div className="text-xl font-bold text-navy-700 dark:text-white col-span-3 ml-1"> 연차 신청 목록</div>
 			<div className="overflow-x-scroll xl:overflow-x-hidden ml-2">
 				<table className="w-full">
 					<thead>

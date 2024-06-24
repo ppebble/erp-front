@@ -1,12 +1,16 @@
 import { Suspense } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { Card, Spinner } from '@chakra-ui/react';
+import { Card } from '@chakra-ui/react';
 import { DatumId, ResponsivePie } from '@nivo/pie';
 import { ProfileService } from '../../../../services/profileService';
 import useProfile from '../../../../store/useProfile';
 
-const Pie = () => {
+type PieProps = {
+	height: string;
+};
+
+const Pie = ({ height }: PieProps) => {
 	const { isSuccess } = useQuery('getProfileList', ProfileService().profileByRank);
 	const { rank, setSearch } = useProfile();
 	const navigate = useNavigate();
@@ -17,10 +21,10 @@ const Pie = () => {
 	};
 
 	return (
-		<Card className="w-full p-4">
-			<div className="w-full h-full">
-				<Suspense fallback={<div>Loading...</div>}>
-					{isSuccess && (
+		<Card style={{ height: `${height}` }}>
+			<Suspense fallback={<div>Loading...</div>}>
+				{isSuccess && (
+					<div className="w-full h-full min-w-[350px] min-h-[350px]">
 						<ResponsivePie
 							data={rank}
 							margin={{ top: 20, right: 20, bottom: 70, left: 20 }}
@@ -48,18 +52,18 @@ const Pie = () => {
 							}}
 							legends={[
 								{
-									anchor: 'bottom',
-									direction: 'row',
+									anchor: 'bottom-right',
+									direction: 'column',
 									justify: false,
-									translateX: 0,
-									translateY: 56,
+									translateX: 50,
+									translateY: 70,
 									itemsSpacing: 0,
 									itemWidth: 100,
-									itemHeight: 18,
+									itemHeight: 25,
 									itemTextColor: '#999',
 									itemDirection: 'left-to-right',
 									itemOpacity: 1,
-									symbolSize: 18,
+									symbolSize: 22,
 									symbolShape: 'circle',
 									effects: [
 										{
@@ -72,9 +76,9 @@ const Pie = () => {
 								},
 							]}
 						/>
-					)}
-				</Suspense>
-			</div>
+					</div>
+				)}
+			</Suspense>
 		</Card>
 	);
 };

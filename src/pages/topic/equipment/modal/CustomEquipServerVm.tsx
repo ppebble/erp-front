@@ -14,6 +14,7 @@ import {
 	TabPanels,
 	Tabs,
 	Textarea,
+	Card,
 } from '@chakra-ui/react';
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -26,7 +27,6 @@ import { useEquipAction, useEquipDetail } from '../../../../store/useEquip';
 
 import { useMemberTags } from '../../../../store/useCalendar';
 import CalendarService from '../../../../services/calendarService';
-import Card from '../../../../components/card';
 import CustomPagingViewTable from '../../../../components/table/CustomPagingViewTable';
 import { AddEquipParam } from './CustomEquipAddModal';
 import DebouncedInput from '../../../../components/table/CustomTableFilterComponent';

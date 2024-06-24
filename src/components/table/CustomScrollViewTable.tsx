@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useCallback, useEffect } from 'react';
+import { Card } from '@chakra-ui/react';
 import { flexRender, getCoreRowModel, getSortedRowModel, OnChangeFn, SortingState, useReactTable } from '@tanstack/react-table';
-import Card from '../card';
 import CardMenu from '../card/CardMenu';
 
 const CustomScrollViewTable = (props: { tableData: any; columns: any; title?: string }) => {
@@ -28,10 +28,10 @@ const CustomScrollViewTable = (props: { tableData: any; columns: any; title?: st
 	});
 	// console.log(data);
 	return (
-		<Card extra="w-full pb-10 pl-4 p-2 h-full min-h-[17.5rem]">
+		<Card className="min-h-[17.5rem]">
 			{title && (
 				<header className="relative flex items-center justify-between pt-5 pb-5">
-					<div className="text-xl font-bold text-navy-700 dark:text-white py-1.5">{title}</div>
+					<div className="text-xl font-bold text-navy-700 dark:text-white ml-1">{title}</div>
 				</header>
 			)}
 			<div className="overflow-x-scroll xl:overflow-x-hidden">

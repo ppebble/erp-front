@@ -53,8 +53,6 @@ const AdminPopup = (props: { [x: string]: any }) => {
 				<div className="p-10" ref={divRef}>
 					<Outlet />
 				</div>
-			</div>
-			<div className={`h-full transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`}>
 				<Footer isSideBar={isSideBar} isScorll={isScroll} />
 			</div>
 		</div>

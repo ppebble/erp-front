@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import '@fullcalendar/react/dist/vdom';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import { Card } from '@chakra-ui/react';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/react';
@@ -9,7 +10,6 @@ import { useQueries, useQuery } from 'react-query';
 import { useSideBar } from '../../../../store/useSideBar';
 import { CalendarParam, getTodayString, INITIAL_EVENTS } from '../../../../components/calendar/utils/event-utils';
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents } from '../../../../store/useCalendar';
-import Card from '../../../../components/card';
 import CalendarService from '../../../../services/calendarService';
 
 type PropsType = {
@@ -58,7 +58,7 @@ const DashboardCalendarComponent = () => {
 		</>
 	);
 	return (
-		<Card extra="flex w-full h-full flex-col px-3 py-3">
+		<Card className="min-h-[35rem]">
 			<div
 				onContextMenu={(e) => {
 					e.preventDefault();

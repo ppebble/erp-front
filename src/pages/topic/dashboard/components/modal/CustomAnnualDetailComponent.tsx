@@ -1,8 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { Button } from '@chakra-ui/react';
+import { Button, Card } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import Card from '../../../../../components/card';
 import { AnnReqProps, AnnualInfo, useAnnRequest, usePersonalAnnual } from '../../../../../store/useAnnual';
 import AnnualService from '../../../../../services/annualService';
 import useModal from '../../../../../store/useModal';
@@ -216,7 +215,7 @@ export const CustomAnnualDetailComponent = () => {
 	});
 
 	return (
-		<Card extra="w-full p-1 h-full">
+		<Card>
 			<div className="mt-1 overflow-x-scroll xl:overflow-x-hidden mb-2 ml-2">
 				<table className="w-full">
 					<thead>

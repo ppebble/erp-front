@@ -1,8 +1,9 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useEffect } from 'react';
 import { flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
-import Card from '../card';
+
 import CardMenu from '../card/CardMenu';
+import { Card } from '@chakra-ui/react';
 
 const CustomViewTable = (props: { tableData: any; columns: any; title?: string }) => {
 	const { tableData, columns, title } = props;
@@ -31,10 +32,10 @@ const CustomViewTable = (props: { tableData: any; columns: any; title?: string }
 	});
 	// console.log(data);
 	return (
-		<Card extra="w-full pb-10 pl-4 p-2 h-full min-h-[17.5rem]">
+		<Card className="min-h-[17.5rem]">
 			{title && (
 				<header className="relative flex items-center justify-between ">
-					<div className="text-xl font-bold text-navy-700 dark:text-white py-1.5">{title}</div>
+					<div className="text-xl font-bold text-navy-700 dark:text-white ml-1">{title}</div>
 				</header>
 			)}
 			<div className="overflow-x-scroll xl:overflow-x-hidden">

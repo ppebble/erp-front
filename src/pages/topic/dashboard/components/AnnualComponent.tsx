@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useState } from 'react';
+import { Card } from '@chakra-ui/react';
 import { createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
 import { BsThreeDots } from 'react-icons/bs';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import Progress from '../../../../components/progress';
-import Card from '../../../../components/card';
 import useModal from '../../../../store/useModal';
 import { CustomAnnualDetailComponent } from './modal/CustomAnnualDetailComponent';
 import { usePersonalAnnual } from '../../../../store/useAnnual';
@@ -15,7 +15,7 @@ const AnnualComponent = () => {
 	const [isDetail, setIsDetail] = useState<boolean>(false);
 
 	return (
-		<Card extra="w-full p-2 h-full">
+		<Card>
 			<div className="grid items-center grid-cols-12 gap-2 md:grid-cols-12">
 				{/* <div className="text-xl font-bold text-navy-700 dark:text-white col-span-3">유효 기간 : {defaultData.validDate || ''}</div> */}
 				<div className="text-xl font-bold text-navy-700 dark:text-white col-span-3">
@@ -30,7 +30,7 @@ const AnnualComponent = () => {
 						onClick={() => {
 							openModal({ type: 5, closeOnOverlay: true });
 						}}
-						className="dark:active-bg-white-20 linear col-span-4 rounded-md bg-lightPrimary px-4 py-2 text-base font-medium text-brand-500 transition duration-200 hover:bg-gray-100 active:bg-gray-200 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
+						className="min-w-[100px] dark:active-bg-white-20 linear col-span-4 rounded-md bg-lightPrimary px-4 py-2 text-base font-medium text-brand-500 transition duration-200 hover:bg-gray-100 active:bg-gray-200 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
 					>
 						연차 신청
 					</button>

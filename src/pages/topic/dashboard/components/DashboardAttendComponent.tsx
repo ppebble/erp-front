@@ -1,10 +1,10 @@
 import SwiperCore, { Navigation, Scrollbar } from 'swiper';
+import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { GoDot, GoDotFill } from 'react-icons/go';
-import { useEffect, useState } from 'react';
+import { Card } from '@chakra-ui/react';
 import WeeklyAttendanceComponent from './WeeklyAttendanceComponent';
 import MonthAttendanceComponent from './MonthAttendanceComponent';
-import Card from '../../../../components/card';
 
 const DashboardAttendComponent = () => {
 	const [slides, setSlides] = useState<any>(null);
@@ -37,7 +37,7 @@ const DashboardAttendComponent = () => {
 		}
 	}, [swiperSetting]);
 	return (
-		<Card extra="w-full h-full px-3 py-3">
+		<Card className="min-h-[35rem]">
 			<div>
 				<div className="mt-1 flex absolute z-20 left-[40%] w-[100px]">
 					{slides &&

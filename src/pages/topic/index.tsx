@@ -9,8 +9,9 @@ import Footer from '../../components/footer/Footer';
 const Topic = (props: { [x: string]: any }) => {
 	const { ...rest } = props;
 	const { isSideBar, setSideBar } = useSideBar();
-	const { isScroll, setScroll, divHeight, setDivHeight } = useScroll();
+	const { isScroll, setScroll, setDivHeight } = useScroll();
 	const divRef = useRef<HTMLDivElement>(null);
+	const [outletHeight, setOutletHeight] = useState<string>();
 
 	useEffect(() => {
 		const checkWidth = () => {
@@ -29,6 +30,7 @@ const Topic = (props: { [x: string]: any }) => {
 			} else {
 				setScroll(false);
 			}
+			setDivHeight((window.innerHeight - 180).toString().concat('px'));
 		};
 
 		// Outlet 높이 변화를 감지함
@@ -45,18 +47,23 @@ const Topic = (props: { [x: string]: any }) => {
 	}, [setScroll]);
 
 	return (
-		<div className="bg-lightPrimary dark:!bg-navy-900">
+		<>
 			<Sidebar open={isSideBar} onClose={() => setSideBar(false)} />
-			<div className={`h-full transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`} style={isScroll ? {} : { minHeight: '100vh' }}>
-				<Navbar onOpenSidenav={() => setSideBar(!isSideBar)} {...rest} />
-				<div ref={divRef} className="h-full">
-					<Outlet />
+			<div className="bg-lightPrimary dark:!bg-navy-900">
+				<div
+					className={`h-full transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`}
+					style={isScroll ? {} : { minHeight: '100vh' }}
+				>
+					<Navbar onOpenSidenav={() => setSideBar(!isSideBar)} {...rest} />
+					<div ref={divRef}>
+						<Outlet />
+					</div>
+				</div>
+				<div className={`h-full transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`}>
+					<Footer isSideBar={isSideBar} isScorll={isScroll} />
 				</div>
 			</div>
-			<div className={`h-full transition-all md:pr-2 ${isSideBar ? 'xl:ml-[313px]' : 'xl:ml-[12px]'}`}>
-				<Footer isSideBar={isSideBar} isScorll={isScroll} />
-			</div>
-		</div>
+		</>
 	);
 };
 

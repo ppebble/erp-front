@@ -1,20 +1,21 @@
+import { useEffect, useMemo, useState } from 'react';
+import { Card } from '@chakra-ui/react';
 import { MdGrid3X3, MdLaptopChromebook } from 'react-icons/md';
-
 import { FaBook, FaMobileAlt, FaServer } from 'react-icons/fa';
 import { HiOutlineDesktopComputer } from 'react-icons/hi';
 import { FiMonitor } from 'react-icons/fi';
-import { useEffect, useMemo, useState } from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { BsPlusCircle } from 'react-icons/bs';
 import { useQuery } from 'react-query';
 import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLineWidget';
-import Card from '../../../components/card';
 import useModal from '../../../store/useModal';
 import EquipService from '../../../services/equipService';
 import useEquip, { useEquipAction } from '../../../store/useEquip';
 import CustomEquipPagingTable from './components/CustomEquipPagingTable';
 import CustomServerEquipComponent from './components/CustomServerEquipComponent';
+import ColumnsTable from '../../../components/columnsTable';
+import { useScroll } from '../../../store/useScroll';
 
 type EquipTitleProp = {
 	type: string;
@@ -29,10 +30,12 @@ const Equipment = () => {
 	const columnHelper = createColumnHelper<any>();
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const equipAction = useEquipAction();
-
+	const [table, setTable] = useState();
+	const { openModal } = useModal();
+	const { divHeight } = useScroll();
+	const [height, setHeight] = useState(divHeight);
 	const { isSuccess, data: result } = useQuery(['getEquips'], EquipService().getEquipList);
 
-	const { openModal } = useModal();
 	const columns = [
 		columnHelper.accessor('equipmentName', {
 			id: 'equipmentName',
@@ -67,11 +70,12 @@ const Equipment = () => {
 			enableGlobalFilter: true,
 			filterFn: 'includesString',
 		}),
-		columnHelper.accessor('note', {
-			id: 'note',
-			header: '비고',
+		columnHelper.accessor('createDate', {
+			id: 'createDate',
+			header: '등록날짜',
 		}),
 	];
+
 	const serverColumns = [
 		columnHelper.accessor('equipmentName', {
 			id: 'equipmentName',
@@ -108,6 +112,7 @@ const Equipment = () => {
 			filterFn: 'includesString',
 		}),
 	];
+
 	const vmColumns = [
 		columnHelper.accessor('ip', {
 			id: 'vmIp',
@@ -140,9 +145,15 @@ const Equipment = () => {
 			setIsOpen(true);
 		}
 	};
+
 	useEffect(() => {
 		setData(allList.notebook);
 	}, [isSuccess]);
+
+	useEffect(() => {
+		setHeight(divHeight);
+	}, [divHeight]);
+
 	useEffect(() => {
 		// 추가, 수정, 삭제 처리 후 테이블 리패칭
 		if (isSuccess && !isOpen) {
@@ -169,12 +180,18 @@ const Equipment = () => {
 			}
 		}
 	}, [result]);
+
 	useEffect(() => {
 		setData(allList.notebook);
 	}, []);
+
+	useEffect(() => {
+		console.log(data);
+	}, [data]);
+
 	return (
-		<div className="flex grid grid-cols-12">
-			<div className="mt-3 mr-5 col-span-2">
+		<div className="overflow-auto flex min-h-[950px] min-w-[1000px]" style={{ height: `${height}` }}>
+			<div className="mt-3 mr-5 min-w-[200px]">
 				<CustomClickableOneLineWidget
 					icon={<MdLaptopChromebook className="h-7 w-7" />}
 					title="노트북"
@@ -247,10 +264,10 @@ const Equipment = () => {
 				/>
 			</div>
 
-			<div className="mt-4 grid grid-cols-1 col-span-10">
-				<Card extra="w-full p-3 max-h-[10vh]">
+			<div className="w-full">
+				<Card className="!p-3 max-h-[10vh]">
 					<div className="flex justify-between items-center">
-						<h4 className="text-xl font-bold text-navy-700 dark:text-white">{title.name}</h4>
+						<h4 className="text-2xl font-bold text-navy-700 dark:text-white">{title.name}</h4>
 						<button
 							onClick={() => {
 								if (title.type === 'book') {
@@ -271,6 +288,9 @@ const Equipment = () => {
 					<>
 						<div className={`${title.type === 'server' ? 'hidden' : ''}`}>
 							<CustomEquipPagingTable tableData={data} columns={columns} onClick={OpenDetail} />
+							{/* <Card>
+								<ColumnsTable columns={columns} list={data} show={10} columnsType="table" isClick isSearch={false} />
+							</Card> */}
 						</div>
 						<div className={`${title.type !== 'server' ? 'hidden' : ''}`}>
 							<CustomServerEquipComponent tableData={data} vmColumns={vmColumns} columns={serverColumns} />

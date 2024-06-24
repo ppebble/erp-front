@@ -6,11 +6,10 @@ import SwiperCore, { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { GoDot, GoDotFill } from 'react-icons/go';
 
-import { Button, Input, Textarea } from '@chakra-ui/react';
+import { Button, Card, Input, Textarea } from '@chakra-ui/react';
 import ReactSignatureCanvas from 'react-signature-canvas';
 import { MdChevronLeft, MdChevronRight, MdFormatListBulleted, MdLaptopChromebook, MdOutlineCheck } from 'react-icons/md';
 import moment from 'moment';
-import Card from '../../../components/card';
 import { AnnReqProps, useAdminAnnRequest, useAnnRequest, useAnnualAction } from '../../../store/useAnnual';
 import AnnualService from '../../../services/annualService';
 import Dropdown from '../../../components/dropdown';
@@ -248,7 +247,7 @@ const AnnualManageComponent = () => {
 					selectedTitle={title}
 				/>
 			</div>
-			<Card extra={`col-span-10 w-full pl-4 p-2 h-full min-h-[65vh] mt-5 `}>
+			<Card className="col-span-10 min-h-[65vh]">
 				<div className="flex justify-between">
 					<div className="text-xl mt-3 font-bold text-navy-700 dark:text-white col-span-3 ml-1"> 연차 신청 목록</div>
 					<Dropdown
