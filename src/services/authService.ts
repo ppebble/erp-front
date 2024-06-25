@@ -22,7 +22,16 @@ export const AuthService = () => {
 			console.log(error);
 		},
 	});
-
+	const checkAdmin = {
+		queryFn: () => getQuery(`/api/auth/checkAdmin`),
+		onSuccess: (result: any) => {
+			return result;
+		},
+		onError: (error: any) => {
+			console.log(error);
+		},
+		enabled: !!sessionStorage.getItem('nex_accessToken'),
+	};
 	// const testQuery = useQuery('getUserInfo', {
 	// 	queryFn: () => getQuery('/api/user/getUserInfo'),
 	// 	onSuccess: (result) => {
@@ -47,7 +56,7 @@ export const AuthService = () => {
 
 	// const commonQuery
 
-	return { loginMutation, testMutation, sampleQuery };
+	return { loginMutation, testMutation, checkAdmin, sampleQuery };
 };
 
 export default AuthService;

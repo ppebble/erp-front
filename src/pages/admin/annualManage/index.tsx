@@ -10,6 +10,7 @@ import { Button, Input, Textarea } from '@chakra-ui/react';
 import ReactSignatureCanvas from 'react-signature-canvas';
 import { MdChevronLeft, MdChevronRight, MdFormatListBulleted, MdLaptopChromebook, MdOutlineCheck } from 'react-icons/md';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 import Card from '../../../components/card';
 import { AnnReqProps, useAdminAnnRequest, useAnnRequest, useAnnualAction } from '../../../store/useAnnual';
 import AnnualService from '../../../services/annualService';
@@ -17,6 +18,7 @@ import Dropdown from '../../../components/dropdown';
 import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLineWidget';
 import useModal from '../../../store/useModal';
 import { ModalList } from '../../../store/common/useCommon';
+import AuthService from '../../../services/authService';
 
 const ANNUAL_STRING = {
 	reqMng: '신청 연차 관리',
@@ -41,11 +43,12 @@ const AnnualManageComponent = () => {
 		pageIndex: 0,
 		pageSize: 5,
 	});
+	const navigate = useNavigate();
 	const { isSuccess } = useQuery(
 		['getAnnApproveList', currentPage + 1],
 		AnnualService({ managerNo: 49, currentPage: currentPage + 1, pageSize: pagination.pageSize }).getAdminAnnualRequest,
 	);
-
+	const { data: isAdmin } = useQuery(['adminCheck'], AuthService().checkAdmin);
 	useEffect(() => {
 		if (title === ANNUAL_STRING.aprMng) {
 			setData(reqData.items.filter((e) => e.signType === 0 || dateValidation(e.start)));
@@ -56,6 +59,11 @@ const AnnualManageComponent = () => {
 			setCurrentPage(0);
 		}
 	}, [title]);
+	useEffect(() => {
+		if (isAdmin && !isAdmin.result) {
+			navigate('/topic/dashboard');
+		}
+	}, [isAdmin]);
 	useEffect(() => {
 		if (title === ANNUAL_STRING.aprMng) {
 			setData(reqData.items.filter((e) => e.signType === 0 || dateValidation(e.start)));
