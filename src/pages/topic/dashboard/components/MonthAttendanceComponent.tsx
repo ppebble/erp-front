@@ -26,22 +26,24 @@ const MonthAttendanceComponent = () => {
 			header: '시간',
 		}),
 	];
-	const [data, setData] = useState<any>('');
 	const { data: result } = useQuery(['getMonthAttend'], AttendService({ date: '2024-03-11' }).getMonthAttend);
+	const [data, setData] = useState<any>('');
 
 	useEffect(() => {
 		const attendData: MonthAttendRow[] = [];
-		Object.entries(result.response.result).map((e) => {
-			if (typeof e[1] !== 'string') {
-				if (e[1]) {
-					attendData.push(e[1] as MonthAttendRow);
-				} else {
-					attendData.push({} as MonthAttendRow);
+		if (result) {
+			result.response.result.map((e: any) => {
+				if (typeof e[1] !== 'string') {
+					if (e[1]) {
+						attendData.push(e[1] as MonthAttendRow);
+					} else {
+						attendData.push({} as MonthAttendRow);
+					}
 				}
-			}
-			return e;
-		});
-		setData(attendData);
+				return e;
+			});
+			setData(attendData);
+		}
 	}, [result]);
 	const table = useReactTable({
 		data: data || '',
