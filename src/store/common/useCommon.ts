@@ -6,6 +6,7 @@ export const taskColor = {
 	personal: '#787f8f',
 	sb: '#e9baba',
 	sc: '#3c9ba6',
+	holiday: '#fc3003',
 } as const;
 
 export const taskLists = [
@@ -16,6 +17,7 @@ export const taskLists = [
 	{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
 	{ id: 'lab', name: '기업부설연구소', color: taskColor.lab },
 	{ id: 'personal', name: '개인일정', color: taskColor.personal },
+	{ id: 'holiday', name: '공휴일', color: taskColor.holiday },
 ] as const;
 
 export type MemberTagProps = {

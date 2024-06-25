@@ -1,60 +1,50 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { useQuery } from 'react-query';
+import AttendService from '../../../../services/attendService';
 
-type AttendRow = {
-	enterTime?: string;
-	leaveTime?: string;
-	time: string;
+type MonthAttendRow = {
+	startDateOfWeek?: string;
+	endDateOfWeek?: string;
+	workTime: string;
 };
 
-const attendHeapData: AttendRow[] = [
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		time: '19:00',
-	},
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		time: '19:00',
-	},
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		time: '19:00',
-	},
-	{
-		enterTime: '05-03 10:00:00',
-		leaveTime: '05-03 19:00:00',
-		time: '19:00',
-	},
-];
-
 const MonthAttendanceComponent = () => {
-	const attendColumnHelper = createColumnHelper<AttendRow>();
+	const attendColumnHelper = createColumnHelper<MonthAttendRow>();
 
 	const attendColumns = [
-		attendColumnHelper.accessor('enterTime', {
-			id: 'enterTime',
+		attendColumnHelper.accessor('startDateOfWeek', {
+			id: 'startDateOfWeek',
 			header: '출근일시',
 		}),
-		attendColumnHelper.accessor('leaveTime', {
-			id: 'leaveTime',
+		attendColumnHelper.accessor('endDateOfWeek', {
+			id: 'endDateOfWeek',
 			header: '퇴근일시',
 		}),
-		attendColumnHelper.accessor('time', {
-			id: 'time',
+		attendColumnHelper.accessor('workTime', {
+			id: 'workTime',
 			header: '시간',
 		}),
 	];
+	const [data, setData] = useState<any>('');
+	const { data: result } = useQuery(['getMonthAttend'], AttendService({ date: '2024-03-11' }).getMonthAttend);
 
-	const [data, setData] = React.useState(() => [...attendHeapData]);
 	useEffect(() => {
-		setData(attendHeapData);
-	}, [attendHeapData]);
-
+		const attendData: MonthAttendRow[] = [];
+		Object.entries(result.response.result).map((e) => {
+			if (typeof e[1] !== 'string') {
+				if (e[1]) {
+					attendData.push(e[1] as MonthAttendRow);
+				} else {
+					attendData.push({} as MonthAttendRow);
+				}
+			}
+			return e;
+		});
+		setData(attendData);
+	}, [result]);
 	const table = useReactTable({
-		data,
+		data: data || '',
 		columns: attendColumns,
 		// sorting :: 정렬되는 객체, asc|desc   :: 첫 클릭 부터 desc =  false / true / sort 해제 순
 		getCoreRowModel: getCoreRowModel(),

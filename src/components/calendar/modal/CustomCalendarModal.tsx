@@ -325,7 +325,7 @@ export const CustomCalendarModal = () => {
 										{taskLists.map((e) => {
 											return (
 												<div
-													className="mt-3 ml-4 flex"
+													className={`${sessionStorage.getItem('isAdmin') === 'false' && e.id === 'holiday' ? 'hidden' : ''} mt-3 ml-4 flex`}
 													key={e.name}
 													onClick={() => {
 														activeTask(e);
@@ -341,10 +341,10 @@ export const CustomCalendarModal = () => {
 									</div>
 								</Dropdown>
 							</div>
-							<div className="flex items-center">
+							{/* <div className="flex items-center">
 								<Checkbox ref={refLegalAnnCheck} />
 								<p className="ml-2 text-sm font-medium text-navy-700 dark:text-white">공휴일 여부</p>
-							</div>
+							</div> */}
 						</div>
 						<div className="mt-5 start justify-start">
 							<div className="flex justify-start">

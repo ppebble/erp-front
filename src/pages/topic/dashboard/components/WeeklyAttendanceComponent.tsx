@@ -39,7 +39,7 @@ const WeeklyAttendanceComponent = () => {
 			header: '시간',
 		}),
 	];
-	const { data: result } = useQuery(['getWeekAttend'], AttendService({ date: '2024-03-11' }).getWeekAttend);
+	const { data: result } = useQuery(['getWeekAttend'], AttendService({ date: '2024-03-18' }).getWeekAttend);
 
 	const [data, setData] = useState<any>('');
 	useEffect(() => {
@@ -56,7 +56,7 @@ const WeeklyAttendanceComponent = () => {
 							minutes: moment(attendData[idx].workTime, 'HH:mm').minute(),
 						});
 					} else {
-						attendData.push({} as AttendRow);
+						attendData.push({ attendanceDate: '-' } as AttendRow);
 					}
 				}
 
@@ -138,7 +138,8 @@ const WeeklyAttendanceComponent = () => {
 				<div className="h-px w-full bg-gray-300 dark:bg-white/20 " />
 				<div className="flex justify-between min-h-[2.5rem] items-center">
 					<p className="text-base font-bold text-navy-700 dark:text-white">
-						잔여 시간 | {40 - Math.ceil(remainTime)} : {Math.ceil(60 - (remainTime - Math.floor(remainTime)) * 60)}
+						{/* 잔여 시간 | {40 - Math.ceil(remainTime)} : {Math.ceil(60 - (remainTime - Math.floor(remainTime)) * 60)} */}
+						주간 출결량 | {Math.ceil((remainTime / 40) * 100)} %
 					</p>
 					<div className="pr-5">
 						<Progress width="w-[15rem]" color={40 - Math.ceil(remainTime) < 0 ? 'red' : 'blue'} value={(remainTime / 40) * 100} />

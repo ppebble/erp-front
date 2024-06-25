@@ -38,10 +38,14 @@ export const AttendService = (param?: any) => {
 	};
 	const getMonthAttend = {
 		// queryFn: (date: string) => getEvents(date),
-		queryFn: () => getQuery(`/api/annual/annual`),
+		queryFn: () => getQuery(`/api/attendance/testMonthAttendance?date=${param.date}`),
 		onSuccess: (result: any) => {
 			if (result.response && result.response.resultCode === '7000') {
 				const data = result.response.result; // arrayList
+				if (data) {
+					console.log(data);
+					return data;
+				}
 			}
 			return false;
 		},

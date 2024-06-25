@@ -48,6 +48,7 @@ const Login = () => {
 
 			if (loginData.isSuccessful && mResult.accessToken !== undefined) {
 				sessionStorage.setItem('nex_accessToken', mResult.accessToken);
+				sessionStorage.setItem('isAdmin', mResult.isAdmin);
 				setCookie('nex_refToken', mResult.refreshToken, {
 					path: '/',
 					expires: new Date(Date.now() + 86400000),
