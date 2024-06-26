@@ -34,6 +34,7 @@ import Dropdown from '../../dropdown';
 import { scheduleResult } from '../../../network/response/scheduleResult';
 import { MemberTagInfo, taskColor, taskLists } from '../../../store/common/useCommon';
 import useModal from '../../../store/useModal';
+import { useIsAdmin } from '../../../store/useLogin';
 
 export const CustomCalendarModal = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,6 +66,8 @@ export const CustomCalendarModal = () => {
 	const refEventStartDateTime = useRef<HTMLInputElement>(null);
 	const refEventEndDateTime = useRef<HTMLInputElement>(null);
 	const refRegistUser = useRef<HTMLInputElement>(null);
+
+	const isAdmin = useIsAdmin();
 
 	const refEventDetail = useRef<HTMLInputElement>(null);
 	useQuery(['getMembers'], CalendarService().availableProfile);
@@ -172,6 +175,7 @@ export const CustomCalendarModal = () => {
 
 	useEffect(() => {
 		if (isDialogOpen) {
+			console.log(isAdmin);
 			calendarAction.setCalendarParam({
 				display: 'block',
 				task: {
@@ -325,7 +329,7 @@ export const CustomCalendarModal = () => {
 										{taskLists.map((e) => {
 											return (
 												<div
-													className={`${sessionStorage.getItem('isAdmin') === 'false' && e.id === 'holiday' ? 'hidden' : ''} mt-3 ml-4 flex`}
+													className={`${isAdmin === 'false' && e.id === 'holiday' ? 'hidden' : ''} mt-3 ml-4 flex`}
 													key={e.name}
 													onClick={() => {
 														activeTask(e);

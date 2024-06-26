@@ -19,6 +19,7 @@ import DashboardAttendComponent from './components/DashboardAttendComponent';
 import AnnualService from '../../../services/annualService';
 import { AnnReqProps, useAnnRequest, usePersonalAnnual } from '../../../store/useAnnual';
 import { CustomAnnualDetailExternalComponent } from './components/modal/CustomAnnualDetailExternalComponent';
+import AuthService from '../../../services/authService';
 
 type ScheduleRow = {
 	date: string;
@@ -32,14 +33,13 @@ const Dashboard = () => {
 	const dailyDept = useDeptEvents();
 	const dailyPersonal = usePersonalEvents();
 	const [personalParams, setPersonalParams] = useState<ScheduleRow[]>([]);
-	const [isAttWeek, setIsAttWeek] = useState<boolean>(true);
 	const [deptParams, setDeptParams] = useState<ScheduleRow[]>([]);
-	const { isSuccess, refetch } = useQuery(['getDailyEvents'], CalendarService().getDeptEvent);
-	const [positionX, setPositionX] = useState<number>(0);
+	const { isSuccess } = useQuery(['getDailyEvents'], CalendarService().getDeptEvent);
 
 	useQuery(['getPersonalAnnual'], AnnualService().getPersonalAnnual);
 	useQuery(['getAnnReqList'], AnnualService().getAnnualRequest);
 	useQuery(['getManagerList'], AnnualService().getManagerList);
+	useQuery(['adminCheck'], AuthService().checkAdmin);
 
 	const columns = [
 		scheduleColumnHelper.accessor('date', {

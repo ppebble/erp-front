@@ -60,7 +60,7 @@ const AnnualManageComponent = () => {
 		}
 	}, [title]);
 	useEffect(() => {
-		if (isAdmin && !isAdmin.result) {
+		if (isAdmin && !isAdmin.response.result) {
 			navigate('/topic/dashboard');
 		}
 	}, [isAdmin]);

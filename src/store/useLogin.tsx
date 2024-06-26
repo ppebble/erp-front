@@ -10,6 +10,7 @@ export type UserInfo = {
 type ActionItem = {
 	login: (user: UserInfo) => void | null;
 	logout: () => void | null;
+	setAdminFlag: (adminFlag: string) => void | null;
 };
 
 export interface LoginPersistStore {
@@ -17,6 +18,7 @@ export interface LoginPersistStore {
 	userId: string;
 	userName: string;
 	token: string;
+	isAdmin: string;
 	action: ActionItem;
 }
 
@@ -28,6 +30,7 @@ const useLoginStore = create<LoginPersistStore>()(
 				userId: '', // store state
 				userName: '',
 				token: '',
+				isAdmin: 'false',
 
 				// 로그인
 				action: {
@@ -54,6 +57,14 @@ const useLoginStore = create<LoginPersistStore>()(
 							false,
 							'LOG_OUT',
 						),
+					setAdminFlag: (adminFlag: string) =>
+						set(
+							{
+								isAdmin: adminFlag,
+							},
+							false,
+							'SET_ADMIN',
+						),
 				},
 			}),
 			{
@@ -74,5 +85,6 @@ export const useUserName = () => useLoginStore((state) => state.userName);
 export const useUserId = () => useLoginStore((state) => state.userId);
 export const useIsAuth = () => useLoginStore((state) => state.isAuthorized);
 export const useToken = () => useLoginStore((state) => state.token);
+export const useIsAdmin = () => useLoginStore((state) => state.isAdmin);
 export const useLoginAction = () => useLoginStore((state) => state.action);
 export default useLoginStore;

@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'react-query';
 import { loginParam } from '../network/request/authParams';
 import { getQuery, postQuery } from './base/AxiosQueryService';
+import { useLoginAction } from '../store/useLogin';
 
 export const AuthService = () => {
 	const loginMutation = useMutation({
@@ -22,9 +23,11 @@ export const AuthService = () => {
 			console.log(error);
 		},
 	});
+	const loginAction = useLoginAction();
 	const checkAdmin = {
 		queryFn: () => getQuery(`/api/auth/checkAdmin`),
 		onSuccess: (result: any) => {
+			loginAction.setAdminFlag(result.response.result.toString());
 			return result;
 		},
 		onError: (error: any) => {
