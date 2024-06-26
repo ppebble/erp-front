@@ -69,6 +69,7 @@ export enum ModalList {
 	EQUIP_ADD = 6, // 장비 등록/조회
 	BOOK_ADD = 7, // 도서 등록/조회
 	ANNUAL_REQUEST = 8, // 연차 신청서 조회
+	SCHEDULE_FILTER = 9, // 스케줄 필터
 }
 export const enum SignType {
 	self = 0,

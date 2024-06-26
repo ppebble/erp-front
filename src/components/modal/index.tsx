@@ -23,6 +23,7 @@ import { CustomEquipBookAddModal } from '../../pages/topic/equipment/modal/Custo
 import InputContainer from '../inputContainer';
 import { ModalList } from '../../store/common/useCommon';
 import AnnualRequestView from '../../pages/admin/annualManage/component/AnnualRequestView';
+import { CustomCalendarFilter } from '../calendar/modal/CustomCalendarFilter';
 
 type ModalProps = {
 	change: () => void;
@@ -219,6 +220,16 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 					<AlertDialogCloseButton size="lg" />
 					<AlertDialogBody className="content-center text-center text-xl">
 						<AnnualRequestView approvalNo={contents.approvalNo} />
+					</AlertDialogBody>
+				</AlertDialogContent>
+			);
+			break;
+		case ModalList.SCHEDULE_FILTER:
+			dialog = (
+				<AlertDialogContent maxWidth="fit-content">
+					<AlertDialogCloseButton size="sm" />
+					<AlertDialogBody className="content-center text-center text-xl">
+						<CustomCalendarFilter />
 					</AlertDialogBody>
 				</AlertDialogContent>
 			);

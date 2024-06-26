@@ -13,7 +13,7 @@ import CalendarService from '../../../services/calendarService';
 import { taskColor, taskLists } from '../../../store/common/useCommon';
 
 // 부서 필터 default value ... 개인일정... + (로그인한 본인 부서)
-let filter = ['personal', 'sc', 'sf', 'manage', 'dev', 'sb', 'lab'] as string[];
+// let filter = ['personal', 'sc', 'sf', 'manage', 'dev', 'sb', 'lab', 'holiday'] as string[];
 const CompanyCalendar = () => {
 	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
 	const calendarAction = useCalendarAction();
@@ -47,7 +47,7 @@ const CompanyCalendar = () => {
 				<div className="col-span-1 h-fit w-full xl:col-span-1 2xl:col-span-2">
 					<div className="mb-4 mt-5 flex flex-col justify-between px-4 md:flex-row md:items-center">
 						<h4 className="ml-1 text-2xl font-bold text-navy-700 dark:text-white"> </h4>
-						<ul className="mt-4 flex items-center justify-between md:mt-0 md:justify-center md:!gap-5 2xl:!gap-12">
+						{/* <ul className="mt-4 flex items-center justify-between md:mt-0 md:justify-center md:!gap-5 2xl:!gap-12">
 							<li className="text-base font-medium text-brand-500 hover:cursor-pointer hover:text-brand-500 dark:text-white">
 								<Dropdown
 									button={<MdSearch className="h-10 w-10" />}
@@ -110,7 +110,7 @@ const CompanyCalendar = () => {
 									/>
 								</p>
 							</li>
-						</ul>
+						</ul> */}
 					</div>
 					<FullCalendarComponent />
 				</div>

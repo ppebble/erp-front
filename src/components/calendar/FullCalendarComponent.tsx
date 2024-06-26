@@ -3,22 +3,30 @@ import '@fullcalendar/react/dist/vdom';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import FullCalendar, { EventClickArg, EventContentArg } from '@fullcalendar/react';
+import FullCalendar, { EventApi, EventClickArg, EventContentArg } from '@fullcalendar/react';
 import { useQuery } from 'react-query';
-import { getTodayString } from './utils/event-utils';
+import { CalendarTaskType, getTodayString } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
 
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents, useFilteredEvents } from '../../store/useCalendar';
 import CalendarService from '../../services/calendarService';
+import { taskColor } from '../../store/common/useCommon';
+import useModal from '../../store/useModal';
 
 const FullCalendarComponent = () => {
 	const { isSideBar } = useSideBar();
+	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
+
 	const calendarRef = useRef<FullCalendar>(null);
 	const isDialogOpen = useCalendarDialogOpen();
 	const calendarAction = useCalendarAction();
 	const calendar = calendarRef.current?.getApi();
+	const { AddHolidayMutation } = CalendarService();
+
+	const eventParam = {} as EventApi;
+	const { openModal } = useModal();
 
 	const initEvents = useFilteredEvents();
 	const [currentDate, setCurrentDate] = useState<string>(getTodayString());
@@ -82,9 +90,9 @@ const FullCalendarComponent = () => {
 					ref={calendarRef}
 					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 					headerToolbar={{
-						start: 'cPrevBtn',
+						start: 'cPrevBtn today',
 						center: 'title',
-						end: 'today cNextBtn',
+						end: 'cAddBtn cFilterBtn cNextBtn',
 					}}
 					height="85vh"
 					initialView="dayGridMonth"
@@ -101,6 +109,37 @@ const FullCalendarComponent = () => {
 							click: () => {
 								calendar?.prev();
 								convertDate(calendar?.getDate());
+							},
+						},
+						cHolidayAddBtn: {
+							text: '공휴일 추가',
+							click: () => {
+								AddHolidayMutation.mutate();
+							},
+						},
+						cAddBtn: {
+							text: '일정 추가',
+							click: () => {
+								// 일정 추가 팝업 모달
+								if (!isDialogOpen) {
+									calendarAction.setWorkType('add');
+									calendarAction.setCalendarParam({
+										display: 'block',
+										task: {
+											id: selectedTask.id,
+											name: selectedTask.name,
+											color: selectedTask.color,
+										},
+									});
+									calendarAction.setCalendarEventParam(eventParam);
+									calendarAction.setCalendarDialogFlag(true);
+								}
+							},
+						},
+						cFilterBtn: {
+							text: '필터',
+							click: () => {
+								openModal({ type: 9, closeOnOverlay: true });
 							},
 						},
 						cNextBtn: {
