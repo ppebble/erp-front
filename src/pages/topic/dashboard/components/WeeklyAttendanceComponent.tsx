@@ -39,7 +39,7 @@ const WeeklyAttendanceComponent = () => {
 			header: '시간',
 		}),
 	];
-	const { data: result } = useQuery(['getWeekAttend'], AttendService({ date: '2024-03-18' }).getWeekAttend);
+	const { data: result } = useQuery(['getWeekAttend'], AttendService({ date: '2024-03-02' }).getWeekAttend);
 
 	const [data, setData] = useState<any>('');
 	useEffect(() => {

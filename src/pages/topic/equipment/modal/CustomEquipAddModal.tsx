@@ -411,9 +411,9 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 	const { isSuccess } = useQuery(['getEquipsDtl', equipNoParam?.equipmentNo], EquipService(equipNoParam).getEquipDetail);
 	useEffect(() => {
 		setCurTitle(curTitle);
-		if (refEquipType.current) {
-			setEqType(refEquipType.current.value);
-		}
+		// if (refEquipType.current) {
+		// 	setEqType(refEquipType.current.value);
+		// }
 		if (eqType === 'pc' || eqType === 'notebook' || eqType === 'desktop' || eqType === 'server' || eqType === 'mobile') {
 			setNdsm(true);
 		} else {
@@ -457,7 +457,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 			setNote(equipDtl.equipment.note || '');
 			setCreateTime(equipDtl.equipment.createDate || '');
 			setUpdateTime(equipDtl.equipment.modifyDate || '');
-			if (eqType === 'notebook' || eqType === 'desktop' || eqType === 'pc') {
+			if (eqType === '노트북' || eqType === '데스크탑' || eqType === 'pc') {
 				setOs(equipDtl.pc?.os || '');
 				setOsVer(equipDtl.pc?.osVersion || '');
 				setRamType(equipDtl.pc?.ram?.slice(0, 4) || '');
@@ -476,7 +476,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 				setInch(equipDtl.mobile?.inch || '');
 				setHdd(equipDtl.mobile?.volume || '');
 			}
-			if (eqType === 'monitor') {
+			if (eqType === '모니터') {
 				setInch(equipDtl.monitor?.inch || '');
 				setResolution(equipDtl.monitor?.resolution || '');
 			}
@@ -946,7 +946,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 					{Object.entries(EquipType).map((e, idx) => {
 						return (
 							// eslint-disable-next-line react/no-array-index-key
-							<option key={idx} value={e[1]}>
+							<option key={idx} value={e[0]}>
 								{e[1]}
 							</option>
 						);
