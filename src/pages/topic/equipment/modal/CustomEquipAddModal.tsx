@@ -457,7 +457,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 			setNote(equipDtl.equipment.note || '');
 			setCreateTime(equipDtl.equipment.createDate || '');
 			setUpdateTime(equipDtl.equipment.modifyDate || '');
-			if (eqType === '노트북' || eqType === '데스크탑' || eqType === 'pc') {
+			if (eqType === 'notebook' || eqType === 'desktop' || eqType === 'pc') {
 				setOs(equipDtl.pc?.os || '');
 				setOsVer(equipDtl.pc?.osVersion || '');
 				setRamType(equipDtl.pc?.ram?.slice(0, 4) || '');
@@ -476,7 +476,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 				setInch(equipDtl.mobile?.inch || '');
 				setHdd(equipDtl.mobile?.volume || '');
 			}
-			if (eqType === '모니터') {
+			if (eqType === 'monitor') {
 				setInch(equipDtl.monitor?.inch || '');
 				setResolution(equipDtl.monitor?.resolution || '');
 			}
