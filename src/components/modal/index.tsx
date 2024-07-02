@@ -21,6 +21,8 @@ import { CustomAnnualAddModal } from '../../pages/topic/dashboard/components/mod
 import { CustomEquipAddModal } from '../../pages/topic/equipment/modal/CustomEquipAddModal';
 import { CustomEquipBookAddModal } from '../../pages/topic/equipment/modal/CustomEquipBookAddModal';
 import InputContainer from '../inputContainer';
+import useBoard from '../../store/useBoard';
+import BoardService from '../../services/boardService';
 
 type ModalProps = {
 	change: () => void;
@@ -28,8 +30,8 @@ type ModalProps = {
 	title?: string;
 	contents?: any;
 	color?: string;
-	okClick: () => void;
-	updataClick: (update: any) => void;
+	okClick: (state: any, file: any) => void;
+	updataClick: (state: any) => void;
 	deleteClick: () => void;
 };
 
@@ -37,23 +39,45 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 	const [detailsSize, setDetailsSize] = useState<string[]>(window.innerWidth < 1441 ? ['80%', '80%'] : ['50%', '75%']);
 	const [partner, setPartner] = useState({ company: '', name: '', phone: '', email: '' });
 	const [newBoard, setNewBoard] = useState({ title: '', body: '' });
+	const update = BoardService().updateBoard;
+	const del = BoardService().delBoard;
+	const { openModal, closeModal } = useModal();
+	const [fileValue, setFileValue] = useState<any>();
+	const [fileCount, setFileCount] = useState(0);
+	const { detail } = useBoard();
 
 	const onChangePartner = (e: any) => {
 		const { id, value } = e.target;
 		setPartner({ ...partner, [id]: value });
 	};
 
-	const onChangeNewBoard = (e: any) => {
-		const { id, value } = e.target;
+	const onChangeNewBoard = (id: string, value: any) => {
 		setNewBoard({ ...newBoard, [id]: value });
 	};
 
-	const [fileCount, setFileCount] = useState(0);
-	const [fileValue, setFileValue] = useState<any>();
+	const updateClick = (newItem: any, file: any) => {
+		const param = { profileNo: 21, authority: 0, title: newItem.title, body: newItem.body };
+		const formData = new FormData();
+		file.forEach((v: any) => {
+			formData.append('uploadFiles', v[0]);
+		});
+		formData.append('boardDto', JSON.stringify(param));
 
-	useEffect(() => {
-		// console.log(fileValue);
-	}, [fileValue]);
+		update.mutate(formData);
+	};
+
+	const updatePopup = () => {
+		openModal({ type: 2, title: '글수정', contents: detail, closeOnOverlay: false, okClick: updateClick });
+	};
+
+	const deleteOk = () => {
+		del.mutate({ seqNo: detail.boardVo.boardNo });
+		closeModal();
+	};
+
+	const deletePopup = () => {
+		openModal({ type: 4, contents: `<p className='text-xl'>삭제 하시겠습니까?</p>`, color: 'red', okClick: deleteOk });
+	};
 
 	useEffect(() => {
 		const changeSize = () => {
@@ -100,30 +124,40 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 						<div>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[120px]">제목</InputLeftAddon>
-								<Input id="title" className="pointer-events-none" defaultValue={contents.title || ''} />
+								<Input id="title" className="pointer-events-none" defaultValue={contents?.boardVo.title || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[120px]">작성일</InputLeftAddon>
-								<Input id="createDate" className="pointer-events-none" defaultValue={contents.createDate || ''} />
+								<Input id="createDate" className="pointer-events-none" defaultValue={contents?.boardVo.createDate || ''} />
 								<InputLeftAddon className="!min-w-[120px] ml-[20px]">작성자</InputLeftAddon>
-								<Input id="name" className="pointer-events-none" defaultValue={contents.name || ''} />
+								<Input id="name" className="pointer-events-none" defaultValue={contents?.boardVo.name || ''} />
 							</InputGroup>
+							{/* 첨부파일 */}
+							<InputContainer
+								props={{ id: fileCount }}
+								count={fileCount}
+								setCount={setFileCount}
+								setValue={setFileValue}
+								type="attachment"
+								style={'board' || ''}
+								readOnly
+							/>
 							<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px] mb-[10px]">
 								내용
 							</Tag>
 							<Text
 								id="body"
 								className="border border-[#E2E8F0] border-solid rounded-md px-[10px] py-[5px] !h-[20rem]"
-								dangerouslySetInnerHTML={{ __html: contents.body }}
+								dangerouslySetInnerHTML={{ __html: contents.boardVo.body }}
 							/>
 						</div>
 					</AlertDialogBody>
 
 					<AlertDialogFooter>
-						<Button colorScheme="green" onClick={updataClick}>
+						<Button colorScheme="green" onClick={() => updatePopup()}>
 							수정
 						</Button>
-						<Button colorScheme="red" ml={3} onClick={change}>
+						<Button colorScheme="red" ml={3} onClick={() => deletePopup()}>
 							삭제
 						</Button>
 					</AlertDialogFooter>
@@ -141,24 +175,30 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 							<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px] mb-[10px]">
 								제목
 							</Tag>
-							<Input id="title" defaultValue={contents?.title || ''} className="mb-[10px]" />
+							<Input
+								id="title"
+								defaultValue={contents?.boardVo.title || ''}
+								className="mb-[10px]"
+								onChange={(e) => onChangeNewBoard(e.target.id, e.target.value)}
+							/>
+							{/* 첨부파일 */}
 							<InputContainer
 								props={{ id: fileCount, file: '' }}
 								count={fileCount}
 								setCount={setFileCount}
 								setValue={setFileValue}
 								type="attachment"
-								style={'board' || ''}
+								style={title === '글쓰기' ? '' : 'board'}
 							/>
 							<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px] mb-[10px]">
 								내용
 							</Tag>
-							<ToastEditor />
+							<ToastEditor onChange={onChangeNewBoard} defaultValue={contents?.boardVo.body || ''} />
 						</div>
 					</AlertDialogBody>
 
 					<AlertDialogFooter>
-						<Button colorScheme="blue" onClick={() => updataClick('test')}>
+						<Button colorScheme="blue" onClick={() => okClick(newBoard, fileValue)}>
 							{title === '글쓰기' ? '등록' : '수정'}
 						</Button>
 						<Button colorScheme="red" ml={3} onClick={change}>

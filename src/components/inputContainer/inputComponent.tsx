@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
 	InputGroup,
@@ -18,6 +18,7 @@ import { DownloadIcon } from '@chakra-ui/icons';
 import useProfile from '../../store/useProfile';
 import useProject from '../../store/useProject';
 import ProfileNumberInput from '../profileNumberInput';
+import useBoard from '../../store/useBoard';
 
 type InputComponentprops = {
 	inputItems: any;
@@ -30,6 +31,7 @@ type InputComponentprops = {
 	onDetailChange?: (e: any, id: any) => void;
 	type: string;
 	style?: string;
+	disable: boolean;
 	readOnly?: boolean;
 };
 
@@ -44,10 +46,13 @@ const InputComponent = ({
 	onDetailChange,
 	type,
 	style,
+	disable,
 	readOnly,
 }: InputComponentprops) => {
 	const { careerIndex, setCareerIndex } = useProfile();
 	const { project, projectOutput, setProjectOutput, projectMember } = useProject();
+	const [attachmentList, setAttachmentList] = useState<any>();
+	const { detail } = useBoard();
 
 	const changeSelect = (index: number) => {
 		setCareerIndex(index);
@@ -56,6 +61,27 @@ const InputComponent = ({
 	const removeFile = (idx: number) => {
 		setProjectOutput(projectOutput.filter((index: any) => index !== idx));
 	};
+
+	const downloadUrl = (index: number) => {
+		let itemNumber;
+		if (style === 'board') {
+			itemNumber = `${detail.boardVo.boardNo}/${detail.uploadFiles[index].fileNo}`;
+		} else {
+			itemNumber = `${project?.projectNo}/${projectOutput[index]?.outputNo}`;
+		}
+		return `${import.meta.env.VITE_TEST_URL2}/api/file/downloadFile/${style}/${itemNumber}`;
+	};
+
+	useEffect(() => {
+		switch (style) {
+			case 'board':
+				setAttachmentList(detail.uploadFiles);
+				break;
+			default:
+				setAttachmentList(projectOutput);
+				break;
+		}
+	}, []);
 
 	const inputComponent = () => {
 		let component;
@@ -236,34 +262,33 @@ const InputComponent = ({
 				break;
 			case 'attachment':
 				component = (
-					<>
+					<div className="overflow-auto max-h-60 mb-4">
 						<div>
 							<Flex className="mb-[10px] flex">
-								<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit w-[100px]">
-									산출물
+								<Tag size="lg" variant="subtle" colorScheme="gray" className="border border-inherit !min-w-[120px] h-[40px]">
+									{style === 'board' ? '첨부파일' : '산출물'}
 								</Tag>
 								<Spacer />
-								{!readOnly && <Button onClick={() => addInput()}>추가</Button>}
+								{!readOnly && (
+									<Button onClick={() => addInput()} isDisabled={disable}>
+										추가
+									</Button>
+								)}
 							</Flex>
 						</div>
-						{projectOutput?.length >= 1 ? (
-							projectOutput.map((item: any, index: any) => {
+						{attachmentList?.length >= 1 ? (
+							attachmentList.map((item: any, index: any) => {
 								return (
 									<div key={`attachment_${item?.id ? item?.id : item?.fileNo}`} className="my-[2px]">
 										<InputGroup className="mb-2">
 											{readOnly ? (
-												<Link
-													to={`${import.meta.env.VITE_TEST_URL2}/api/file/downloadFile/project/${project?.projectNo}/${projectOutput[index]?.outputNo}`}
-													className="float-left"
-													download
-													target="_self"
-												>
-													{projectOutput[index].fileName}
+												<Link to={downloadUrl(index)} className="float-left" download target="_self">
+													{attachmentList[index].fileName}
 													<DownloadIcon className="ml-[10px]" />
 												</Link>
 											) : (
 												<>
-													<p>{projectOutput[index].fileName}</p>
+													<p>{attachmentList[index].fileName}</p>
 													<Spacer />
 													<CloseButton className="float-left" onClick={() => removeFile(index)} />
 												</>
@@ -286,7 +311,7 @@ const InputComponent = ({
 									</div>
 								);
 							})}
-					</>
+					</div>
 				);
 				break;
 			case 'member':

@@ -11,6 +11,8 @@ const baseStyle = definePartsStyle({
 		padding: '1rem',
 		paddingBottom: '2.5rem',
 		marginTop: '1rem',
+		marginBottom: '1rem',
+		marginRight: '1rem',
 		overflow: 'auto',
 	},
 	header: {

@@ -221,7 +221,15 @@ const ProjectDetail = () => {
 					<Divider className="my-3" />
 
 					{/* 산출물 */}
-					<InputContainer props={{ id: fileCount }} count={fileCount} setCount={setFileCount} setValue={setFileValue} type="attachment" readOnly />
+					<InputContainer
+						props={{ id: fileCount }}
+						count={fileCount}
+						setCount={setFileCount}
+						setValue={setFileValue}
+						type="attachment"
+						style={'project' || ''}
+						readOnly
+					/>
 
 					<Divider className="my-3" />
 

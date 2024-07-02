@@ -11,8 +11,8 @@ import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLi
 import { useScroll } from '../../../store/useScroll';
 import ColumnsTable from '../../../components/columnsTable';
 
-// 연구과제 상세보기
-const BusinessDetail = () => {
+// 연구과제 수정
+const BusinessModify = () => {
 	const { businessDetail } = useBusiness();
 	const navigate = useNavigate();
 	const { openModal, closeModal } = useModal();
@@ -84,6 +84,10 @@ const BusinessDetail = () => {
 		navigate('/topic/businessModify', { state: { isNew: false } });
 	};
 
+	const addMember = () => {
+		console.log('addMember');
+	};
+
 	useEffect(() => {
 		console.log(businessDetail);
 	}, [businessDetail]);
@@ -145,27 +149,27 @@ const BusinessDetail = () => {
 							{/* info */}
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[120px]">사업명</InputLeftAddon>
-								<Input id="businessName" className="pointer-events-none" defaultValue={businessDetail?.detail.info.businessName || ''} />
+								<Input id="businessName" defaultValue={businessDetail?.detail.info.businessName || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[120px]">참여유형</InputLeftAddon>
-								<Input id="participationType" className="pointer-events-none" defaultValue={businessDetail?.detail.info.participationType || ''} />
+								<Input id="participationType" defaultValue={businessDetail?.detail.info.participationType || ''} />
 								<InputLeftAddon className="!min-w-[120px] ml-[20px]">시행부처</InputLeftAddon>
-								<Input id="department" className="pointer-events-none" defaultValue={businessDetail?.detail.info.department || ''} />
+								<Input id="department" defaultValue={businessDetail?.detail.info.department || ''} />
 							</InputGroup>
 							<InputGroup className="mb-3">
 								<InputLeftAddon className="!min-w-[120px]">시작일</InputLeftAddon>
-								<Input id="startDate" className="pointer-events-none" defaultValue={businessDetail?.detail.info.startDate || ''} />
+								<Input id="startDate" defaultValue={businessDetail?.detail.info.startDate || ''} />
 								<InputLeftAddon className="!min-w-[120px] ml-[20px]">종료일</InputLeftAddon>
-								<Input id="endDate" className="pointer-events-none" defaultValue={businessDetail?.detail.info.endDate || ''} />
+								<Input id="endDate" defaultValue={businessDetail?.detail.info.endDate || ''} />
 							</InputGroup>
 							<InputGroup className="mb-3">
 								<InputLeftAddon className="!min-w-[120px]">작성자</InputLeftAddon>
-								<Input id="register" className="pointer-events-none" defaultValue={businessDetail?.detail.info.register || ''} />
+								<Input id="register" defaultValue={businessDetail?.detail.info.register || ''} />
 								<InputLeftAddon className="!min-w-[120px] ml-[20px]">작성일</InputLeftAddon>
-								<Input id="createDate" className="pointer-events-none" defaultValue={businessDetail?.detail.info.createDate || ''} />
+								<Input id="createDate" defaultValue={businessDetail?.detail.info.createDate || ''} />
 								<InputLeftAddon className="!min-w-[120px] ml-[20px]">수정일</InputLeftAddon>
-								<Input id="modifyDate" className="pointer-events-none" defaultValue={businessDetail?.detail.info.modifyDate || ''} />
+								<Input id="modifyDate" defaultValue={businessDetail?.detail.info.modifyDate || ''} />
 							</InputGroup>
 						</>
 					)}
@@ -174,62 +178,50 @@ const BusinessDetail = () => {
 							{/* institution */}
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">전문 연구 기관명</InputLeftAddon>
-								<Input id="proResearchIns" className="pointer-events-none" defaultValue={businessDetail?.detail.institution.proResearchIns || ''} />
+								<Input id="proResearchIns" defaultValue={businessDetail?.detail.institution.proResearchIns || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">전문 연구 기관 과제명</InputLeftAddon>
-								<Input id="proResearchName" className="pointer-events-none" defaultValue={businessDetail?.detail.institution.proResearchName || ''} />
+								<Input id="proResearchName" defaultValue={businessDetail?.detail.institution.proResearchName || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">전문 연구 기관 과제번호</InputLeftAddon>
-								<Input id="proResearchNo" className="pointer-events-none" defaultValue={businessDetail?.detail.institution.proResearchNo || ''} />
+								<Input id="proResearchNo" defaultValue={businessDetail?.detail.institution.proResearchNo || ''} />
 							</InputGroup>
 							<Divider className="my-3" />
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">주관 연구 기관명</InputLeftAddon>
-								<Input id="headResearchIns" className="pointer-events-none" defaultValue={businessDetail?.detail.institution.headResearchIns || ''} />
+								<Input id="headResearchIns" defaultValue={businessDetail?.detail.institution.headResearchIns || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">주관 연구 기관 과제명</InputLeftAddon>
-								<Input
-									id="headResearchName"
-									className="pointer-events-none"
-									defaultValue={businessDetail?.detail.institution.headResearchName || ''}
-								/>
+								<Input id="headResearchName" defaultValue={businessDetail?.detail.institution.headResearchName || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">주관 연구 기관 과제번호</InputLeftAddon>
-								<Input id="headResearchNo" className="pointer-events-none" defaultValue={businessDetail?.detail.institution.headResearchNo || ''} />
+								<Input id="headResearchNo" defaultValue={businessDetail?.detail.institution.headResearchNo || ''} />
 							</InputGroup>
 							<Divider className="my-3" />
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">협동 연구 기관명</InputLeftAddon>
-								<Input
-									id="jointResearchIns"
-									className="pointer-events-none"
-									defaultValue={businessDetail?.detail.institution.jointResearchIns || ''}
-								/>
+								<Input id="jointResearchIns" defaultValue={businessDetail?.detail.institution.jointResearchIns || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">협동 연구 기관 과제명</InputLeftAddon>
-								<Input
-									id="jointResearchName"
-									className="pointer-events-none"
-									defaultValue={businessDetail?.detail.institution.jointResearchName || ''}
-								/>
+								<Input id="jointResearchName" defaultValue={businessDetail?.detail.institution.jointResearchName || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">협동 연구 기관 과제번호</InputLeftAddon>
-								<Input id="jointResearchNo" className="pointer-events-none" defaultValue={businessDetail?.detail.institution.jointResearchNo || ''} />
+								<Input id="jointResearchNo" defaultValue={businessDetail?.detail.institution.jointResearchNo || ''} />
 							</InputGroup>
 							<Divider className="my-3" />
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">세부 과제명</InputLeftAddon>
-								<Input id="detailNo" className="pointer-events-none" defaultValue={businessDetail?.detail.institution.detailNo || ''} />
+								<Input id="detailNo" defaultValue={businessDetail?.detail.institution.detailNo || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[13rem]">세부 과제번호</InputLeftAddon>
-								<Input id="detailName" className="pointer-events-none" defaultValue={businessDetail?.detail.institution.detailName || ''} />
+								<Input id="detailName" defaultValue={businessDetail?.detail.institution.detailName || ''} />
 							</InputGroup>
 						</>
 					)}
@@ -238,28 +230,31 @@ const BusinessDetail = () => {
 							{/* info */}
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[9.3rem]">총 연구비</InputLeftAddon>
-								<Input id="sumCost" className="pointer-events-none" defaultValue={sumCost() || ''} />
+								<Input id="sumCost" defaultValue={sumCost() || ''} />
 							</InputGroup>
 							<InputGroup className="mb-2">
 								<InputLeftAddon className="!min-w-[9.3rem]">정부 지원금</InputLeftAddon>
-								<Input id="fundingCost" className="pointer-events-none" defaultValue={retrunCost(businessDetail?.detail.cost.fundingCost) || ''} />
+								<Input id="fundingCost" defaultValue={retrunCost(businessDetail?.detail.cost.fundingCost) || ''} />
 							</InputGroup>
 							<InputGroup className="mb-3">
 								<InputLeftAddon className="!min-w-[9.3rem]">민간 현금 지원금</InputLeftAddon>
-								<Input id="privateCost" className="pointer-events-none" defaultValue={retrunCost(businessDetail?.detail.cost.privateCost) || ''} />
+								<Input id="privateCost" defaultValue={retrunCost(businessDetail?.detail.cost.privateCost) || ''} />
 							</InputGroup>
 							<InputGroup className="mb-3">
 								<InputLeftAddon className="!min-w-[9.3rem]">민간 현물 지원금</InputLeftAddon>
-								<Input id="privateGoods" className="pointer-events-none" defaultValue={retrunCost(businessDetail?.detail.cost.privateGoods) || ''} />
+								<Input id="privateGoods" defaultValue={retrunCost(businessDetail?.detail.cost.privateGoods) || ''} />
 							</InputGroup>
 							<InputGroup className="mb-3">
 								<InputLeftAddon className="!min-w-[9.3rem]">기타 지원금</InputLeftAddon>
-								<Input id="etcCost" className="pointer-events-none" defaultValue={retrunCost(businessDetail?.detail.cost.etcCost) || ''} />
+								<Input id="etcCost" defaultValue={retrunCost(businessDetail?.detail.cost.etcCost) || ''} />
 							</InputGroup>
 						</>
 					)}
 					<Divider className="my-3" />
-
+					<div>
+						<span className="text-xl font-bold text-navy-700 dark:text-white ml-1">참여 연구원</span>
+						<Button onClick={() => addMember()}>추가</Button>
+					</div>
 					<ColumnsTable
 						list={businessDetail.member}
 						columns={columns}
@@ -277,4 +272,4 @@ const BusinessDetail = () => {
 	);
 };
 
-export default BusinessDetail;
+export default BusinessModify;

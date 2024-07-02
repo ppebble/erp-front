@@ -6,7 +6,7 @@ type modalProps = {
 	contents?: any;
 	color?: string;
 	closeOnOverlay?: boolean;
-	okClick?: () => void;
+	okClick?: (state: any, file: any) => void;
 	updataClick?: (update: any) => void;
 	deleteClick?: () => void;
 };
@@ -18,7 +18,7 @@ interface ModalStore {
 	contents: any;
 	color: string;
 	closeOnOverlay: boolean;
-	okClick: () => void;
+	okClick: (state: any, file: any) => void;
 	updataClick: (update: any) => void;
 	deleteClick: () => void;
 	openModal: (select: modalProps) => void;

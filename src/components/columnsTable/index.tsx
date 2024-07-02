@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { useQuery } from 'react-query';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { AccessorKeyColumnDef, SortingState, flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
@@ -9,6 +9,7 @@ import { ProfileService } from '../../services/profileService';
 import useModal from '../../store/useModal';
 import BoardService from '../../services/boardService';
 import useProject from '../../store/useProject';
+import useBoard from '../../store/useBoard';
 
 type searchType = {
 	option: string;
@@ -28,7 +29,8 @@ type ColumnsTableProps = {
 	addButton?: any;
 	detailButton?: any;
 	columnsType: string;
-	type: string;
+	type?: string;
+	minH?: number;
 };
 
 const ColumnsTable = ({
@@ -45,21 +47,20 @@ const ColumnsTable = ({
 	detailButton,
 	columnsType,
 	type,
+	minH,
 }: ColumnsTableProps) => {
-	useQuery('getProfileList', ProfileService().getProfileList);
-
+	useQuery('boardDetail', BoardService().boardDetail);
 	const [row] = useState(show);
 	const { openModal } = useModal();
-
 	const [totalPage, setTotalPage] = useState(0);
 	const [customPagination, setCustomPagination] = useState<any[]>();
-
-	const [profileListSplit, setProfileListSplit] = useState<any>(); // 10개(row)씩 나눈 리스트
+	const [splitList, setSplitList] = useState<any>(); // 10개(row)씩 나눈 리스트
 	const [searchSplit, setSearchSplit] = useState<any>(); // 검색 결과 리스트
-
 	const [data, setData] = useState<any>('');
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [currentPage, setCurrentPage] = useState(0);
+	const refSearch = useRef<HTMLInputElement>(null);
+	const { boardIndex, setBoardIndex } = useBoard();
 
 	const previousPage = () => {
 		setCurrentPage(currentPage - 1);
@@ -73,14 +74,13 @@ const ColumnsTable = ({
 		setCurrentPage(page);
 	};
 
-	const update = () => {
-		openModal({ type: 2, title: '글수정', closeOnOverlay: false });
+	const itemClick = (index: any) => {
+		setBoardIndex(index);
 	};
 
-	const itemClick = (index: any) => {
-		const contents = { title: '제목', name: '유저1', createDate: '2024-03-01', body: '<p>내용1</p><br/><p>내용2</p>' };
-		openModal({ type: 1, contents, updataClick: update });
-	};
+	useEffect(() => {
+		console.log(boardIndex);
+	}, [boardIndex]);
 
 	const table =
 		columns &&
@@ -155,14 +155,29 @@ const ColumnsTable = ({
 		return cardMap;
 	};
 
+	const filterbySearch = () => {
+		const array = [];
+		if (filter?.length >= 10) {
+			for (let i = 0; i < Math.ceil(filter.length / row); i += 1) {
+				array.push(filter.slice(i * row, (i + 1) * row));
+			}
+			setSearchSplit(array);
+			setData(array[0]);
+		} else {
+			setSearchSplit(filter);
+			setData(filter);
+		}
+	};
+
 	useEffect(() => {
-		if (profileListSplit) {
+		if (splitList || searchSplit) {
 			if (search?.input) {
 				if (searchSplit) {
 					setData(searchSplit[currentPage]);
 				}
 			} else {
-				setData(profileListSplit[currentPage]);
+				console.log(splitList);
+				setData(splitList[currentPage]);
 			}
 		}
 
@@ -170,27 +185,16 @@ const ColumnsTable = ({
 	}, [currentPage]);
 
 	useEffect(() => {
-		if (profileListSplit) {
+		if (splitList) {
 			if (search) {
 				setCurrentPage(0);
 				if (filter) {
 					if (search.input) {
-						const array = [];
-						if (filter.length >= 10) {
-							for (let i = 0; i < Math.ceil(filter.length / row); i += 1) {
-								array.push(filter.slice(i * row, (i + 1) * row));
-							}
-							setSearchSplit(array);
-							setData(array[0]);
-						} else {
-							setSearchSplit(filter);
-							setData(filter);
-						}
+						filterbySearch();
 					} else {
-						setData(profileListSplit[currentPage]);
+						setData(splitList[currentPage]);
 					}
-
-					setTotalPage(Math.ceil(filter.length / row));
+					setTotalPage(filter?.length ? Math.ceil(filter.length / row) : 0);
 				}
 			}
 		}
@@ -199,21 +203,34 @@ const ColumnsTable = ({
 	}, [search, filter]);
 
 	useEffect(() => {
+		setCurrentPage(0);
 		const array = [];
-		if (list) {
+		if (list?.length) {
 			for (let i = 0; i < Math.ceil(list.length / row); i += 1) {
 				array.push(list.slice(i * row, (i + 1) * row));
 			}
 		}
-		setTotalPage(array.length);
+		if (search?.input) {
+			filterbySearch();
+			setTotalPage(filter?.length ? Math.ceil(filter.length / row) : 0);
+		} else {
+			setTotalPage(array?.length ? array.length : 0);
+			const arr = [];
+			for (let i = 0; i < array.length; i += 1) {
+				arr[i] = i;
+			}
+			setData(array[0]);
+		}
+		setSplitList(array);
+	}, [list, row]);
+
+	useEffect(() => {
 		const arr = [];
-		for (let i = 0; i < array.length; i += 1) {
+		for (let i = 0; i < totalPage; i += 1) {
 			arr[i] = i;
 		}
 		setCustomPagination(arr);
-		setProfileListSplit(array);
-		setData(array[0]);
-	}, [list]);
+	}, [totalPage]);
 
 	return (
 		<div className="w-full">
@@ -224,7 +241,7 @@ const ColumnsTable = ({
 					</Button>
 				</div>
 			)}
-			<div className="mt-8 mx-[3rem]">
+			<div className={`${type !== '연구과제' ? 'mt-8 mx-[3rem]' : 'mx-[1rem]'}`} style={{ minHeight: `${minH}rem` }}>
 				{columnsType === 'table' ? (
 					<table className="w-full">
 						<thead>
@@ -255,26 +272,28 @@ const ColumnsTable = ({
 									</tr>
 								))}
 						</thead>
-						<tbody>
-							{table &&
-								table.getRowModel().rows.map((rows) => {
-									return (
-										<tr
-											key={rows.id}
-											className={`${isClick ? 'cursor-pointer' : ''}`}
-											onClick={isClick ? () => itemClick(rows.original.newsNo) : undefined}
-										>
-											{rows.getVisibleCells().map((cell) => {
-												return (
-													<td key={cell.id} className="border-white/0 py-3 pr-4">
-														{flexRender(cell.column.columnDef.cell, cell.getContext())}
-													</td>
-												);
-											})}
-										</tr>
-									);
-								})}
-						</tbody>
+						{data && (
+							<tbody>
+								{table &&
+									table.getRowModel()?.rows.map((rows) => {
+										return (
+											<tr
+												key={rows.id}
+												className={`${isClick ? 'cursor-pointer' : ''}`}
+												onClick={isClick ? () => itemClick(rows.original.postNo) : undefined}
+											>
+												{rows.getVisibleCells().map((cell) => {
+													return (
+														<td key={cell.id} className="border-white/0 py-3 pr-4">
+															{flexRender(cell.column.columnDef.cell, cell.getContext())}
+														</td>
+													);
+												})}
+											</tr>
+										);
+									})}
+							</tbody>
+						)}
 					</table>
 				) : (
 					<SimpleGrid columns={3} spacing={5}>
@@ -282,7 +301,7 @@ const ColumnsTable = ({
 					</SimpleGrid>
 				)}
 			</div>
-			<div className="absolute mt-4 bottom-0 left-0 right-0 mb-[2rem]">
+			<div className="mt-8 bottom-0 left-0 right-0 mb-[2rem]">
 				{/* 페이지 */}
 				{totalPage > 1 && (
 					<div className="flex justify-center flex-col sm:flex-row gap-5">
@@ -331,7 +350,7 @@ const ColumnsTable = ({
 								))}
 							</Select>
 						</div>
-						<Input id="input" className="ml-[1rem] !w-[300px]" defaultValue={search?.input} onChange={(e) => onSearch(e)} />
+						<Input id="input" className="ml-[1rem] !w-[300px]" defaultValue={search?.input} onChange={(e) => onSearch(e)} ref={refSearch} />
 						<SearchIcon className="flex my-auto ml-[1rem]" />
 					</InputGroup>
 				)}

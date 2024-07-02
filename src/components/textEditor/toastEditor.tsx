@@ -6,13 +6,13 @@ import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 import '../../css/tui-color-picker.css';
 import '../../css/toastui_editor.css';
 
-const ToastEditor = () => {
-	const editorRef = useRef<Editor>(null);
+type EditorProps = {
+	onChange: (id: string, value: any) => void;
+	defaultValue: string;
+};
 
-	const onChange = () => {
-		const data = editorRef.current?.getInstance().getHTML();
-		console.log(data);
-	};
+const ToastEditor = ({ onChange, defaultValue }: EditorProps) => {
+	const editorRef = useRef<Editor>(null);
 
 	const toolbarItems = [
 		['heading', 'bold', 'italic', 'strike'],
@@ -24,16 +24,16 @@ const ToastEditor = () => {
 	];
 
 	return (
-		<div className="edit_wrap">
+		<div className="edit_wrap mb-4">
 			<Editor
-				// initialValue="hello react editor world!"
 				previewStyle="vertical"
 				height="600px"
 				initialEditType="wysiwyg"
 				useCommandShortcut={false}
 				ref={editorRef}
 				toolbarItems={toolbarItems}
-				onChange={onChange}
+				initialValue={defaultValue}
+				onChange={(e) => onChange('body', editorRef.current?.getInstance().getHTML())}
 				plugins={[
 					fontSize,
 					[

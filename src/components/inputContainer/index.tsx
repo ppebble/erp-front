@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import InputComponent from './inputComponent';
 import useProfile from '../../store/useProfile';
 import useProject from '../../store/useProject';
+import useModal from '../../store/useModal';
+import useBoard from '../../store/useBoard';
 
 type InputProps = {
 	props?: any;
@@ -19,7 +21,10 @@ type InputProps = {
 const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, setValue, type, style, setIndex, readOnly }: InputProps) => {
 	const { career, license, coursework, skill, careerIndex, setCareer } = useProfile();
 	const { projectMember, projectOutput } = useProject();
+	const { detail } = useBoard();
 	const [state, setState] = useState<any>([props]);
+	const { openModal } = useModal();
+	const [disable, setDisable] = useState(false);
 
 	useEffect(() => {
 		if (state) {
@@ -80,8 +85,8 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 				task: '',
 				term: '',
 			});
-			setState((detail: any) =>
-				detail.map((item: any, index: number) =>
+			setState((detailList: any) =>
+				detailList.map((item: any, index: number) =>
 					index === careerIndex
 						? {
 								...item,
@@ -95,9 +100,18 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 	}, [detailCount]);
 
 	const AddInput = () => {
+		// todo : 첨부파일 최대 10개로 제한
 		if (type === 'attachment') {
-			if (count < 9) {
+			let fileCount = 0;
+			if (style === 'board') {
+				fileCount = detail.uploadFiles.length;
+			} else {
+				fileCount = projectOutput.length;
+			}
+			if (state.length + fileCount < 10) {
 				setCount(count + 1);
+			} else {
+				setDisable(true);
 			}
 		} else {
 			setCount(count + 1);
@@ -116,8 +130,8 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 
 	const DetailDelete = (idx: number) => {
 		const removeDetail = state[careerIndex].careerDetail.filter((item: any, index: any) => index !== idx);
-		setState((detail: any) =>
-			detail.map((item: any, index: number) =>
+		setState((detailList: any) =>
+			detailList.map((item: any, index: number) =>
 				index === careerIndex
 					? {
 							...item,
@@ -150,8 +164,8 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 				[e.target.id]: e.target.value,
 			};
 			const change = state[careerIndex].careerDetail.map((item: any, index: number) => (index === idx ? { ...item, ...detailData } : item));
-			setState((detail: any) =>
-				detail.map((item: any, index: number) =>
+			setState((detailList: any) =>
+				detailList.map((item: any, index: number) =>
 					index === careerIndex
 						? {
 								...item,
@@ -175,6 +189,7 @@ const InputContainer = ({ props, count, setCount, detailCount, setDetailCount, s
 			onDetailChange={onDetailChange}
 			type={type}
 			style={style}
+			disable={disable}
 			readOnly={readOnly}
 		/>
 	);

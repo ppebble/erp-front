@@ -17,7 +17,7 @@ const ProfileNumberInput = ({ id, className, onChange, defaultValue, index }: In
 
 	const change = (e: any) => {
 		setFilter(profileList.filter((item) => item.name.includes(e.target.value)));
-		if (filter.length === 1) {
+		if (filter?.length === 1) {
 			if (index === undefined) {
 				onChange({ target: { id, value: filter[0].profileNo } });
 			} else {

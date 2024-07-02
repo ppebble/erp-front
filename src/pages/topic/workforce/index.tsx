@@ -26,23 +26,13 @@ const Workforce = () => {
 			cell: (info) => addTag(info.getValue()),
 			size: 200,
 		}),
-		columnHelper.accessor('position', {
-			id: '직책',
-			cell: (info) => addTag(info.getValue()),
-			size: 200,
-		}),
-		columnHelper.accessor('rank', {
-			id: '직급',
-			cell: (info) => addTag(info.getValue()),
-			size: 200,
-		}),
 		columnHelper.accessor('task', {
 			id: '부서',
 			cell: (info) => addTag(info.getValue()),
 			size: 250,
 		}),
-		columnHelper.accessor('place', {
-			id: '근무지',
+		columnHelper.accessor('rank', {
+			id: '직급',
 			cell: (info) => addTag(info.getValue()),
 			size: 200,
 		}),
@@ -55,9 +45,9 @@ const Workforce = () => {
 
 	const searchItem = [
 		{ option: 'name', value: '이름' },
-		{ option: 'rank', value: '직급' },
 		{ option: 'task', value: '부서' },
-		{ option: 'place', value: '근무지' },
+		{ option: 'rank', value: '직급' },
+		{ option: 'userEmail', value: '이메일' },
 	];
 
 	useEffect(() => {
@@ -97,7 +87,7 @@ const Workforce = () => {
 
 	return (
 		<div className="overflow-auto flex min-h-[800px]" style={{ height: `${height}` }}>
-			<Card>
+			<Card className="sm:!px-[5%] md:!px-[10%] xl:!px-[20%]">
 				<header className="relative flex items-center justify-between">
 					<div className="text-2xl font-bold text-navy-700 dark:text-white ml-1">인력사항</div>
 				</header>
@@ -113,6 +103,7 @@ const Workforce = () => {
 						search={search}
 						setSearch={setSearch}
 						filter={filter}
+						minH={40}
 						columnsType="table"
 					/>
 				)}

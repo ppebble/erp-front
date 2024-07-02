@@ -19,13 +19,12 @@ import { ProfileService } from '../../../services/profileService';
 // 프로젝트 추가 / 수정
 const ProjectModify = () => {
 	useQuery('getProfileList', ProfileService().getProfileList);
-	const { state } = useLocation();
+	const { project, projectDetail, projectMember, projectOutput, setProject, setProjectDetail, setProjectMember, setProjectOutput } = useProject();
 	const navigate = useNavigate();
+	const { state } = useLocation();
 	const { isNew } = state;
 	const insert = ProjectService().insertProject;
 	const modify = ProjectService().modifyProject;
-	const { project, projectDetail, projectMember, projectOutput, setProject, setProjectDetail, setProjectMember, setProjectOutput, setClear } =
-		useProject();
 	const { openModal, closeModal } = useModal();
 	const { profileList } = useProfile();
 	const [fileCount, setFileCount] = useState(0);
@@ -61,7 +60,6 @@ const ProjectModify = () => {
 
 	useEffect(() => {
 		if (partner) {
-			console.log(partner);
 			const id: string = 'partner';
 			setProject({ ...project, [id]: partner });
 
@@ -88,7 +86,6 @@ const ProjectModify = () => {
 
 	const newProject = () => {
 		const param = { project, projectDetail, projectMember, projectOutput: [] };
-		console.log(param);
 		const formData = new FormData();
 		fileValue.forEach((v: any) => {
 			formData.append('uploadFiles', v[0]);
@@ -116,7 +113,6 @@ const ProjectModify = () => {
 	useEffect(() => {
 		const splitPartner = project?.partner.split(', ');
 		setPartnerSplit(splitPartner);
-		// return () => setClear();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -136,15 +132,9 @@ const ProjectModify = () => {
 	}, [swiperSetting]);
 
 	useEffect(() => {
-		// setProjectOutput([]);
-	}, [fileValue, setProjectOutput]);
-
-	useEffect(() => {
 		if (memberValue) {
 			setProjectMember(memberValue);
 		}
-		// setProjectMember([]);
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [memberValue]);
 
@@ -321,7 +311,14 @@ const ProjectModify = () => {
 					<Divider className="my-3" />
 
 					{/* 산출물 */}
-					<InputContainer props={{ id: fileCount }} count={fileCount} setCount={setFileCount} setValue={setFileValue} type="attachment" />
+					<InputContainer
+						props={{ id: fileCount }}
+						count={fileCount}
+						setCount={setFileCount}
+						setValue={setFileValue}
+						type="attachment"
+						style={'project' || ''}
+					/>
 
 					<Divider className="my-3" />
 

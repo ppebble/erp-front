@@ -6,17 +6,20 @@ import { MdLaptopChromebook } from 'react-icons/md';
 import { BsPlusCircle } from 'react-icons/bs';
 import { HiOutlineDesktopComputer } from 'react-icons/hi';
 import { ProjectService } from '../../../services/projectService';
+import { BusinessService } from '../../../services/businessService';
 import useProject from '../../../store/useProject';
 import CustomClickableOneLineWidget from '../../../components/widget/CustomOneLineWidget';
 import ColumnsTable from '../../../components/columnsTable';
 import { useScroll } from '../../../store/useScroll';
+import useBusiness from '../../../store/useBusiness';
 
 const Project = () => {
 	useQuery('projectDetail', ProjectService().projectDetail); // 프로젝트 상세조회
-	useQuery('businessDetail', ProjectService().businessDetail); // 연구과제 상세조회
+	useQuery('businessDetail', BusinessService().businessDetail); // 연구과제 상세조회
 
 	const navigate = useNavigate();
-	const { projectList, businessList, setProjectNo, setBusinessNo, setClearDetailNo, setClear } = useProject();
+	const { projectList, setProjectNo, setClear } = useProject();
+	const { businessList, setBusinessNo } = useBusiness();
 	const { divHeight } = useScroll();
 	const [height, setHeight] = useState(divHeight);
 	const [searchProject, setSearchProject] = useState({ option: 'projectName', input: '' }); // 프로젝트 검색
@@ -26,7 +29,7 @@ const Project = () => {
 	const [title, setTitle] = useState('프로젝트');
 
 	const pList = useQuery('projectList', ProjectService().projectList); // 프로젝트 목록 조회
-	const bList = useQuery('businessList', ProjectService().businessList); // 연구과제 목록 조회
+	const bList = useQuery('businessList', BusinessService().businessList); // 연구과제 목록 조회
 
 	const newProject = () => {
 		navigate('/topic/projectModify', { state: { isNew: true } });
@@ -82,16 +85,19 @@ const Project = () => {
 
 	useEffect(() => {
 		setClear();
-		return () => setClearDetailNo();
-	}, [setClear, setClearDetailNo]);
+		return () => {
+			setProjectNo(0);
+			setBusinessNo(0);
+		};
+	}, [setClear, setProjectNo, setBusinessNo]);
 
 	useEffect(() => {
 		setHeight(divHeight);
 	}, [divHeight]);
 
 	return (
-		<div className="overflow-auto flex min-h-[950px] min-w-[1000px]" style={{ height: `${height}` }}>
-			<div className="mt-3 mr-5 min-w-[200px]">
+		<div className="overflow-auto flex min-h-[950px] min-w-[1100px]" style={{ height: `${height}` }}>
+			<div className="mt-3 mr-5 w-[10%] min-w-[200px]">
 				<CustomClickableOneLineWidget
 					icon={<MdLaptopChromebook className="h-7 w-7" />}
 					title="프로젝트"
@@ -109,7 +115,7 @@ const Project = () => {
 					selectedTitle={title}
 				/>
 			</div>
-			<div className="grid grid-cols-1 w-full">
+			<div className="grid grid-cols-1 w-full pr-[10%]">
 				<Card>
 					{title === '프로젝트' ? (
 						<>
@@ -160,7 +166,6 @@ const Project = () => {
 										setSearch={setSearchbusiness}
 										filter={businessFilter}
 										columnsType="card"
-										type={title}
 									/>
 								)}
 							</div>

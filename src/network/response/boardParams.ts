@@ -16,3 +16,26 @@ export interface boardViewType {
 	body: string;
 	createDate: string;
 }
+
+export interface newBoardType {
+	profileNo: number;
+	authority: number;
+	title: string;
+	body: string;
+}
+
+export interface boardDetailType {
+	boardVo: {
+		postNo: number;
+		boardNo: number;
+		profileNo: number;
+		authority: number;
+		name: string;
+		title: string;
+		body: string;
+		createDate: string;
+		modifyDate: string;
+	};
+	uploadFiles: any;
+	reply: [];
+}
