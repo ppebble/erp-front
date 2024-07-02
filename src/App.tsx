@@ -18,11 +18,11 @@ import Project from './pages/topic/project';
 import ProjectDetail from './pages/topic/project/projectDetail';
 import ProjectModify from './pages/topic/project/projectModify';
 import BusinessDetail from './pages/topic/project/businessDetail';
+import BusinessModify from './pages/topic/project/businessModify';
 import Equipment from './pages/topic/equipment';
-import News from './pages/topic/notices/news';
-import Seminar from './pages/topic/notices/seminar';
-import Free from './pages/topic/notices/free';
-import Notice from './pages/topic/notices/notice';
+import Notices from './pages/topic/notices';
+import NoticesDetail from './pages/topic/notices/noticesDetail';
+import NoticesModify from './pages/topic/notices/noticesModify';
 import SignUp from './pages/topic/signUp';
 import Password from './pages/topic/password';
 
@@ -52,11 +52,11 @@ const App = () => {
 					<Route path="projectDetail" element={<ProjectDetail />} />
 					<Route path="projectModify" element={<ProjectModify />} />
 					<Route path="businessDetail" element={<BusinessDetail />} />
+					<Route path="businessModify" element={<BusinessModify />} />
 					<Route path="equipment" element={<Equipment />} />
-					<Route path="news" element={<News />} />
-					<Route path="seminar" element={<Seminar />} />
-					<Route path="free" element={<Free />} />
-					<Route path="notice" element={<Notice />} />
+					<Route path="notices" element={<Notices />} />
+					<Route path="noticesDetail" element={<NoticesDetail />} />
+					<Route path="noticesModify" element={<NoticesModify />} />
 					<Route path="signup" element={<SignUp />} />
 					<Route path="password" element={<Password />} />
 				</Route>

@@ -72,32 +72,38 @@ const routes = [
 		layout: '/topic',
 		path: 'notices',
 		icon: <MdOutlineDashboard className="h-8 w-8" />,
-		child: [
-			{
-				name: '공지사항',
-				layout: '/topic',
-				path: 'notice',
-				icon: <MdEmojiPeople className="h-7 w-7" />,
-			},
-			{
-				name: '회사소식',
-				layout: '/topic',
-				path: 'news',
-				icon: <MdOutlineNewspaper className="h-7 w-7" />,
-			},
-			{
-				name: '자유게시판',
-				layout: '/topic',
-				path: 'free',
-				icon: <MdOutlineComment className="h-7 w-7" />,
-			},
-			// {
-			// 	name: '세미나',
-			// 	layout: '/topic',
-			// 	path: 'seminar',
-			// 	icon: <MdPeople className="h-7 w-7" />,
-			// },
-		],
+		// child: [
+		// 	{
+		// 		name: '게시판',
+		// 		layout: '/topic',
+		// 		path: 'notices',
+		// 		icon: <MdPeople className="h-7 w-7" />,
+		// 	},
+		// 	{
+		// 		name: '공지사항',
+		// 		layout: '/topic',
+		// 		path: 'notice',
+		// 		icon: <MdEmojiPeople className="h-7 w-7" />,
+		// 	},
+		// 	{
+		// 		name: '회사소식',
+		// 		layout: '/topic',
+		// 		path: 'news',
+		// 		icon: <MdOutlineNewspaper className="h-7 w-7" />,
+		// 	},
+		// 	{
+		// 		name: '자유게시판',
+		// 		layout: '/topic',
+		// 		path: 'free',
+		// 		icon: <MdOutlineComment className="h-7 w-7" />,
+		// 	},
+		// 	{
+		// 		name: '세미나',
+		// 		layout: '/topic',
+		// 		path: 'seminar',
+		// 		icon: <MdPeople className="h-7 w-7" />,
+		// 	},
+		// ],
 	},
 	{
 		name: '관리자',
