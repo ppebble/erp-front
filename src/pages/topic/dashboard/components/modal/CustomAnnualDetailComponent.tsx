@@ -146,8 +146,8 @@ export const CustomAnnualDetailComponent = () => {
 		}),
 	]; // eslint-disable-next-line
 	const annReqColumns = [
-		annReqColHelper.accessor('historyNo', {
-			id: 'febuary',
+		annReqColHelper.accessor('approvalNo', {
+			id: 'approvalNo',
 			header: () => <p className="text-sm font-bold text-gray-900 dark:text-white">연차 신청 번호</p>,
 			cell: (info) => (
 				<div className="flex font-bold">
@@ -191,9 +191,9 @@ export const CustomAnnualDetailComponent = () => {
 					<Button
 						onClick={() => {
 							if (window.confirm('연차 신청을 취소하시겠습니까?')) {
-								annualService.calcleAnnual.mutate({ historyNo: info.row.original.historyNo, content: '' });
+								annualService.calcleAnnual.mutate({ approvalNo: info.row.original.approvalNo, content: '' });
 							}
-							console.log(info.row.original.historyNo);
+							console.log(info.row.original.approvalNo);
 						}}
 						colorScheme="red"
 					>
@@ -207,7 +207,6 @@ export const CustomAnnualDetailComponent = () => {
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
-		debugTable: true,
 	});
 	const annReqTable = useReactTable({
 		data: reqData,

@@ -16,6 +16,7 @@ import {
 import { ProfileService } from '../../../../services/profileService';
 import useProfile from '../../../../store/useProfile';
 import useModal from '../../../../store/useModal';
+import { DevDeptProps, PositionProps, RankProps, taskLists, TaskProps, WorkPlaceProps } from '../../../../store/common/useCommon';
 
 const Basic = () => {
 	const {
@@ -133,19 +134,35 @@ const Basic = () => {
 					<InputLeftAddon className="!min-w-[100px]">부서</InputLeftAddon>
 					<Select id="task" key="task" className="!min-w-[160px]" onChange={(e) => changeDept(e)} defaultValue={dept.task || '-'}>
 						<option value="-">-</option>
-						<option value="SC사업본부">SC사업본부</option>
+						{Object.entries(TaskProps).map((e, idx) => {
+							return (
+								// eslint-disable-next-line react/no-array-index-key
+								<option key={idx} value={e[1]}>
+									{e[1]}
+								</option>
+							);
+						})}
+						{/* <option value="SC사업본부">SC사업본부</option>
 						<option value="SF&신사업본부">SF&신사업본부</option>
 						<option value="경영팀">경영팀</option>
 						<option value="기술개발본부">기술개발본부</option>
-						<option value="기업부설연구소">기업부설연구소</option>
+						<option value="기업부설연구소">기업부설연구소</option> */}
 					</Select>
 					{dept.task === '기술개발본부' ? (
 						<>
 							<InputLeftAddon className="!min-w-[70px] ml-[20px]">팀</InputLeftAddon>
 							<Select id="team" key="team" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.team || '-'}>
 								<option value="-">-</option>
-								<option value="개발1팀">개발1팀</option>
-								<option value="개발2팀">개발2팀</option>
+								{/* <option value="개발1팀">개발1팀</option>
+								<option value="개발2팀">개발2팀</option> */}
+								{Object.entries(DevDeptProps).map((e, idx) => {
+									return (
+										// eslint-disable-next-line react/no-array-index-key
+										<option key={idx} value={e[1]}>
+											{e[1]}
+										</option>
+									);
+								})}
 							</Select>
 						</>
 					) : (
@@ -156,17 +173,26 @@ const Basic = () => {
 					<InputLeftAddon className="!min-w-[100px]">직책</InputLeftAddon>
 					<Select id="position" key="position" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.position || '-'}>
 						<option value="-">-</option>
+						{/* <option value="-">-</option>
 						<option value="CEO">CEO</option>
 						<option value="사업부장">사업부장</option>
 						<option value="본부장">본부장</option>
 						<option value="연구소장">연구소장</option>
 						<option value="실장">실장</option>
 						<option value="팀장">팀장</option>
-						<option value="파트장">파트장</option>
+						<option value="파트장">파트장</option> */}
+						{Object.entries(PositionProps).map((e, idx) => {
+							return (
+								// eslint-disable-next-line react/no-array-index-key
+								<option key={idx} value={e[1]}>
+									{e[1]}
+								</option>
+							);
+						})}
 					</Select>
 					<InputLeftAddon className="!min-w-[70px] ml-[20px]">직급</InputLeftAddon>
 					<Select id="rank" key="rank" className="!min-w-[100px]" onChange={(e) => changeDept(e)} defaultValue={dept.rank || '-'}>
-						<option value="-">-</option>
+						{/* <option value="-">-</option>
 						<option value="주임">주임</option>
 						<option value="대리">대리</option>
 						<option value="과장">과장</option>
@@ -175,18 +201,35 @@ const Basic = () => {
 						<option value="이사">이사</option>
 						<option value="상무">상무</option>
 						<option value="대표">대표</option>
-						<option value="회장">회장</option>
+						<option value="회장">회장</option> */}
+						<option value="-">-</option>
+						{Object.entries(RankProps).map((e, idx) => {
+							return (
+								// eslint-disable-next-line react/no-array-index-key
+								<option key={idx} value={e[1]}>
+									{e[1]}
+								</option>
+							);
+						})}
 					</Select>
 				</InputGroup>
 				<InputGroup className="mb-2">
 					<InputLeftAddon className="!min-w-[100px]">근무지</InputLeftAddon>
 					<Select id="place" key="place" className="!min-w-[150px]" onChange={(e) => changeDept(e)} defaultValue={dept.place || '-'}>
-						<option value="-">-</option>
+						{/* <option value="-">-</option>
 						<option value="SKT">SKT</option>
 						<option value="본사">본사</option>
 						<option value="안산">안산</option>
 						<option value="윤선생">윤선생</option>
-						<option value="미라콤">미라콤</option>
+						<option value="미라콤">미라콤</option> */}
+						{Object.entries(WorkPlaceProps).map((e, idx) => {
+							return (
+								// eslint-disable-next-line react/no-array-index-key
+								<option key={idx} value={e[1]}>
+									{e[1]}
+								</option>
+							);
+						})}
 					</Select>
 					<InputLeftAddon className="!min-w-[100px] ml-[20px]">입사일</InputLeftAddon>
 					<Input id="employmentDate" type="date" onChange={(e) => changeDept(e)} defaultValue={dept.employmentDate || ''} />

@@ -1,11 +1,24 @@
-export const taskList = {
-	sc: { id: 'sc', name: 'SC사업부', color: '#1cb9e0' },
-	sf: { id: 'sf', name: 'SF&신사업부', color: '#00e413' },
-	manage: { id: 'manage', name: '경영팀', color: '#f52b4d' },
-	dev: { id: 'dev', name: '기술개발본부', color: '#9842fa' },
-	sb: { id: 'sb', name: '전략사업본부', color: '#e9baba' },
-	personal: { id: 'personal', name: '개인일정', color: '#787f8f' },
+export const taskColor = {
+	lab: '#b5bf24',
+	sf: '#32a14f',
+	manage: '#b53840',
+	dev: '#9842fa',
+	personal: '#787f8f',
+	sb: '#e9baba',
+	sc: '#3c9ba6',
+	holiday: '#fc3003',
 } as const;
+
+export const taskLists = [
+	{ id: 'sc', name: 'SC사업본부', color: taskColor.sc },
+	{ id: 'sf', name: 'SF&신사업본부', color: taskColor.sf },
+	{ id: 'manage', name: '경영팀', color: taskColor.manage },
+	{ id: 'dev', name: '기술개발본부', color: taskColor.dev },
+	{ id: 'sb', name: '전략사업본부', color: taskColor.sb },
+	{ id: 'lab', name: '기업부설연구소', color: taskColor.lab },
+	{ id: 'personal', name: '개인일정', color: taskColor.personal },
+	{ id: 'holiday', name: '공휴일', color: taskColor.holiday },
+] as const;
 
 export type MemberTagProps = {
 	name: string;
@@ -45,9 +58,149 @@ export type dailyEventProps = {
 	date: string;
 	members?: string;
 };
-export type taskList = (typeof taskList)[keyof typeof taskList];
 
-type ValuesOf<E> = E[keyof E];
+export enum ModalList {
+	PROJECT_PARTER_ADD = 0, // 프로젝트 - 파트너 추가
+	BOARD_VIEW_DETAIL = 1, // 게시판 글 상세보기
+	BOARD_WRITE = 2, // 게시판 글쓰기
+	ALERT_ALARM = 3, // 알림
+	ALERT_CONFIRM = 4, // 수정/삭제
+	ANNUAL_ADD = 5, // 연차 신청
+	EQUIP_ADD = 6, // 장비 등록/조회
+	BOOK_ADD = 7, // 도서 등록/조회
+	ANNUAL_REQUEST = 8, // 연차 신청서 조회
+	SCHEDULE_FILTER = 9, // 스케줄 필터
+}
+export const enum SignType {
+	self = 0,
+	director = 2,
+	CEO = 3,
+	reject = 4,
+	cancel = 5,
+}
+export enum RamType {
+	DDR3 = 'DDR3',
+	DDR4 = 'DDR4',
+	DDR5 = 'DDR5',
+}
+export enum DDR3Hz {
+	Hz800 = '800',
+	Hz1066 = '1066',
+	Hz1333 = '1333',
+	Hz1600 = '1600',
+	Hz1866 = '1866',
+	Hz2133 = '2133',
+}
+export enum DDR4Hz {
+	Hz1600 = '1600',
+	Hz1866 = '1866',
+	Hz2133 = '2133',
+	Hz2400 = '2400',
+	Hz2666 = '2666',
+	Hz2933 = '2933',
+	Hz3200 = '3200',
+}
+export enum DDR5Hz {
+	Hz4800 = '4800',
+	Hz5333 = '5333',
+	Hz5866 = '5866',
+	Hz6400 = '6400',
+}
+export enum EquipType {
+	notebook = '노트북',
+	desktop = '데스크탑',
+	monitor = '모니터',
+	server = '서버',
+	mobile = '모바일',
+	etc = '기타장비',
+}
+export enum PcOsProps {
+	LINUX = 'LINUX',
+	Window = 'Window',
+}
+export enum BookStatus {
+	ON_DISP = '비치중',
+	DISCARD = '폐기',
+}
+export enum EquipStatus {
+	ON_USE = '사용중',
+	IDLE = '유휴',
+	FAULTY = '불량',
+	DISCARD = '폐기',
+}
+export enum AnnualProps {
+	ANN = '연차',
+	AM_HALF = '오전반차',
+	PM_HALF = '오후반차',
+	EVENT = '경조',
+	MR = 'MR',
+	NIGHT_WORK = '야간작업',
+	SUB_ANN = '대체휴가',
+	HEALTH_ANN = '보건휴가',
+	SICK_ANN = '병가',
+	SUMMBER_HOLIDAY = '하기휴가',
+}
+export enum OsProps {
+	LINUX = 'LINUX',
+	Window = 'Window',
+	Android = 'Android',
+	IOS = 'iOS',
+}
+export enum ProjectStepProps {
+	REQ = '요구사항분석',
+	DESIGN = '설계',
+	DEV = '개발',
+	UNIT_TEST = '단위테스트',
+	INT_TEST = '통합테스트',
+	TAKE_OVER = '인수',
+}
+export enum ProjectStatus { // 개발진행, 운영진행 띄어쓰기 구분
+	DEV = '개발 진행',
+	QS = '운영 진행',
+	DONE = '완료',
+	SUSPEND = '유예',
+	RESEARCH = '연구과제',
+}
+
+export enum DevDeptProps {
+	DEV1 = '개발1팀',
+	DEV2 = '개발2팀',
+}
+export enum RankProps {
+	FOREMEN = '주임',
+	PROXY = '대리',
+	CHIEF = '과장',
+	DEPUTY_DIRECTOR = '차장',
+	HEAD_DEPT = '부장',
+	HEAD_DIRECTOR = '이사',
+	DIRECTOR = '상무',
+	REPRESENT = '대표',
+	CHAIRMAN = '회장',
+}
+export enum PositionProps {
+	CEO = 'CEO',
+	HEAD_BUSS = '사업부장',
+	DIRECTOR = '본부장',
+	HEAD_LAB = '연구소장',
+	HEAD_DEPT = '실장',
+	HEAD_TEAM = '팀장',
+	HEAD_PART = '파트장',
+}
+export enum WorkPlaceProps {
+	HEAD = '본사',
+	SKT = 'SKT',
+	ANSAN = '안산',
+	YUN = '윤선생',
+	MIRACOM = '미라콤',
+}
+export enum TaskProps {
+	SF = 'SF&신사업부',
+	SC = 'SC사업부',
+	DEV = '기술개발본부',
+	MNG = '경영팀',
+	SB = '전략사업본부',
+	LAB = '기업부설연구소',
+}
 
 // 쓸지 알 수 없음
 export const errorCode = {

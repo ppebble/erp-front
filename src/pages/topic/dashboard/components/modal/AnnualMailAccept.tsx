@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import moment from 'moment';
 import logo from '../../../../../assets/img/logo/logo.png';
 import redCircle from '../../../../../assets/img/logo/redCircle.png';
 import { decryptData } from '../../../../../services/serialize/Deserialize';
@@ -9,7 +10,6 @@ type MailAcceptProps = {
 	annType: string;
 	dayDiff: number;
 	endDate: string;
-	expires: string;
 	note: string;
 	register: string;
 	registerEmpNo: string;
@@ -17,36 +17,28 @@ type MailAcceptProps = {
 	registerTask: string;
 	sign: string;
 	startDate: string;
-	historyNo: string;
+	approvalNo: string;
 };
 
 const AnnualMailAccept = () => {
 	const location = useLocation();
-	console.log(location.pathname.split('/'));
 	const extractData = location.pathname.substring(21);
-	console.log(extractData);
 
-	// const encryptedData =
-	// 	'xYXj6mgjPlOMz3ayHllDoFurhpl5GbSrnSS1bO4W/M6oMabbinb/PPodYS0F9QqQ4ErFrxRNlBK/ygMMMWGKofzatzGLGfsiQfE+3GqgsxNzdBhBN5S93KUib5/96wkD';
 	const encryptedData = extractData;
 	const secretKey = 'NexmoreUrlTokenParam!!!'; // key
 	const decryptedData = decryptData(encryptedData, secretKey);
 	const data: MailAcceptProps = JSON.parse(decryptedData);
 	const annualService = AnnualService();
-	if (decryptedData) {
-		console.log(data);
-	}
+
 	useEffect(() => {
 		annualService.approveAnnual.mutate(
 			{
-				historyNo: data.historyNo,
-				expires: data.expires.slice(0, 16),
+				approvalNo: data.approvalNo,
 				managerSign: '',
 			},
 			{
 				onSuccess: () => {
 					window.open('about:blank', '_self')?.self.close();
-					// window.close();
 				},
 			},
 		);
@@ -202,7 +194,9 @@ const AnnualMailAccept = () => {
 								<div>
 									<span>&nbsp;</span>
 								</div>
-								<span style={{ fontSize: '12.0pt' }}>XXXX 년 XX 월 XX 일</span>
+								<span style={{ fontSize: '12.0pt' }}>
+									{moment().year()} 년 {moment().month() + 1} 월 {moment().date()} 일
+								</span>
 							</div>
 						</td>
 						<td style={{ border: 'none' }} />
@@ -280,7 +274,7 @@ const AnnualMailAccept = () => {
 							</span>
 							<span
 								style={{
-									backgroundImage: `${data.annType === '반차' ? `url(${redCircle})` : ''}`,
+									backgroundImage: `${data.annType === '반차' || data.annType === '반휴' ? `url(${redCircle})` : ''}`,
 									paddingBottom: '4px',
 									paddingTop: '3px',
 									backgroundRepeat: 'no-repeat',
@@ -437,9 +431,6 @@ const AnnualMailAccept = () => {
 							<img src={logo} alt="NEXMORE" />
 						</td>
 					</tr>
-					{/* <tr>
-						<td style={{ textAlign: 'left' }}>첨부 : [사유서 또는 향군등의 경우 자료 첨부]</td>
-					</tr> */}
 				</tbody>
 			</table>
 		</div>

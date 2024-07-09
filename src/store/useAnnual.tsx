@@ -25,8 +25,16 @@ export type AnnualInfo = {
 	december: number;
 	remainDay: number;
 };
+export type AdminAnnReqProps = {
+	totalPages: number;
+	totalElements: number;
+	totalApproveElements: number;
+	currentPage: number;
+	pageSize: number;
+	items: AnnReqProps[];
+};
 export type AnnReqProps = {
-	historyNo: number;
+	approvalNo: number;
 	register: string;
 	start: string;
 	end: string;
@@ -41,7 +49,7 @@ type ActionItem = {
 	setPersonalAnnualClear: () => void | null;
 	setAnnualRequest: (req: AnnReqProps[]) => void | null;
 	setClearAnnReq: () => void | null;
-	setAdminAnnualRequest: (req: AnnReqProps[]) => void | null;
+	setAdminAnnualRequest: (req: AdminAnnReqProps) => void | null;
 	setClearAdminAnnReq: () => void | null;
 	setManagerList: (manager: ManagerProps[]) => void | null;
 	setManagerListClear: () => void | null;
@@ -50,7 +58,7 @@ type ActionItem = {
 interface AnnualStore {
 	personalAnnual: AnnualInfo[];
 	annualRequest: AnnReqProps[];
-	adminAnnualRequest: AnnReqProps[];
+	adminAnnualRequest: AdminAnnReqProps;
 	managerList: ManagerProps[];
 	action: ActionItem;
 }
@@ -59,7 +67,7 @@ const useAnnual = create<AnnualStore>()(
 	devtools((set, get) => ({
 		personalAnnual: [] as AnnualInfo[],
 		annualRequest: [] as AnnReqProps[],
-		adminAnnualRequest: [] as AnnReqProps[],
+		adminAnnualRequest: {} as AdminAnnReqProps,
 		managerList: [] as ManagerProps[],
 		action: {
 			setPersonalAnnual: (annual: AnnualInfo[]) =>
@@ -94,7 +102,7 @@ const useAnnual = create<AnnualStore>()(
 					false,
 					'CLEAR_PERSONAL_ANNUAL_REQUEST',
 				),
-			setAdminAnnualRequest: (req: AnnReqProps[]) =>
+			setAdminAnnualRequest: (req: AdminAnnReqProps) =>
 				set(
 					{
 						adminAnnualRequest: req,
@@ -105,7 +113,7 @@ const useAnnual = create<AnnualStore>()(
 			setClearAdminAnnReq: () =>
 				set(
 					{
-						adminAnnualRequest: [] as AnnReqProps[],
+						adminAnnualRequest: {} as AdminAnnReqProps,
 					},
 					false,
 					'CLEAR_ADMINL_ANNUAL_REQUEST',

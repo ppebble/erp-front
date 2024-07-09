@@ -15,6 +15,7 @@ import EquipService from '../../../services/equipService';
 import useEquip, { useEquipAction } from '../../../store/useEquip';
 import CustomEquipPagingTable from './components/CustomEquipPagingTable';
 import CustomServerEquipComponent from './components/CustomServerEquipComponent';
+import { ModalList } from '../../../store/common/useCommon';
 
 type EquipTitleProp = {
 	type: string;
@@ -41,12 +42,6 @@ const Equipment = () => {
 			enableGlobalFilter: true,
 			filterFn: 'includesString',
 		}),
-		// columnHelper.accessor('equipmentNo', {
-		// 	id: 'equipmentNo',
-		// 	header: title.type === 'book' ? '도서 번호' : '장비 번호',
-		// 	filterFn: 'includesString',
-		// 	enableGlobalFilter: true,
-		// }),
 		columnHelper.accessor('user', {
 			id: 'user',
 			header: '사용자',
@@ -67,9 +62,13 @@ const Equipment = () => {
 			enableGlobalFilter: true,
 			filterFn: 'includesString',
 		}),
-		columnHelper.accessor('note', {
-			id: 'note',
-			header: '비고',
+		// columnHelper.accessor('note', {
+		// 	id: 'note',
+		// 	header: '비고',
+		// }),
+		columnHelper.accessor('createDate', {
+			id: 'createDate',
+			header: '입고일',
 		}),
 	];
 	const serverColumns = [
@@ -80,13 +79,6 @@ const Equipment = () => {
 			enableGlobalFilter: true,
 			filterFn: 'includesString',
 		}),
-		// columnHelper.accessor('equipmentNo', {
-		// 	id: 'equipmentNo',
-		// 	header: title.type === 'book' ? '도서 번호' : '장비 번호',
-
-		// 	filterFn: 'includesString',
-		// 	enableGlobalFilter: true,
-		// }),
 		columnHelper.accessor('user', {
 			id: 'user',
 			header: '사용자',
@@ -99,13 +91,16 @@ const Equipment = () => {
 			filterFn: 'includesString',
 			enableGlobalFilter: true,
 		}),
-
 		columnHelper.accessor('status', {
 			id: 'status',
 			header: '상태',
 			enableColumnFilter: true,
 			enableGlobalFilter: true,
 			filterFn: 'includesString',
+		}),
+		columnHelper.accessor('createDate', {
+			id: 'createDate',
+			header: '입고일',
 		}),
 	];
 	const vmColumns = [
@@ -133,9 +128,9 @@ const Equipment = () => {
 	const OpenDetail = (row: any) => {
 		if (row) {
 			if (title.type === 'book') {
-				openModal({ type: 8, closeOnOverlay: false, contents: { title, row, setOpen: setIsOpen } });
+				openModal({ type: ModalList.BOOK_ADD, closeOnOverlay: false, contents: { title, row, setOpen: setIsOpen } });
 			} else {
-				openModal({ type: 7, closeOnOverlay: false, contents: { title, row, setOpen: setIsOpen } });
+				openModal({ type: ModalList.EQUIP_ADD, closeOnOverlay: false, contents: { title, row, setOpen: setIsOpen } });
 			}
 			setIsOpen(true);
 		}
@@ -254,10 +249,10 @@ const Equipment = () => {
 						<button
 							onClick={() => {
 								if (title.type === 'book') {
-									openModal({ type: 8, closeOnOverlay: false, contents: { title, setOpen: setIsOpen } });
+									openModal({ type: ModalList.BOOK_ADD, closeOnOverlay: false, contents: { title, setOpen: setIsOpen } });
 									setIsOpen(true);
 								} else {
-									openModal({ type: 7, closeOnOverlay: false, contents: { title, setOpen: setIsOpen } });
+									openModal({ type: ModalList.EQUIP_ADD, closeOnOverlay: false, contents: { title, setOpen: setIsOpen } });
 									setIsOpen(true);
 								}
 							}}

@@ -1,36 +1,37 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import '@fullcalendar/react/dist/vdom';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import FullCalendar, { DateSelectArg, EventApi, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/react';
-import { useQuery, useQueryClient } from 'react-query';
-import moment from 'moment';
-import { CalendarParam, getTodayString, INITIAL_EVENTS } from './utils/event-utils';
+import FullCalendar, { EventApi, EventClickArg, EventContentArg } from '@fullcalendar/react';
+import { useQuery } from 'react-query';
+import { CalendarTaskType, getTodayString } from './utils/event-utils';
 import '../../assets/css/FullCalendar.css';
 import { useSideBar } from '../../store/useSideBar';
 import Card from '../card';
 
 import { useCalendarAction, useCalendarDialogOpen, useCalendarParam, useCalendarType, useEvents, useFilteredEvents } from '../../store/useCalendar';
 import CalendarService from '../../services/calendarService';
+import { taskColor } from '../../store/common/useCommon';
+import useModal from '../../store/useModal';
 
 const FullCalendarComponent = () => {
-	const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
-
 	const { isSideBar } = useSideBar();
+	const [selectedTask, setSelectedTask] = useState<CalendarTaskType>({ id: 'personal', name: '개인일정', color: taskColor.personal });
+
 	const calendarRef = useRef<FullCalendar>(null);
-	const calendarParam = useCalendarParam();
 	const isDialogOpen = useCalendarDialogOpen();
 	const calendarAction = useCalendarAction();
-	const events = useEvents();
 	const calendar = calendarRef.current?.getApi();
+	const { AddHolidayMutation } = CalendarService();
+
+	const eventParam = {} as EventApi;
+	const { openModal } = useModal();
 
 	const initEvents = useFilteredEvents();
 	const [currentDate, setCurrentDate] = useState<string>(getTodayString());
-	const { isSuccess, refetch } = useQuery(['getEvents', currentDate.slice(0, 7)], CalendarService(currentDate).getEventQuery);
-	const queryClient = useQueryClient();
+	const { isSuccess } = useQuery(['getEvents', currentDate.slice(0, 7)], CalendarService(currentDate).getEventQuery);
 
-	const filter = [''] as string[];
 	const convertDate = (date: any) => {
 		const yyyy = date.getFullYear().toString();
 		const mm = date.getMonth() + 1;
@@ -54,9 +55,6 @@ const FullCalendarComponent = () => {
 	useEffect(() => {
 		if (initEvents && calendar) {
 			calendar.addEvent(initEvents);
-			if (isSuccess) {
-				// calendarAction.setFilterEvents(events.filter((item) => filter.includes(item.extendedProps?.task.id)));
-			}
 		}
 	}, [initEvents]);
 	useEffect(() => {
@@ -73,25 +71,13 @@ const FullCalendarComponent = () => {
 		(clickInfo: EventClickArg) => {
 			if (!isDialogOpen) {
 				calendarAction.setWorkType('edit');
-				const event = { ...clickInfo.event };
-				// event.event.end = moment(clickInfo.event.end).subtract(1, 'days');
 				calendarAction.setCalendarEventParam(clickInfo.event);
 				calendarAction.setCalendarDialogFlag(true);
 			}
 		},
 		[isDialogOpen],
 	);
-	const renderEventContent = (eventContent: EventContentArg) => (
-		<>
-			{/* <b>{eventContent.timeText}</b> */}
-			<p className="hover:cursor-pointer">{eventContent.event.title}</p>
-		</>
-	);
-	// useEffect(() => {
-	// 	if (!isDialogOpen) {
-	// 		queryClient.invalidateQueries([`getEvents, ${currentDate.slice(0, 7)}`]);
-	// 	}
-	// }, [isDialogOpen]);
+	const renderEventContent = (eventContent: EventContentArg) => <p className="hover:cursor-pointer">{eventContent.event.title}</p>;
 	return (
 		<Card extra="mt-15 flex w-full h-full flex-col px-3 py-3">
 			<div
@@ -104,9 +90,9 @@ const FullCalendarComponent = () => {
 					ref={calendarRef}
 					plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 					headerToolbar={{
-						start: 'cPrevBtn',
+						start: 'cPrevBtn today',
 						center: 'title',
-						end: 'today cNextBtn',
+						end: 'cAddBtn cFilterBtn cNextBtn',
 					}}
 					height="85vh"
 					initialView="dayGridMonth"
@@ -119,11 +105,41 @@ const FullCalendarComponent = () => {
 					events={initEvents}
 					customButtons={{
 						cPrevBtn: {
-							// text: '<',
 							icon: 'chevron-left',
 							click: () => {
 								calendar?.prev();
 								convertDate(calendar?.getDate());
+							},
+						},
+						cHolidayAddBtn: {
+							text: '공휴일 추가',
+							click: () => {
+								AddHolidayMutation.mutate();
+							},
+						},
+						cAddBtn: {
+							text: '일정 추가',
+							click: () => {
+								// 일정 추가 팝업 모달
+								if (!isDialogOpen) {
+									calendarAction.setWorkType('add');
+									calendarAction.setCalendarParam({
+										display: 'block',
+										task: {
+											id: selectedTask.id,
+											name: selectedTask.name,
+											color: selectedTask.color,
+										},
+									});
+									calendarAction.setCalendarEventParam(eventParam);
+									calendarAction.setCalendarDialogFlag(true);
+								}
+							},
+						},
+						cFilterBtn: {
+							text: '필터',
+							click: () => {
+								openModal({ type: 9, closeOnOverlay: true });
 							},
 						},
 						cNextBtn: {

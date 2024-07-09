@@ -2,13 +2,10 @@
 import { EventInput } from '@fullcalendar/react';
 import { useEffect } from 'react';
 import { useCalendarParam } from '../../../store/useCalendar';
-import { taskList } from '../../../store/common/useCommon';
+import { taskLists } from '../../../store/common/useCommon';
 
 // let eventGuid = 0;
 const todayStr = new Date().toISOString().replace(/T.*$/, ''); // YYYY-MM-DD of today
-// export function createEventId() {
-// 	return String((eventGuid += 1))
-// }
 
 export type CalendarTaskType = {
 	id?: string;
@@ -20,27 +17,15 @@ export type CalendarParam = {
 	display: string;
 };
 
-// export const getEventColor = (task: string | undefined) => taskList.find((e) => e.id === task)?.color;
 export const getEventColor = (task: string | undefined) => {
-	if (task === 'sc') {
-		return taskList.sc.color;
-	}
-	if (task === 'sf') {
-		return taskList.sf.color;
-	}
-	if (task === 'manage') {
-		return taskList.manage.color;
-	}
-	if (task === 'dev') {
-		return taskList.dev.color;
-	}
-	if (task === 'sb') {
-		return taskList.sb.color;
-	}
-	if (task === 'personal') {
-		return taskList.personal.color;
-	}
-	return 'false';
+	let color;
+	taskLists.map((e) => {
+		if (task === e.id) {
+			color = e.color;
+		}
+		return true;
+	});
+	return color;
 };
 export const getTodayString = () => {
 	const date = new Date();
@@ -63,25 +48,14 @@ export const getTodayString = () => {
 	return `${yyyy}-${mmString}-${ddString}`;
 };
 export const getEventTask = (taskName: string | undefined) => {
-	if (taskName === '기술개발본부') {
-		return taskList.dev.id;
-	}
-	if (taskName === 'SF&신사업부') {
-		return taskList.sf.id;
-	}
-	if (taskName === '경영팀') {
-		return taskList.manage.id;
-	}
-	if (taskName === 'SC사업부') {
-		return taskList.sc.id;
-	}
-	if (taskName === '전략사업본부') {
-		return taskList.sb.id;
-	}
-	if (taskName === '개인일정') {
-		return taskList.personal.id;
-	}
-	return 'false';
+	let taskId;
+	taskLists.map((e) => {
+		if (taskName === e.name) {
+			taskId = e.id;
+		}
+		return true;
+	});
+	return taskId;
 };
 
 /**
@@ -95,8 +69,10 @@ export const getEventTask = (taskName: string | undefined) => {
  *  endDate = end(string)
  *  status ?   ???
  *
-
  */
+
+// EVENT_MODEL_EXAMPLE
+
 export const INITIAL_EVENTS: EventInput[] = [
 	{
 		id: 'event1',

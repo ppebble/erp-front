@@ -52,7 +52,7 @@ const useCalendar = create<CalendarStoreProps>()(
 		isDialogOpen: false,
 		members: [] as MemberTagProps[],
 		selectedMembers: [] as string[],
-		filter: ['personal'] as string[],
+		filter: ['personal', 'sc', 'sf', 'manage', 'dev', 'sb', 'lab', 'holiday'] as string[],
 		dailyDeptEvents: [] as dailyEventProps[],
 		dailyPersonalEvents: [] as dailyEventProps[],
 

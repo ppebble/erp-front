@@ -19,6 +19,7 @@ import { useMemberTags } from '../../../../store/useCalendar';
 import CalendarService from '../../../../services/calendarService';
 import { VmInfo } from './CustomEquipServerVm';
 import useModal from '../../../../store/useModal';
+import { DDR3Hz, DDR4Hz, DDR5Hz, EquipStatus, EquipType, OsProps, RamType, taskColor } from '../../../../store/common/useCommon';
 
 export type AddEquipParam = {
 	equipType: string;
@@ -162,7 +163,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 	const [note, setNote] = useState<string>('');
 	const [os, setOs] = useState<string>('');
 	const [osVer, setOsVer] = useState<string>('');
-	const [ramType, setRamType] = useState<string>('');
+	const [ramType, setRamType] = useState<string>('DDR3');
 	const [ramHz, setRamHz] = useState<string>('');
 	const [cpu, setCpu] = useState<string>('');
 	const [gpu, setGpu] = useState<string>('');
@@ -176,8 +177,6 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 	const [ramSize, setRamSize] = useState<string>('');
 	const [ramIsExpand, setRamIsExpand] = useState<number>(0);
 
-	const [ip, setIp] = useState<string>('');
-
 	const equipAction = useEquipAction();
 	const onEquipClose = () => {
 		setUser(['']);
@@ -189,7 +188,6 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 	const handleChange = (e: any) => {
 		if (e.type === 'add') {
 			if (memberTags) {
-				// setUserName(e.detail.tagify.value[0].value);
 				setUser(e.detail.tagify.value[0].value);
 			}
 		}
@@ -412,11 +410,10 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 
 	const { isSuccess } = useQuery(['getEquipsDtl', equipNoParam?.equipmentNo], EquipService(equipNoParam).getEquipDetail);
 	useEffect(() => {
-		console.log(eqType);
 		setCurTitle(curTitle);
-		if (refEquipType.current) {
-			setEqType(refEquipType.current.value);
-		}
+		// if (refEquipType.current) {
+		// 	setEqType(refEquipType.current.value);
+		// }
 		if (eqType === 'pc' || eqType === 'notebook' || eqType === 'desktop' || eqType === 'server' || eqType === 'mobile') {
 			setNdsm(true);
 		} else {
@@ -576,10 +573,14 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 										setStatus(e.target.value);
 									}}
 								>
-									<option value="사용중">사용중</option>
-									<option value="유휴">유휴</option>
-									<option value="불량">불량</option>
-									<option value="폐기">폐기</option>
+									{Object.entries(EquipStatus).map((e, idx) => {
+										return (
+											// eslint-disable-next-line react/no-array-index-key
+											<option key={idx} value={e[1]}>
+												{e[1]}
+											</option>
+										);
+									})}
 								</Select>
 							</div>
 						</div>
@@ -694,10 +695,18 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 										setOs(e.target.value);
 									}}
 								>
-									<option value="LINUX">LINUX</option>
+									{Object.entries(OsProps).map((e, idx) => {
+										return (
+											// eslint-disable-next-line react/no-array-index-key
+											<option key={idx} value={e[1]}>
+												{e[1]}
+											</option>
+										);
+									})}
+									{/* <option value="LINUX">LINUX</option>
 									<option value="Window">Window</option>
 									<option value="Android">Android</option>
-									<option value="IOS">iOS</option>
+									<option value="IOS">iOS</option> */}
 								</Select>
 								<input
 									type="text"
@@ -754,9 +763,17 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 										setRamType(e.target.value);
 									}}
 								>
-									<option value="DDR3">DDR3</option>
-									<option value="DDR4">DDR4</option>
-									<option value="DDR5">DDR5</option>
+									{Object.entries(RamType).map((e, idx) => {
+										return (
+											// eslint-disable-next-line react/no-array-index-key
+											<option key={idx} value={e[1]}>
+												{e[1]}
+											</option>
+										);
+									})}
+									{/* <option value={RamType.DDR3}>{RamType.DDR3}</option>
+									<option value={RamType.DDR4}>{RamType.DDR4}</option>
+									<option value={RamType.DDR5}>{RamType.DDR5}</option> */}
 								</Select>
 								<p className="text-base items-center flex font-bold text-navy-700 ml-5 mr-5 mt-1"> - </p>
 								<Select
@@ -769,22 +786,33 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 										setRamHz(e.target.value);
 									}}
 								>
-									<option value="800">800</option>
-									<option value="1066">1066</option>
-									<option value="1333">1333</option>
-									<option value="1600">1600</option>
-									<option value="1866">1866</option>
-									<option value="2133">2133</option>
-									<option value="2400">2400</option>
-									<option value="2666">2666</option>
-									<option value="2933">2933</option>
-									<option value="3200">3200</option>
-									<option value="3733">3733</option>
-									<option value="4266">4266</option>
-									<option value="4800">4800</option>
-									<option value="5333">5333</option>
-									<option value="5866">5866</option>
-									<option value="6400">6400</option>
+									{ramType === 'DDR3' &&
+										Object.entries(DDR3Hz).map((e, idx) => {
+											return (
+												// eslint-disable-next-line react/no-array-index-key
+												<option key={idx} value={e[1]}>
+													{e[1]}
+												</option>
+											);
+										})}
+									{ramType === 'DDR4' &&
+										Object.entries(DDR4Hz).map((e, idx) => {
+											return (
+												// eslint-disable-next-line react/no-array-index-key
+												<option key={idx} value={e[1]}>
+													{e[1]}
+												</option>
+											);
+										})}
+									{ramType === 'DDR5' &&
+										Object.entries(DDR5Hz).map((e, idx) => {
+											return (
+												// eslint-disable-next-line react/no-array-index-key
+												<option key={idx} value={e[1]}>
+													{e[1]}
+												</option>
+											);
+										})}
 								</Select>
 							</div>
 						</div>
@@ -858,7 +886,7 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 									type="text"
 									readOnly={!isEditable}
 									ref={refIp}
-									defaultValue={ip}
+									defaultValue=""
 									placeholder="ex) 192.168.0.1"
 									disabled={false}
 									className="read-only ml-2 flex h-10 w-full items-center border bg-white/0 p-1 border-b-gray-500 border-white/10 text-sm outline-none"
@@ -915,18 +943,25 @@ export const CustomEquipAddModal = ({ title, row, onClose, setOpen }: any) => {
 						setEqType(e.target.value);
 					}}
 				>
-					<option value="notebook">노트북</option>
+					{Object.entries(EquipType).map((e, idx) => {
+						return (
+							// eslint-disable-next-line react/no-array-index-key
+							<option key={idx} value={e[0]}>
+								{e[1]}
+							</option>
+						);
+					})}
+					{/* <option value="notebook">노트북</option>
 					<option value="desktop">데스크탑</option>
 					<option value="monitor">모니터</option>
 					<option value="server">서버장비</option>
 					<option value="mobile">모바일</option>
-					<option value="etc">기타장비</option>
+					<option value="etc">기타장비</option> */}
 				</Select>
 				<Button
 					colorScheme="blue"
 					className="mr-3 ml-3"
 					onClick={() => {
-						// setIsConfirm(!isConfirm);
 						onAddEquip();
 					}}
 				>

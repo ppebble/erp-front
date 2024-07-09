@@ -56,7 +56,6 @@ const CustomPagingViewTable = (props: { tableData: any; columns: any; title?: st
 		getFilteredRowModel: getFilteredRowModel(),
 		onPaginationChange: setPagination,
 		onGlobalFilterChange: setGlobalFilter,
-		debugTable: true,
 	});
 	useEffect(() => {
 		if (table.getState().columnFilters[0]?.id === 'fullName') {

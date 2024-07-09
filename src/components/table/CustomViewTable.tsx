@@ -27,7 +27,6 @@ const CustomViewTable = (props: { tableData: any; columns: any; title?: string }
 		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		debugTable: true,
 	});
 	// console.log(data);
 	return (

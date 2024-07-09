@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'react-query';
 import { loginParam } from '../network/request/authParams';
 import { getQuery, postQuery } from './base/AxiosQueryService';
+import { useLoginAction } from '../store/useLogin';
 
 export const AuthService = () => {
 	const loginMutation = useMutation({
@@ -22,7 +23,18 @@ export const AuthService = () => {
 			console.log(error);
 		},
 	});
-
+	const loginAction = useLoginAction();
+	const checkAdmin = {
+		queryFn: () => getQuery(`/api/auth/checkAdmin`),
+		onSuccess: (result: any) => {
+			loginAction.setAdminFlag(result.response.result.toString());
+			return result;
+		},
+		onError: (error: any) => {
+			console.log(error);
+		},
+		enabled: !!sessionStorage.getItem('nex_accessToken'),
+	};
 	// const testQuery = useQuery('getUserInfo', {
 	// 	queryFn: () => getQuery('/api/user/getUserInfo'),
 	// 	onSuccess: (result) => {
@@ -47,7 +59,7 @@ export const AuthService = () => {
 
 	// const commonQuery
 
-	return { loginMutation, testMutation, sampleQuery };
+	return { loginMutation, testMutation, checkAdmin, sampleQuery };
 };
 
 export default AuthService;

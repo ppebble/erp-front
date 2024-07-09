@@ -21,6 +21,9 @@ import { CustomAnnualAddModal } from '../../pages/topic/dashboard/components/mod
 import { CustomEquipAddModal } from '../../pages/topic/equipment/modal/CustomEquipAddModal';
 import { CustomEquipBookAddModal } from '../../pages/topic/equipment/modal/CustomEquipBookAddModal';
 import InputContainer from '../inputContainer';
+import { ModalList } from '../../store/common/useCommon';
+import AnnualRequestView from '../../pages/admin/annualManage/component/AnnualRequestView';
+import { CustomCalendarFilter } from '../calendar/modal/CustomCalendarFilter';
 
 type ModalProps = {
 	change: () => void;
@@ -60,7 +63,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 	const cancelRef = useRef<any>();
 	let dialog;
 	switch (type) {
-		case 0: // 프로젝트 - 파트너 추가
+		case ModalList.PROJECT_PARTER_ADD: // 프로젝트 - 파트너 추가
 			dialog = (
 				<AlertDialogContent minW="20%" minH="20%">
 					<AlertDialogHeader>추가</AlertDialogHeader>
@@ -84,7 +87,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 				</AlertDialogContent>
 			);
 			break;
-		case 1: // 게시판 글 상세보기
+		case ModalList.BOARD_VIEW_DETAIL: // 게시판 글 상세보기
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
 					<AlertDialogHeader>상세보기</AlertDialogHeader>
@@ -124,7 +127,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 				</AlertDialogContent>
 			);
 			break;
-		case 2: // 게시판 글 쓰기
+		case ModalList.BOARD_WRITE: // 게시판 글 쓰기
 			dialog = (
 				<AlertDialogContent minW="50%" minH="50%">
 					<AlertDialogHeader>{title}</AlertDialogHeader>
@@ -162,7 +165,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 				</AlertDialogContent>
 			);
 			break;
-		case 3: // 알림
+		case ModalList.ALERT_ALARM: // 알림
 			dialog = (
 				<AlertDialogContent minW="20%" minH="20%">
 					<AlertDialogHeader />
@@ -180,7 +183,7 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 				</AlertDialogContent>
 			);
 			break;
-		case 4: // 수정/삭제
+		case ModalList.ALERT_CONFIRM: // 수정/삭제
 			dialog = (
 				<AlertDialogContent minW="20%" minH="20%">
 					<AlertDialogHeader />
@@ -201,35 +204,33 @@ const SetModal = ({ change, type, title, contents, color, okClick, updataClick, 
 				</AlertDialogContent>
 			);
 			break;
-		case 5:
+		case ModalList.ANNUAL_ADD:
 			dialog = <CustomAnnualAddModal onClose={change} />;
 			break;
-		case 6:
-			break;
-		case 7:
+		case ModalList.EQUIP_ADD:
 			dialog = <CustomEquipAddModal title={contents.title} onClose={change} row={contents.row} setOpen={contents.setOpen} />;
 			break;
-		case 8:
+		case ModalList.BOOK_ADD:
 			dialog = <CustomEquipBookAddModal title={contents.title} row={contents.row} onClose={change} setOpen={contents.setOpen} />;
 			break;
-		case 9:
+		case ModalList.ANNUAL_REQUEST:
 			dialog = (
-				<AlertDialogContent minW="30%" minH="30%">
+				<AlertDialogContent minW="40%" minH="20%">
 					<AlertDialogHeader />
 					<AlertDialogCloseButton size="lg" />
-
 					<AlertDialogBody className="content-center text-center text-xl">
-						<Input />
+						<AnnualRequestView approvalNo={contents.approvalNo} />
 					</AlertDialogBody>
-
-					<AlertDialogFooter>
-						<Button colorScheme="blue" onClick={okClick}>
-							확인
-						</Button>
-						<Button ref={cancelRef} ml={3} onClick={change}>
-							취소
-						</Button>
-					</AlertDialogFooter>
+				</AlertDialogContent>
+			);
+			break;
+		case ModalList.SCHEDULE_FILTER:
+			dialog = (
+				<AlertDialogContent maxWidth="fit-content">
+					<AlertDialogCloseButton size="sm" />
+					<AlertDialogBody className="content-center text-center text-xl">
+						<CustomCalendarFilter />
+					</AlertDialogBody>
 				</AlertDialogContent>
 			);
 			break;

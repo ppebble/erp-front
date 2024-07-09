@@ -163,7 +163,7 @@ export const CalendarService = (date?: string) => {
 						const param = {} as MemberTagProps;
 						param.name = data[i].name;
 						param.task = {
-							id: getEventTask(data[i].team),
+							id: getEventTask(data[i].team) || '',
 							name: data[i].team,
 						};
 						param.profileNo = data[i].profileNo;
@@ -183,6 +183,16 @@ export const CalendarService = (date?: string) => {
 		},
 		// enabled: !!sessionStorage.getItem('nex_accessToken'),
 	};
+	const AddHolidayMutation = useMutation({
+		mutationFn: () => postQuery(`/api/schedule/addHoliday`),
+		onSuccess: (result) => {
+			queryClient.invalidateQueries('getEvents');
+			return result.response;
+		},
+		onError: (error) => {
+			alert(error);
+		},
+	});
 
 	const createEventMutation = useMutation({
 		mutationFn: (params: any) => postQuery(`/api/schedule/schedule`, params),
@@ -217,7 +227,16 @@ export const CalendarService = (date?: string) => {
 
 	// const commonQuery
 
-	return { getEventQuery, getWeekEventQuery, createEventMutation, updateEventMutation, deleteEventMutation, getDeptEvent, availableProfile };
+	return {
+		getEventQuery,
+		getWeekEventQuery,
+		createEventMutation,
+		updateEventMutation,
+		AddHolidayMutation,
+		deleteEventMutation,
+		getDeptEvent,
+		availableProfile,
+	};
 };
 
 export default CalendarService;

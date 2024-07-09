@@ -32,6 +32,7 @@ import { AddEquipParam } from './CustomEquipAddModal';
 import DebouncedInput from '../../../../components/table/CustomTableFilterComponent';
 import CustomEquipPagingTable from '../components/CustomEquipPagingTable';
 import useModal from '../../../../store/useModal';
+import { DDR3Hz, DDR4Hz, DDR5Hz, EquipStatus, PcOsProps, RamType } from '../../../../store/common/useCommon';
 
 export type VmInfo = {
 	vmNo?: number | undefined;
@@ -501,10 +502,14 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 													setStatus(e.target.value);
 												}}
 											>
-												<option value="사용중">사용중</option>
-												<option value="유휴">유휴</option>
-												<option value="불량">불량</option>
-												<option value="폐기">폐기</option>
+												{Object.entries(EquipStatus).map((e, idx) => {
+													return (
+														// eslint-disable-next-line react/no-array-index-key
+														<option key={idx} value={e[1]}>
+															{e[1]}
+														</option>
+													);
+												})}
 											</Select>
 										</div>
 									</div>
@@ -630,10 +635,14 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 													setOs(e.target.value);
 												}}
 											>
-												<option value="LINUX">LINUX</option>
-												<option value="Window">Window</option>
-												{/* <option value="Android">Android</option>
-												<option value="IOS">iOS</option> */}
+												{Object.entries(PcOsProps).map((e, idx) => {
+													return (
+														// eslint-disable-next-line react/no-array-index-key
+														<option key={idx} value={e[1]}>
+															{e[1]}
+														</option>
+													);
+												})}
 											</Select>
 											<input
 												type="text"
@@ -694,9 +703,14 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 													setRamType(e.target.value);
 												}}
 											>
-												<option value="DDR3">DDR3</option>
-												<option value="DDR4">DDR4</option>
-												<option value="DDR5">DDR5</option>
+												{Object.entries(RamType).map((e, idx) => {
+													return (
+														// eslint-disable-next-line react/no-array-index-key
+														<option key={idx} value={e[1]}>
+															{e[1]}
+														</option>
+													);
+												})}
 											</Select>
 											<p className="text-base items-center flex font-bold text-navy-700 ml-5 mr-5 mt-1"> - </p>
 											<Select
@@ -709,22 +723,33 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 													setRamHz(e.target.value);
 												}}
 											>
-												<option value="800">800</option>
-												<option value="1066">1066</option>
-												<option value="1333">1333</option>
-												<option value="1600">1600</option>
-												<option value="1866">1866</option>
-												<option value="2133">2133</option>
-												<option value="2400">2400</option>
-												<option value="2666">2666</option>
-												<option value="2933">2933</option>
-												<option value="3200">3200</option>
-												<option value="3733">3733</option>
-												<option value="4266">4266</option>
-												<option value="4800">4800</option>
-												<option value="5333">5333</option>
-												<option value="5866">5866</option>
-												<option value="6400">6400</option>
+												{ramType === 'DDR3' &&
+													Object.entries(DDR3Hz).map((e, idx) => {
+														return (
+															// eslint-disable-next-line react/no-array-index-key
+															<option key={idx} value={e[1]}>
+																{e[1]}
+															</option>
+														);
+													})}
+												{ramType === 'DDR4' &&
+													Object.entries(DDR4Hz).map((e, idx) => {
+														return (
+															// eslint-disable-next-line react/no-array-index-key
+															<option key={idx} value={e[1]}>
+																{e[1]}
+															</option>
+														);
+													})}
+												{ramType === 'DDR5' &&
+													Object.entries(DDR5Hz).map((e, idx) => {
+														return (
+															// eslint-disable-next-line react/no-array-index-key
+															<option key={idx} value={e[1]}>
+																{e[1]}
+															</option>
+														);
+													})}
 											</Select>
 										</div>
 									</div>
@@ -898,8 +923,14 @@ export const CustomEquipServerVm = ({ title, columns }: any) => {
 														setVmOs(e.target.value);
 													}}
 												>
-													<option value="LINUX">LINUX</option>
-													<option value="Window">Window</option>
+													{Object.entries(PcOsProps).map((e, idx) => {
+														return (
+															// eslint-disable-next-line react/no-array-index-key
+															<option key={idx} value={e[1]}>
+																{e[1]}
+															</option>
+														);
+													})}
 												</Select>
 												<input
 													type="text"

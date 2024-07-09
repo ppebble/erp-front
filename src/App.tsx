@@ -26,7 +26,6 @@ import Upload from './pages/topic/notices/upload'; // 업로드 테스트
 
 // error
 import NotFound from './pages/error/NotFound';
-import AnnualRequest from './pages/topic/dashboard/components/modal/AnnualRequest';
 import AnnualMailAccept from './pages/topic/dashboard/components/modal/AnnualMailAccept';
 import AdminPopup from './pages/admin';
 import AnnualManageComponent from './pages/admin/annualManage';
@@ -40,7 +39,6 @@ const App = () => {
 				</Route>
 				<Route path="/topic" element={<Topic />}>
 					<Route path="dashboard" element={<Dashboard />} />
-					<Route path="annRequest" element={<AnnualRequest />} />
 					<Route path="summary" element={<Summary />} />
 					<Route path="workforce" element={<Workforce />} />
 					<Route path="calendar" element={<CompanyCalendar />} />

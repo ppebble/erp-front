@@ -1,4 +1,3 @@
-import SwiperCore, { Navigation, Scrollbar } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { GoDot, GoDotFill } from 'react-icons/go';
 import { useEffect, useState } from 'react';
@@ -15,18 +14,9 @@ const DashboardAttendComponent = () => {
 	useEffect(() => {
 		if (!swiperSetting) {
 			setSwiperSetting({
-				// spaceBetween: 24,
 				scrollbar: { draggable: true, el: null },
 				slidesPerView: 'auto',
-				// onBeforeInit: (swiper: SwiperCore) => {
-				// 	if (typeof swiper.params.navigation !== 'boolean') {
-				// 		if (swiper.params.navigation) {
-				// 			swiper.params.navigation.prevEl = prevRef.current;
-				// 			swiper.params.navigation.nextEl = nextRef.current;
-				// 		}
-				// 	}
-				// 	swiper.navigation.update();
-				// },
+
 				onSlideChange: (e) => {
 					setCurpage(e.activeIndex);
 				},
@@ -51,13 +41,11 @@ const DashboardAttendComponent = () => {
 				{swiperSetting && (
 					<Swiper {...swiperSetting}>
 						<SwiperSlide>
-							{/* <div className={`${isAttWeek ? '' : 'hidden h-0 w-0'} object-contain`}> */}
 							<div>
 								<WeeklyAttendanceComponent />
 							</div>
 						</SwiperSlide>
 						<SwiperSlide>
-							{/* <div className={`${isAttWeek ? 'hidden  h-0 w-0' : ''} object-contain`}> */}
 							<div>
 								<MonthAttendanceComponent />
 							</div>

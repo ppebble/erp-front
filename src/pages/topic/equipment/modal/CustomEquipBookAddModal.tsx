@@ -15,6 +15,7 @@ import EquipService from '../../../../services/equipService';
 import { useEquipAction, useEquipDetail } from '../../../../store/useEquip';
 import { AddEquipParam } from './CustomEquipAddModal';
 import useModal from '../../../../store/useModal';
+import { BookStatus } from '../../../../store/common/useCommon';
 
 export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) => {
 	const createEquip = EquipService().createEquipMutation;
@@ -273,10 +274,14 @@ export const CustomEquipBookAddModal = ({ title, onClose, row, setOpen }: any) =
 									disabled={!isEditable}
 									value={status}
 								>
-									<option value="비치중">비치중</option>
-									<option value="유휴">유휴</option>
-									<option value="불량">불량</option>
-									<option value="폐기">폐기</option>
+									{Object.entries(BookStatus).map((e, idx) => {
+										return (
+											// eslint-disable-next-line react/no-array-index-key
+											<option key={idx} value={e[1]}>
+												{e[1]}
+											</option>
+										);
+									})}
 								</Select>
 							</div>
 						</div>
